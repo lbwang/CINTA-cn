@@ -5,3 +5,5 @@
 本书书名的“具体”二字是为了向著名的《具体数学》致敬，同时也向数学的“抽象性”发起挑战，希望本书不要成为另一本抽象代数，而是一般可以具体带来实际帮助的数学书。本书的英文名拟定为：A Concrete Introduction to Number Theory and Algebra，因其大写首写字母而简称为CINTA。
 
 希望大家享受阅读CINTA的乐趣。
+
+最后，本书的排版应用了名为[ElegantBook(https://github.com/ElegantLaTeX/)的模板，在此表示感谢。
