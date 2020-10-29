@@ -6,4 +6,4 @@
 
 希望大家享受阅读CINTA的乐趣。
 
-最后，本书的排版应用了名为[ElegantBook(https://github.com/ElegantLaTeX/)的模板，在此表示感谢。
+最后，本书的排版应用了名为[ElegantBook](https://github.com/ElegantLaTeX/)的模板，在此表示感谢。
