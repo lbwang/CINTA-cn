@@ -1,0 +1,538 @@
+% This text is a supplement of CINTA.
+% Setp. 2018
+% Author: Libin Wang
+% SCNU
+% additional use of \usepackage{beamerthemesplit}
+\documentclass{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[BoldFont,SlantFont,CJKnumber]{xeCJK} % 允许使用粗体，斜体以及调用CJKnumb宏包
+%\usepackage[CJKbookmarks]{hyperref}
+
+%%Support Chinese in Mac!
+
+\setCJKmainfont[BoldFont=STFangsong, ItalicFont=STKaiti]{STSong}
+\setCJKsansfont[BoldFont=STHeiti]{STXihei}
+\setCJKmonofont{STFangsong}
+
+%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
+
+\setmainfont{Times New Roman} % 设置默认英文衬线字体
+
+\setCJKfamilyfont{ls}{LiSu} %定义字体
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{beamerthemesplit} % new 
+\usepackage{beamerthemeshadow}
+\usepackage{amsmath, amsfonts, amssymb}
+
+%% Setup for Code
+\usepackage{listings}
+\lstset{language = Python,
+	showstringspaces = false,
+	columns = fullflexible,
+	numbers = left,
+	numberstyle = \tiny,
+	frame = single}
+%Can't work!
+%\usepackage{minted}
+
+%%\newproof{pf}{Proof} 
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{fact}[theorem]{Fact}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{rema}[theorem]{Remark}
+\newtheorem{clam}[theorem]{Claim}
+\newtheorem{exm}[theorem]{Example}
+
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\F}{{\mathbb F}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\R}{{\mathbb R}}
+
+% New commands to keep things tidy.
+%\newcommand{\ket}[1]{$\left|#1\right\rangle$}
+%\newcommand{\Om}[1]{\small $\omega_{#1}$}
+\newcommand{\Grp}[1]{\mathbb{#1}}
+\begin{document}
+%\title{信息安全的数学基础 -- 二次剩余} 
+\title{Mathematics for Computer Science -- QR} 
+\author{Libin Wang} 
+\institute{School of Computer Science, South China Normal University}
+\date{\today} 
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of contents}\tableofcontents} 
+
+\section{Quadratic Residues and Euler's Criterion}
+\label{sec:qr}
+
+\frame{\frametitle{First Question.}
+\begin{exampleblock}{First Question.}
+Let $p$ be an odd prime and $y$ an integer relatively prime to $p$, is $y$ a perfect square modulo $p$?  Equivalently, we need to decide whether there exists $x\in \Z$ such that:
+\[ x^2 \equiv  y \pmod{p}. \]
+\end{exampleblock}
+}
+
+\frame{\frametitle{Naive Solution.} 
+	\begin{exampleblock}{Easy jobs.}
+	Let $p = 11$, and $y = 5$, is $y$ a perfect square modulo $p$?
+	We write a simple program to square every number from $1$ to $10$.
+	The output is :
+	
+	\[1, 4, 9, 5, 3, 3, 5, 9, 4, 1\]
+	
+   \end{exampleblock}
+}
+
+\frame{\frametitle{More data.}
+    \begin{table}[h]
+		\begin{tabular}{ | c | c |}
+			\hline
+			$y$  & $y^2$  \\ \hline
+			1 & 1  \\ \hline
+			2 & 4  \\ \hline 
+			3 & 4 \\ \hline
+			4 & 1 \\ \hline 
+		\end{tabular}  
+		\caption{$y^2 \bmod 5$}
+   \end{table}
+}
+
+\frame{\frametitle{More data.}
+\begin{table}[h]
+
+	\begin{tabular}{ | c | c |}
+		\hline
+		$y$  & $y^2$\\ \hline
+		1 & 1  \\ \hline
+		2 & 4 \\ \hline
+		3 & 2  \\ \hline
+		4 & 2  \\ \hline
+		5 & 4  \\ \hline
+		6 & 1  \\ \hline
+	\end{tabular}  
+	\caption{$y^2 \bmod 7$}
+\end{table}
+
+}
+\frame{\frametitle{More data.}
+\begin{table}[h]
+
+	\begin{tabular}{ | c | c |}
+	
+		\hline
+		$y$  & $y^2$ \\ \hline
+		1 & 1   \\ \hline
+		2 & 4  \\ \hline
+		3 & 9  \\ \hline
+		4 & 3  \\ \hline
+		5 & 12 \\ \hline
+		6 & 10 \\ \hline
+		7 & 10  \\ \hline
+		8 & 12 \\ \hline
+		9 &  3 \\ \hline
+		10 & 9  \\ \hline
+		11 & 4 \\ \hline
+		12 & 1 \\ \hline
+	\end{tabular}
+	 \caption{$y^2 \bmod 13$}
+ % \makeatletter\def\@captype{table}\makeatother\caption{$a^i \bmod 13$}
+    \end{table}
+}
+
+%Why it doesn't work?
+\iffalse
+\begin{lstlisting}[language=Python]
+p = 11
+a = 5
+for i in range(1, p):
+    print pow(i, 2) % p,
+print
+\end{lstlisting}
+\fi
+
+\frame{\frametitle{To find some patterns.}
+
+\begin{alertblock}{Pattern!}
+Can you find some patterns from the tables?
+\end{alertblock}
+}
+
+\frame{\frametitle{Some easy conclusions.}
+\begin{block}{One easy conclusion.}
+\[(p-1)^2 \equiv 1 \pmod{p}. \] 
+\end{block}
+\pause
+Do you see why? \pause
+
+\begin{block}{Easy proof.}
+It is easy to prove that: 
+ \[(p-1)^2 = p^2 - 2p + 1 \equiv 1 \pmod{p}.\] The pattern means that the congruence $x^2 \equiv 1 \pmod{p}$ has two solutions, $1$ and $p - 1$. 
+\end{block}
+
+}
+
+\frame{\frametitle{Some easy conclusions.}
+\begin{block}{Another easy conclusion.}
+Every second columns of these tables is reflectional
+symmetric （反射对称）that can be described by the following formula.
+ 
+ \[(p - a)^2 \equiv a^2 \pmod{p}.\]
+\end{block}
+\pause
+
+ The proof is similar, since:
+ \[(p - a)^2  = p^2 + 2pa + a^2. \]
+ 
+ \pause
+ 
+ This formula means the congruence $x^2 \equiv a \pmod{p}$ has two incongruent solutions, $a$ and $p - a$. 
+}
+
+\frame{\frametitle{One formally stated property.}
+\begin{prop}
+ \label{prop:num_qr}
+ Let $p$ be an odd prime and $b$ an integer not divisible by $p$. Then, the congruence
+ \[x^2 \equiv b \pmod{p} \]
+ has either no solutions or exactly two incongruent solutions modulo $p$.
+ \end{prop}
+}
+
+\frame{\frametitle{One formally stated property.}
+\begin{proof}
+We know $x^2 \equiv b \pmod{p}$ has two incongruent solutions. 
+
+Then we must show that there are no more than two incongruent solutions. Assume that $x_0$ and $x_1$ are two solutions of $x^2 \equiv b \pmod{p}$. Then 
+$$x_0 ^ 2 \equiv x_1^2  \equiv b \pmod{p},$$ thus
+$$x_0 ^ 2 - x_1^2 = (x_0 - x_1)(x_0 + x_1) \equiv 0 \pmod{p}.$$
+Hence, $p \mid (x_0 - x_1)$ or $p \mid (x_0 + x_1)$, which
+means $x_0 \equiv x_1 \pmod{p}$ or $x_0 \equiv -x_1 \pmod{p}$. Therefore, if there is a solution, there are exactly two incongruent solutions. 
+\end{proof} 
+}
+
+\frame{\frametitle{Quadratic Residues（二次剩余） and Quadratic Non-Residue（二次非剩余）.}
+\begin{defn}
+ Let $m,n \in \mathbb{Z}$ with $gcd(m,n)=1$.  Then $m$ is called a \textit{quadratic residue modulo $n$}(模$n$的二次剩余)
+  (short for $\mathbf{QR}$) if $m \equiv x^2 \pmod{n}$ for some $x \in \Z$, and $m$ is called a \textit{quadratic nonresidue modulo $n$}（模$n$的二次非剩余）(short for $\mathbf{QNR}$) otherwise. 
+ \end{defn}
+}
+
+\frame{\frametitle{QR and QNR.}
+\begin{exm}
+  From these tables we have showed, we know that, the $\mathbf{QR}$ modulo $7$ are $\{1, 2, 4\}$; the $\mathbf{QR}$ modulo $13$ are $ \{1, 3, 4, 9, 10, 12\}$; the $\mathbf{QNR}$ modulo $7$ are $\{3, 5, 6\}$; the $\mathbf{QNR}$ modulo $13$ are $\{2, 5, 6, 7, 8, 11\}$.
+  \end{exm}
+}
+
+\frame{\frametitle{QR and QNR.}
+\begin{theorem}
+ \label{thm:num_qr}
+ Let $p$ be an odd prime, then there are exactly $(p-1)/2$ $\mathbf{QRs}$ modulo $p$ and exactly $(p-1)/2$ $\mathbf{QNRs}$ modulo $p$.
+ \end{theorem}
+}
+
+
+\frame{\frametitle{QR and QNR.}
+\begin{proof}
+ We map the integers from $\Z_p^*$ to $\mathbf{QR}$s modulo $p$ by squaring. since Propostion \ref{prop:num_qr} tell us that, two incongruent integers map to one $\mathbf{QR}$, and we have $p-1$  squares to consider, then there are exactly $(p-1)/2$ $\mathbf{QR}$s modulo $p$. The remaining $(p-1)/2$ integers are $\mathbf{QNR}$s modulo $p$.
+ \end{proof}
+}
+
+\frame{\frametitle{Quadratic Residues Group.}
+\begin{prop}
+  \label{prop:QR_gr}
+  Let $\mathbb{QR}_p$ denotes the set of every $\mathbf{QR}$ modulo $p$, $\mathbb{QR}_p$ is a group under multiplication. 
+  \end{prop}
+  
+  \begin{proof}
+  It is easy to prove by checking every axioms of group. 
+  \end{proof}
+}
+
+\frame{\frametitle{Quadratic Residues Group.}
+\begin{block}{Remark.}
+The map from $\mathbb{Z}_p^*$ to $\mathbb{QR}_p$ is a group homomorphism, if we denote it as $\phi$, then by earlier observation we know $ker \;\phi = \{1, p-1\}$. By using the First Isomorphism Theorem from Chapter 9, we have a new proof for last Theorem .
+\end{block}
+
+}
+
+\frame{\frametitle{Quadratic Residues vs Quadratic Non-Residues .}
+  \begin{prop}
+  \label{prop:qr_mul}
+  Let $p$ be an odd prime, then
+  
+ (1.) The product of two $\mathbf{QR}$s modulo $p$ is a $\mathbf{QR}$, denoted as $$\mathbf{QR} \times \mathbf{QR} = \mathbf{QR},$$
+ 
+ (2.) The product of a $\mathbf{QR}$ modulo $p$ and a $\mathbf{QNR}$ modulo $p$ is a $\mathbf{QNR}$ modulo $p$, denoted as $$\mathbf{QR} \times \mathbf{QNR} = \mathbf{QNR},$$
+ 
+ (3.) The product of two $\mathbf{QNR}$s modulo $p$ is a $\mathbf{QR}$, denoted as $$\mathbf{QNR} \times \mathbf{QNR} = \mathbf{QR}.$$
+  \end{prop}
+}
+
+\frame{\frametitle{Quadratic Residues vs Quadratic Non-Residues .}
+ \begin{proof}
+  $$\mathbf{QR} \times \mathbf{QNR} = \mathbf{QNR},$$
+   Let $b$ be a $\mathbf{QNR}$, and $a$ be a $\mathbf{QR}$, then there exists $a_1\in \Z$ such that $a \equiv a_1^2 \pmod{p}$. Assume that $ab$ is a $\mathbf{QR}$, then there exists $c\in \Z$ such that
+  \[ c^2 \equiv ab \equiv a_1^2 b \pmod{p}. \] 
+  We know that $gcd(a_1, p) = 1$, then there exists $a_1^{-1} \in \Z$ such that $a_1 a_1^{-1} \equiv 1 \pmod{p}$, therefore we have
+  \[ c^2( a_1^{-1})^2 \equiv b \pmod{p}.\] This means that $b$ is a $\mathbf{QR}$ contradicting the assumtion that $b$ is a $\mathbf{QNR}$.
+  \end{proof}
+}
+
+\frame{\frametitle{Quadratic Residues vs Quadratic Non-Residues .}
+ \begin{proof}
+  $$\mathbf{QNR} \times \mathbf{QNR} = \mathbf{QR}.$$
+  
+  Let $a$ be a $\mathbf{QNR}$ and $p  \nmid a$, then we know $$a \Z_p^* = \Z_p^*.$$ We also know that there are $(p-1)/2$ $\mathbf{QR}$s and $(p-1)/2$ $\mathbf{QNR}$s in $\Z_p^*$. As we have proved, when we multiply $a$ by a $\mathbf{QR}$ we get a $\mathbf{QNR}$, hence the $(p-1)/2$ products $a \times \mathbf{QR}$ give all $(p-1)/2$ $\mathbf{QNR}$s in $\Z_p^*$. Then when we multiply $a$ by a $\mathbf{QNR}$, the only possibility is that it gives one of the $\mathbf{QR}$s in $\Z_p^*$.
+  
+  \end{proof}
+  }
+  
+    \frame{\frametitle{以上证明的代数视角.}
+    \begin{block}{使用群论理解二次剩余.}
+    给定素数$p$，定义$\mathbb{Z}_p^*$，然后，$\mathbb{QR}_p$是$\mathbb{Z}_p^*$的子群。我们可以做商群$\mathbb{Z}_p^*/\mathbb{QR}_p$，
+    这个商群只有两个元素，$\mathbb{QR}_p$是商群的单位元，
+    $\mathbf{QNR}$则是该商群中的另一个元素。分别把这个两个元素记为$\{e, a\}$于是，我们问：
+    \begin{itemize}
+    \item 为什么$\mathbf{QR} \times \mathbf{QR} = \mathbf{QR}$？答：$e*e = e$。
+    
+    \item 为什么$\mathbf{QR} \times \mathbf{NQR} = \mathbf{NQR}$？答：因为$e*a = a$。
+    
+    \item 为什么$\mathbf{NQR} \times \mathbf{NQR} = \mathbf{QR}$？答：$a*a$只能等于$e$。
+    \end{itemize} 
+    \end{block}
+    }
+    
+  \frame{\frametitle{二次剩余的初始目标.}
+  \begin{block}{注记.}
+  研究二次剩余的一个初始目标就是以求解线性同余方程的方法为基础，试图解
+  二次同余方程。即给定奇素数$p$和$a, b, c \in \Z$，其中要求$gcd(a,p)=1$，求解
+  \begin{equation*}
+  \label{eq:qu_eq}
+  a x^2 + bx + c \equiv 0 \pmod{p}
+  \end{equation*}
+  \end{block}
+  }
+  
+\frame{\frametitle{Legendre symbol.（勒让德符号）}
+\begin{defn}
+Let $p$ be an odd prime and let $n \in \Z$. The \textbf{Legendre symbol} $(n/p)$ is defined as
+\[\left(\frac{n}{p}\right) = 
+\left\{ \begin{array}{rl} 
+1 & \mbox{if } n \mbox{ is a quadratic residue mod } p\\
+-1 & \mbox{if } n \mbox{ is a quadratic nonresidue mod } p \\
+0 & \mbox{if } p\mid n.
+  \end{array} 
+ \right.  \] 
+\end{defn}
+}
+
+\frame{\frametitle{Legendre symbol的属性.}
+\begin{prop}
+   设$p$是奇素数，$a, b \in \mathbb{Z}$且不被$p$整除。则有：
+   \begin{enumerate}
+   \item 如果$a \equiv b \pmod{p}$，则$\left(\frac{a}{p} \right) = \left(\frac{b}{p} \right)$；
+   
+   \item $\left(\frac{a}{p} \right) \left(\frac{b}{p} \right) = \left(\frac{ab}{p} \right)$；
+   
+   \item $\left(\frac{a^2}{p} \right) = 1$。
+   \end{enumerate}
+   \end{prop}
+   
+   \pause
+   
+    \begin{proof}
+    It is naive by Proposition \ref{prop:qr_mul}. 
+    \end{proof}
+}
+
+
+\frame{\frametitle{Legendre symbol.}
+ \begin{exm}
+\[ \left(\frac{75}{97} \right) = \left(\frac{3\cdot 5 \cdot 5}{97} \right) = \left(\frac{3}{97} \right) = 1\]
+Since $10^2 \equiv 3 \pmod{97}$, so $3$ is a $\mathbf{QR}$.
+ \end{exm}
+\pause 
+\begin{exm}
+\[ \left(\frac{269}{97} \right) = \left(\frac{2 \cdot 97 + 75 }{97} \right) = \left(\frac{75}{97} \right) = 1. \]
+
+\end{exm}
+}
+
+\frame{\frametitle{Euler's Criterion.（欧拉准则）}
+\begin{theorem}{(Euler's Criterion.)}
+ \label{thm:euler_cri}
+ Let $p$ be an odd prime and let $a \in \Z$ with $gcd(a,p)=1$. Then
+ \[
+ \left(\frac{a}{p} \right) \equiv a^{(p-1)/2} \pmod{p}.
+ \]
+ \end{theorem}
+ }
+
+\frame{\frametitle{Euler's Criterion.}
+  \begin{proof}
+  We have two cases to consider. For the first case, we assume $\left(\frac{a}{p} \right) = 1$, which means that there exist $x \in \Z$ such that $x^2 \equiv a \pmod{p}$. By Fermat's little theorem, we have that
+  \[x^{(p-1)} \equiv 1 \pmod{p}, \]
+  and
+  \[x^{(p-1)}\equiv (x^2)^{(p-1)/2} \equiv  a^{(p-1)/2} \pmod{p}. \]
+  Hence \[a^{(p-1)/2} \equiv 1 \equiv \left(\frac{a}{p} \right) \pmod{p}.\]
+
+  \end{proof}
+  }
+  
+  \frame{\frametitle{Euler's Criterion.}
+    \begin{proof}
+    
+    For the second case, we assume $\left(\frac{a}{p} \right) = -1$, which means that the congruence $x^2 \equiv a \pmod{p}$ has no solutions. Using Fermat's little theorem again, we know that
+    \[0 \equiv a^{(p-1)} -1 \equiv (a^{(p-1)/2} - 1)(a^{(p-1)/2} + 1) \pmod{p} .\]
+    Since $\left(\frac{a}{p} \right) = -1$, $a^{(p-1)/2} -1 \not \equiv 0 \pmod{p}$,
+    %This part has a blur, we should follow FINT.
+    hence, it must be $$a^{(p-1)/2} + 1 \equiv 0 \pmod{p}.$$ Therefore
+    \[a^{(p-1)/2} \equiv -1 \equiv  \left(\frac{a}{p} \right) \pmod{p}\]
+    \end{proof}
+    }
+   
+\frame{\frametitle{Euler's Criterion.}
+    \begin{exm}
+    \[ \left(\frac{3}{97} \right) = 3^{(97- 1)/2} \bmod 97 = 3^{48} \bmod 97 = 1. \]
+    Thus $3$ is a $\mathbf{QR} \bmod 97$.
+    \end{exm}
+}
+    
+ \frame{\frametitle{Euler's Criterion.}
+ \begin{theorem}
+  \label{thm:qu_rec} 
+  Let $p$ be an odd prime then
+ \[
+   \left(\frac{-1}{p}\right) = 
+    \left\{ \begin{array}{rl} 
+    1 & \qquad \mbox{if } p \equiv 1 \pmod{4};\\
+    -1 & \qquad \mbox{if } p \equiv -1 \pmod{4}.
+      \end{array} 
+       \right.
+  \]
+  \end{theorem}
+  
+  \begin{proof}
+  It is easy by using Euler's criterion. 
+  \end{proof}
+ }
+ 
+ \frame{\frametitle{Theorem about   $\left( \frac{2}{p} \right)$.}
+ \begin{theorem}
+  Let $p$ be an odd prime. Then
+  \begin{equation*}
+  \left( \frac{2}{p} \right) = (-1)^{(p^2-1)/8}.
+  \end{equation*}
+  \end{theorem}
+  
+  \begin{proof}
+    It is NOT obvious  by using Euler's criterion. 
+    \end{proof}
+ }
+ 
+ \frame{\frametitle{Theorem about   primes of the form $4k+1$.}
+ \begin{prop}
+  模$4$余$1$的素数有无穷多。
+  \end{prop}
+ 
+ \begin{proof}
+ 假设模$4$余$1$的素数有限，枚举之$S = \{1, p_1, p_2, \cdots, p_n\}$。
+ 令
+ \begin{equation}
+ \label{eq:mod4_1}
+ N = (2p_1p_2 \cdots p_n)^2 + 1
+ \end{equation}
+ 显然，$N$是一个奇数（注意上式构造中嵌入的那个$2$），所以必然存在一个奇素数$p$使得$p \mid N$。也就是说：
+ \[(2p_1p_2 \cdots p_n)^2 \equiv -1 \pmod{p}\]
+ 即$\left(\frac{-1}{p}\right) = 1$。
+ 根据勒让德符号的属性，可知$p$是形如$4k + 1$的素数，所以$p \in S$。这说明
+ $p \mid (N - (2p_1p_2 \cdots p_n)^2 )$，即$p \mid 1$，矛盾！
+ \end{proof}
+ 
+ }
+ 
+ \section{Quadratic Reciprocity.}
+   
+   \frame{\frametitle{Quadratic Reciprocity(二次互反律).}
+   \begin{block}{注记.}
+   著名的定理\emph{二次互反律}是一个优美且高效实用的定理。据说，德国数学天才高斯18岁时第一次给出了二次互反律的严格证明，
+   他称二次互反律是\emph{算术理论中的宝石}，是\emph{黄金定律}。希望大家能理解它并会使用它。
+   \end{block}
+   } 
+
+  \frame{\frametitle{Quadratic Reciprocity.}
+  \begin{theorem}
+   {(Quadratic Reciprocity, Version 1.)}
+   \label{thm:qu_reci1}
+   Let $p,q$ be distinct odd primes. 
+ 
+     \[
+       \left(\frac{-1}{p}\right) = 
+        \left\{ \begin{array}{rl} 
+        1 & \qquad \mbox{if } p \equiv 1 \pmod{4};\\
+        -1 & \qquad \mbox{if } p \equiv -1 \pmod{4}.
+          \end{array} 
+           \right.
+      \]
+      
+    \[
+      \left(\frac{2}{p}\right) = 
+       \left\{ \begin{array}{rl} 
+       1 & \qquad \mbox{if } p \equiv 1\;\; \mbox{or}\;\; 7 \pmod{8};\\
+       -1 & \qquad \mbox{if } p \equiv 3 \;\; \mbox{or} \;\; 5 \pmod{8}.
+         \end{array} 
+          \right.
+     \]
+     
+      \[
+          \left(\frac{q}{p}\right) = 
+           \left\{ \begin{array}{rl} 
+           \left(\frac{p}{q}\right)  & \qquad \mbox{if } p \equiv 1 \pmod{4} \;\; \mbox{or}\;\; q \equiv 1 \pmod{4};  \\
+           - \left(\frac{p}{q}\right)  & \qquad \mbox{if } p \equiv q \equiv 3 \pmod{4} .
+             \end{array} 
+              \right.
+         \]
+ 
+   \end{theorem}
+   }
+  
+   \frame{\frametitle{Quadratic Reciprocity.}
+    \begin{exm}
+       \[ \left(\frac{14}{137} \right) = \left(\frac{2}{137} \right) \left(\frac{7}{137} \right) = \left(\frac{7}{137} \right) = \left(\frac{137}{7} \right) = \left(\frac{4}{7} \right) = 1  . \]
+       Thus $14$ is a $\mathbf{QR}$.
+       \end{exm}
+   }
+
+\frame{\frametitle{Quadratic Reciprocity.}
+    \begin{theorem}
+    {(Quadratic Reciprocity, Version 2.)}
+    \label{thm:qu_reci2}
+    Let $p,q$ be distinct odd primes. Then
+    \begin{equation*}
+    \left(\frac{p}{q}\right) \left(\frac{q}{p} \right) = (-1)^{((p-1)/2)((q-1)/2)}.
+    \end{equation*}
+    \end{theorem}
+}
+
+\frame{\frametitle{Exercises.} 
+	\begin{block}{习题.}
+	\begin{itemize}
+	\item 请计算以下勒让德符号：$(\frac{7}{11})$，$(\frac{72}{131})$，$(\frac{20}{23})$，$(\frac{17}{31})$。%-1， -1， -1，-1
+	
+	\item 设$n= 7*11$，请手动计算求出同余方程$x^2 \equiv a \pmod{n}$在$a = 5$和$a = 4$时的所有解。%ans，a = 5时无解: 
+	
+     \item 设$p$是奇素数，请证明$\Z_p^*$的所有生成元都是模$p$的二次非剩余。%应用欧拉准则立得！
+	  
+	 \item 使用抽象代数的语言重新证明欧拉准则。
+	 
+	\end{itemize}
+	\end{block}
+	
+}
+\end{document}

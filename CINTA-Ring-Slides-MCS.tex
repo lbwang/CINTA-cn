@@ -1,0 +1,877 @@
+% This text is a supplement of CINTA.
+% Nov. 2020
+% Author: Libin Wang
+% SCNU
+% additional use of \usepackage{beamerthemesplit}
+\documentclass{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[BoldFont,SlantFont,CJKnumber]{xeCJK} % 允许使用粗体，斜体以及调用CJKnumb宏包
+%\usepackage[CJKbookmarks]{hyperref}
+
+%%Support Chinese in Mac!
+
+\setCJKmainfont[BoldFont=STFangsong, ItalicFont=STKaiti]{STSong}
+\setCJKsansfont[BoldFont=STHeiti]{STXihei}
+\setCJKmonofont{STFangsong}
+
+%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
+
+\setmainfont{Times New Roman} % 设置默认英文衬线字体
+
+\setCJKfamilyfont{ls}{LiSu} %定义字体
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{beamerthemesplit} % new 
+\usepackage{beamerthemeshadow}
+\usepackage{amsmath, amsfonts, amssymb}
+
+%% Setup for Code
+\usepackage{listings}
+\lstset{language = Python,
+	showstringspaces = false,
+	columns = fullflexible,
+	numbers = left,
+	numberstyle = \tiny,
+	frame = single}
+%Can't work!
+%\usepackage{minted}
+
+%%\newproof{pf}{Proof} 
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{fact}[theorem]{Fact}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{rema}[theorem]{Remark}
+\newtheorem{clam}[theorem]{Claim}
+\newtheorem{exm}[theorem]{Example}
+
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\F}{{\mathbb F}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\R}{{\mathbb R}}
+
+% New commands to keep things tidy.
+%\newcommand{\ket}[1]{$\left|#1\right\rangle$}
+%\newcommand{\Om}[1]{\small $\omega_{#1}$}
+\newcommand{\Grp}[1]{\mathbb{#1}}
+\begin{document}
+\title{Mathematics for Computer Science--环与域} 
+\author{Libin Wang} 
+\institute{School of Computer Science, South China Normal University}
+\date{\today} 
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of contents}\tableofcontents} 
+
+\section{Ring（环）}
+\label{sec:ring}
+\subsection{定义}
+
+\frame{\frametitle{Ring（环）.}
+\begin{defn}
+环$R$是一个非空集合，在$R$上有两种封闭的二元操作：加法（记为$+: R \times R \mapsto R$）
+和乘法（记为$*: R \times R \mapsto R$），并且满足以下条件：
+\begin{enumerate}
+\item 在加法（+）上$R$是一个阿贝尔群，加法的单位元记为$0$，加法上的逆元记为$-a$；
+\item $R$在乘法（*）上满足结合律；
+\item 乘法在加法上满足分配律。
+\end{enumerate}
+\end{defn}
+}
+
+\frame{\frametitle{Ring（环）.}
+具体地表示为公式，对任意$a,b, c\in R$，环$R$满足以下公理：
+\begin{eqnarray}
+a + (b + c ) = (a + b) + c   \quad \quad \mbox{($+$的结合律)}\\
+a + b  =  b + a   \quad \quad \mbox{($+$的交换律)}\\
+a + 0 = 0 + a \quad \mbox{($+$的单位元)}\\
+a + (- a) = (- a) + a = 0 \quad \quad \mbox{($+$的逆元)}\\
+a *(b * c) = (a *b) * c \quad  \quad\mbox{($*$的结合律)}\\
+%a * 1= 1*a = a \quad \quad \mbox{($*$的单位元)}\\
+(a + b) * c = (a * c) + (b * c) \quad \quad \mbox{(右分配律)}\\
+a * (b + c) = (a * b) + (a *c) \quad \quad \mbox{(左分配律)}
+\end{eqnarray}
+}
+
+\frame{\frametitle{Ring（环）.}
+\begin{defn}
+\begin{itemize}
+\item 如果$R$在乘法上也满足交换律，
+则称$R$为\emph{交换环}，否则称为非交换环。
+
+\item 如果$R$在乘法上具有单位元，则称环$R$为带单位元的环。
+\end{itemize}
+\end{defn}
+}
+
+\frame{\frametitle{Ring实例.}
+
+\begin{example}
+\begin{enumerate}
+\item $R = \{0\}$是只有一个元素的最小环，称为平凡环或零环。如果一个环中，$1 \neq 0$，则这个环是非平凡环。
+一个最小的非平凡环就是$R = \{0, 1\}$，或者记为$\Z_2$。\pause
+
+\item 在普通意义的加法和乘法上，容易验证$\Z, \mathbb{Q}, \mathbb{R}, \mathbb{C}$都是交换环。\pause
+
+\item 整数中所有的偶数在一般的加法与乘法上形成环，同样记为$2\Z$，这是一个不带单位元的环。
+           更一般地，对任意整数$n\in \Z$，$n\Z$在一般的加法与乘法上形成环。\pause
+
+\item 对任意正整数$n\in \N$，$\Z_n$是模$n$的加法群。如果给加法群$\Z_n$配置上乘法$*$，
+乘法$*$被定义为整数上的模$n$乘法，即$\forall a, b \in \Z_n$，
+$a*b \triangleq ab\bmod{n}$。容易验证$\Z_n$是一个交换环。
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{Ring实例.}
+
+\begin{example}
+\begin{enumerate}
+
+\item 取$p$为任意素数，$\Z_p$在模$p$的加法与模$p$的乘法下成环，
+而且$\Z_p$的所有非零元素在乘法上都有逆元。以后我们将重点讨论这种特殊的环。\pause
+
+\item 对任意环$R$，$R$的直积$R \times R$形成环，环的加法与乘法定义
+为$\forall (a,b), (c,d) \in R \times R$序对，
+$(a, b) + (c, d) \triangleq (a+c, b+d)$和$(a, b)  (c, d) \triangleq (ac, bd)$。\pause
+
+\item 实数上的$n \times n$矩阵在普通的矩阵加法和矩阵乘法上形成环，也称为矩阵环，记为$M_n(\mathbb{R})$。这是一种非交换环。
+\end{enumerate}
+\end{example}
+}
+
+\subsection{基本属性}
+
+\frame{\frametitle{Ring的属性.}
+\begin{prop}
+如果环中包含乘法单位元，则加法交换律必然成立。
+\end{prop}
+\begin{proof}
+设$R$是环，任取$a, b \in R$，考虑$(a + b)(1 + 1) $，分别应用左分配律和右分配律，有：
+\[(a + b)(1 + 1) = (a + b) + (a + b) = (a + a) + (b + b)  \]
+所以有$a + b = b + a$，即加法交换律成立。
+\end{proof}
+}
+
+\frame{\frametitle{Ring的属性.}
+\begin{prop}
+设$R$是一个环，且$a, b \in R$，则有：
+\begin{enumerate}
+\item $a0 = 0a = 0$
+\item $a(-b) =  (-a)b = -ab$
+\item $(-a)(-b) = ab$
+\end{enumerate}
+\end{prop}
+}
+
+\frame{\frametitle{Ring的属性.}
+\begin{proof}
+根据分配律，
+\[ a 0 = a  (0 + 0) = a0 + a0\]
+则$a0 = 0$，同理$0a = 0$。同样根据分配律
+\[ab + a(-b) = a(b + (-b)) = a 0 = 0\]
+所以，$-(ab) = a(-b)$，同理$-(ab) = (-a)b$。最后，
+根据以上结论，
+$(-a)(-b) = -(a(-b)) = -(-(ab)) = ab$。
+\end{proof}
+}
+
+\subsection{整环与子环}
+\frame{\frametitle{整环（Integral Domain.）}
+\begin{definition}
+给定一个环$R$，对任意非$0$元素$a \in R$，如果存在非$0$元素$b\in R$使得$a*b = 0$，
+则称$a$为一个\emph{零因子}（\emph{zero divisor}）。如果交换环$R$中没有零因子，
+即$\forall a, b \in R$，$a, b \ne 0$，如果$ab = 0$则有$a = 0$或$b = 0$， 
+则称$R$为整环。
+\end{definition}
+}
+
+\frame{\frametitle{整环实例}
+\begin{example}
+\begin{enumerate}
+\item 在普通意义的加法和乘法上，$\Z, \mathbb{Q}, \mathbb{R}, \mathbb{C}$都是整环。比如，考虑$a, b \in \Z$，
+$ab = 0$ 当且仅当$a=0$或者$b = 0$。其他实例，验证类似。
+
+\item 可验证偶数环$2\Z$是整环。更一般地，对任意的$n\in \Z$，$n\Z$都是整环。
+
+\item 已知$\Z_n$是一个交换环。但是，$\Z_n$并不是整环。比如，$\Z_{15}$中，$(3*5) \bmod{15} = 0$，
+$3$和$5$都是$\Z_{15}$中的零因子。
+
+\item 矩阵环$M_n(\mathbb{R})$不是整环，因为存在$A, B \in M_n(\mathbb{R})$，使得$AB = 0$但是$A$
+和$B$都不为$0$。
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{整环属性}
+\begin{prop}
+设$D$是一个交换环，$D$是整环当且仅当对任意元素$a,b,c\in D$，且$a \neq 0$，若$ab = ac$，则$b = c$。
+\end{prop}
+}
+
+\frame{\frametitle{整环属性}
+\begin{proof}
+\begin{enumerate}
+\item $\Rightarrow$. $D$是整环，则$D$中无零因子。若$a \neq 0$且$ab = ac$，则$a(b - c) = 0$，则$b - c = 0$，即$b = c$。
+
+\item $\Leftarrow$. 假设$D$中消去律成立。任取$a, b \in D$且$a \neq 0$。
+设$ab = 0$，则有$ab = a0$。根据消去律，
+得到$b = 0$。因此，$a$不可能是零因子。
+\end{enumerate}
+\end{proof}
+}
+
+\frame{\frametitle{子环（Subring）}
+\begin{definition}
+给定环$R$，$R'$是$R$的子集，如果$R'$在环$R$的加法和乘法上也形成环，则称$R'$是$R$的子环，记为$R' \subset R$。
+\end{definition}
+}
+
+\frame{\frametitle{子环实例}
+\begin{example}
+\begin{enumerate}
+\item 容易验证以下子环序列：$\Z\subset \mathbb{Q}\subset \mathbb{R}\subset \mathbb{C}$。
+
+\item 偶数环是整数环的子环，即$2\Z \subset \Z$。由此可知，子环并不自然继承母环的单位元。
+            当然，对任意的$n\in \Z$，有$n \Z \subset \Z$。
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{子环属性}
+\begin{prop}
+给定环$R$，$R'$是$R$的子集。$R'$是$R$的子环，当且仅当以下条件满足：
+\begin{enumerate}
+\item $R' \neq \emptyset$；
+\item $\forall a, b \in R'$，有$ab \in R'$；
+\item $\forall a, b \in R'$，有$a - b \in R'$。
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+根据子群命题易得，留作课后练习。
+\end{proof}
+}
+
+\subsection{环同态、理想与商环}
+\frame{\frametitle{环同态与环同构}
+\begin{definition}
+给定两个环$R$和$R'$，若映射$\phi: R \mapsto R'$满足：$\forall a, b \in R$，
+\begin{eqnarray*}
+\phi(a + b) = \phi(a) + \phi(b)\\
+\phi(ab) = \phi(a)\phi(b)
+\end{eqnarray*}
+则称$\phi$为一个环同态。如果$\phi$是一个双射，则$\phi$是一个环同构。
+环同态$\phi$的Kernel定义为以下集合：
+\[\mbox{Ker}\; \phi = \{r \in R: \phi(r) = 0\} \mbox{。}\]
+\end{definition}
+}
+
+\frame{\frametitle{环同态的性质}
+\begin{prop}
+设映射$\phi: R \mapsto R'$是环同态，则：
+\begin{enumerate}
+\item 如果$R$是交换环，则$\phi(R)$也是交换环。
+
+\item 分别记$0$和$0'$是$R$和$R'$的加法单位元，$\phi(0) = 0'$。
+
+\item 分别记$1$和$1'$是$R$和$R'$的乘法单位元，如果$\phi$是满射，则$\phi(1) = 1'$。
+\end{enumerate}
+\end{prop}
+}
+
+\frame{\frametitle{环同态实例--1}
+\begin{example}
+请验证以下同态实例，体会环同态与群同态的异同点。
+
+\begin{enumerate}
+\item 已知$\Z$是环，定义映射$\phi : \Z \mapsto \Z$为$\phi(k) = 2k$，$\forall k \in \Z$，即把所有整数映射到偶数$2\Z$。
+已知$\phi$是$\Z$到$\Z$的群同态，但是可以验证$\phi$不是一种环同态。\pause
+
+\item 对任意整数$n\in \Z$，已知$\Z_n$为环，定义映射$\phi : \Z_n \mapsto \Z_n$为$\phi(a) = a^2 \bmod{n}$，$\forall a \in \Z_n$，
+即把所有$\Z_n$的元素映射到平方数。可以验证$\phi$不是一种环同态，尽管这种映射在$\Z_n^*$中是一种群同态。
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{环同态实例--2}
+\begin{example}
+请验证以下同态实例，体会环同态与群同态的异同点。
+
+\begin{enumerate}
+
+\item 考虑一种特殊的环同态，定义$\phi: 2\Z \mapsto \Z_2$为$\forall k \in 2\Z$，$\phi(k) = k \bmod{2}$。明显，$\phi$
+是同态，但不是满同态，它把所有偶数都映射到了$0$。将这种把任意$R$映射到零环$\{0\}$的环同态称为\emph{零同态}。\pause
+
+\item 考虑一种更特殊的环同态，对任意的环$R$，定义映射$\phi: R \mapsto \Z_2$为$\forall a \in R$，$\phi(a) = 0$。可验证，
+这是一种零同态，显然不是满同态。特别提醒注意，如果环$R$有乘法单位元$1$，$\phi(1) = 0$。并不是我们期望的映射到$\Z_2$的$1$。
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{环同态实例--3}
+\begin{example}
+\begin{enumerate}
+
+\item 对任意环$R$，已知$R\times R$是环。定义映射$\phi: R\times R \mapsto R\times R$为
+$\forall (a, b)\in R\times R$，$\phi(a,b) = (a, 0)$。可验证，这是一个环同态，但并非满同态。注意，
+在$\phi(R\times R)$中的单位元是$(1,0)$，但是$R\times R$中的单位元是$(1,1)$。
+
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{环同态实例--4}
+\begin{example}
+\begin{enumerate}
+
+\item 设$p$是任意一个奇素数，考虑$2\Z$与$\Z_p$之间的映射$\phi: 2\Z \mapsto \Z_p$，
+定义为$\forall k \in 2\Z$，$\phi(k) = k \bmod{p}$。
+直观上看，该映射把所有的偶数做模$p$操作满射到环$\Z_p$。容易验证$\phi$是满同态。值得注意的是，
+偶数环$2\Z$没有乘法单位元，环$\Z_p$的乘法单位元是$1$，$2\Z$中有无穷多的元素映射到$\Z_p$的乘法单位元$1$上。
+也就是说，即使乘法单位元必然映射为乘法单位元，也并非只有乘法单位元才映射为乘法单位元。
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{理想}
+环的理想在群论中的对应概念是正规子群。
+\begin{definition}
+给定环$R$，$I$是$R$的子环，如果对任意的$r \in R$有$rI \subset I$和$Ir \subset I$，则称$I$是$R$的理想。
+\end{definition}\pause
+从表面上看，所谓环$R$的理想$I$，首先它是环$R$的子环，其次它具有“\emph{吸收性}”，即对任意的环元素$r\in R$，无论它是否落在$I$中，
+用$r$左乘或者右乘$I$，所得到的元素都会落回到$I$中。
+}
+
+\frame{\frametitle{理想的实例}
+\begin{example}
+\label{exm:ideal1}
+\begin{enumerate}
+\item 所有的环$R$都有两个平凡理想：$\{0\}$和$R$。
+
+\item 如果$R$的理想$I$中包括$1$，则$R=I$。
+
+\item 对任意整数$n\in \Z$，集合$n\Z$是环$\Z$的理想。直观上看，集合$n\Z$包含了所有$n$的倍数，$n\Z$在加法上成群，
+而用任意整数乘$n$的倍数还是得到一个$n$的倍数，虽然此时$n\Z$中并不必然有单位元$1$，也不必然有乘法逆元。
+
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{“模”理想的同余关系}
+\begin{block}{同余关系}
+利用理想，可以定义环中元素\emph{模}理想的\emph{同余关系}。设$R$是环，$I$是$R$中的理想，那么对任意的$a, b \in R$，
+如果$a \in b + I$，则称$a$和$b$满足以下同余关系：
+\[ a \equiv b \pmod{I}\]
+或者等价于说，如果$a$与$b$模$I$同余，则存在$i \in I$使得$a = b + i$，即$a - b \in I$。
+\end{block}
+}
+
+\frame{\frametitle{“模”理想的同余关系}
+
+\begin{example}
+已知，$\Z$是环，$2\Z \subset \Z$是$\Z$的理想。那么
+\[ 7 \equiv 5 \pmod{2\Z}\]
+因为，$7 = 5 + 2$，且$2 \in 2\Z$。但是，
+\[ 7 \not\equiv 6 \pmod{2\Z}\]
+因为，不存在偶数加$6$会等于$7$。
+\end{example}
+}
+
+\frame{\frametitle{中国剩余定理--环版本}
+\begin{theorem}
+设$R$是环，$I$和$J$是$R$中的理想，并且$I + J = R$。 对任意$r_1, r_2 \in R$，以下方程组有解，并且，该方程组的任意解都模$I \cap J$同余。
+\begin{eqnarray*}
+x &\equiv& r_1 \pmod{I}\\
+x &\equiv& r_2 \pmod{J}
+\end{eqnarray*}
+
+\end{theorem}
+}
+
+\frame{\frametitle{中国剩余定理--环版本}
+\begin{proof}
+因为$I + J = R$，所以存在$i \in I$和$j \in J$使得$i + j = r_2 - r_1$。注意，此时只需要把$r_2 - r_1$理解为$R$中的某个元素即可。
+令$x' = r_1 + i = r_2 - j$，可知$x' \in r_1 + I$且$x' \in r_2 + J$，所以$x'$是方程组的解。
+
+假设方程有两个解$x_1$和$x_2$，那么必然有：
+\begin{eqnarray*}
+x_1 &\equiv& x_2 \pmod{I}\\
+x_1 &\equiv& x_2 \pmod{J}
+\end{eqnarray*}
+则有$x_1 - x_2 \in I$和$x_1 - x_2 \in J$，因此$x_1 - x_2 \in I \cap J$，即
+\[ x_1 \equiv x_2 \pmod{I \cap J}\]
+
+\end{proof}
+}
+
+\frame{\frametitle{中国剩余定理--环版本}
+
+\begin{example}
+已知，$\Z$是环，$2\Z, 3\Z \subset \Z$是$\Z$的理想，且$2\Z + 3\Z = \Z$。求解：
+\begin{eqnarray*}
+x &\equiv& 5 \pmod{2\Z}\\
+x &\equiv& 4 \pmod{3\Z}
+\end{eqnarray*}
+易知：$ 7 \equiv 5 \pmod{2\Z}$，且$7 \equiv 4 \pmod{3\Z}$。
+$7$是唯一解吗？
+\end{example}
+}
+
+\frame{\frametitle{主理想（Principal Ideal）}
+
+\begin{prop}
+设$R$是一个交换环且有单位元，任取$a \in R$，则集合
+\[ \langle a \rangle \triangleq \{ar: r \in R\}\]
+是环$R$的一个理想，称之为\emph{主理想}（\emph{Principal Ideal}）。
+\end{prop}\pause
+
+\begin{alertblock}{主理想 vs 循环群}
+环的主理想对应群论中的循环群。
+\end{alertblock}
+}
+
+\frame{\frametitle{主理想--证明}
+
+\begin{proof}
+首先，验证$\langle a \rangle $是非空集合，至少包括$0$和$a$两个元素。
+其次，验证$\langle a \rangle$在加法上成群。
+最后，验证$\langle a \rangle$ 具有吸收性，即任取$s \in R$乘上$\langle a \rangle $中任意元素$ar$，
+必然有
+\[s (ar) =  a(sr) \in \langle a \rangle \]
+注意，上式成立需要依赖交换律。所以，$\langle a \rangle$是$R$的理想。
+\end{proof}
+
+}
+
+\frame{\frametitle{主理想--实例}
+\begin{example}
+\label{exm:ideal2}
+\begin{enumerate}
+\item 对任意环$R$，只包含一个元素$0$的主理想$\langle 0 \rangle$称为\emph{零理想}。
+
+\item 对任意带单位元的环$R$，称$\langle 1 \rangle$为\emph{单位理想}，显然$R = \langle 1 \rangle$。
+
+\item 对任意整数$n$，集合$n\Z$是整数环$\Z$的理想，也是主理想，$n\Z = \langle n \rangle$。
+\end{enumerate}
+ 
+\end{example}
+}
+
+\frame{\frametitle{理想与主理想}
+
+\begin{prop}
+整数环$\Z$的所有理想都是主理想。
+\end{prop}
+
+\begin{proof}
+首先，零理想也是主理想，因为$\langle 0 \rangle = \{0\}$。设$I$是整数环$\Z$的一个非零理想，
+则$I$中必然包括某些正整数，根据良序原则，
+则$I$中必然存在一个最小正整数$n$。对任意的元素$a\in I$，根据除法算法，
+存在整数$q$和$r$，$0 \leq r < n$，使得：
+\[ a = qn + r\]
+也就是，$r = a - qn$，利用理想的属性，可知$r \in I$。又因为$n$是$I$中最小正整数，
+所以，$r=0$。因此，$a = qn$，即$I = \langle n \rangle $。
+\end{proof}
+}
+
+\frame{\frametitle{环同态与Kernel}
+\begin{prop}
+环同态$\phi: R \mapsto R'$的Kernel是$R$的理想。
+\end{prop}
+
+\begin{proof}
+根据群论的结论，$K = \mbox{Ker}\;\phi$是$R$的加法子群（并且是正规子群）。
+只需要证明$K$具有理想的“吸收性”，
+即对任意的$r \in R$和$a \in K$有$ar \in K$和$ra \in K$。
+显然如此，因为：
+\[\phi(ar) =  \phi(a) \phi(r) = 0 \phi(r) = 0 \]
+且
+\[\phi(ra) = \phi(r )\phi(a) = \phi(r) 0 = 0\]
+\end{proof}
+}
+
+\frame{\frametitle{环同态与Kernel}
+\begin{example}
+对任意整数$n\in \Z$，定义映射$\phi: \Z \mapsto \Z_n$为，对任意$ a \in \Z$，$\phi(a) = a \bmod{n}$。容易验证
+这是一个环同态，而$\mbox{Ker}\;\phi$就是$n\Z$。
+\end{example}
+}
+
+\frame{\frametitle{商环}
+要定义商环， 先回顾、理解、熟悉相关的思路。
+\begin{block}{第一}
+环$R$本身在加法上是阿贝尔群，而其理想$I$则是$R$的正规加法子群，
+因此$R/I$在加法上就是一个商群，其中元素就是加法上$I$的陪集。比如，任取$r\in R$，$r + I$
+就是是$R/I$中的群元素。为清晰起见，描述$R/I$在加法定义如下。对任意的$r, s \in R$，
+\[(r + I) + (s + I) = (r+s) + I\]
+\end{block}
+
+}
+
+\frame{\frametitle{商环}
+
+\begin{block}{第二}
+$R/I$要形成环，必须定义$R/I$群元素的乘法。无论乘法是什么，根据环的定义，该乘法必须是封闭的，且具有
+结合律和分配律。在给出乘法定义之后，这些都需要证明。除此之外，特别强调的是，既然$R/I$的乘法
+是对陪集的操作，千万要记得证明良定义属性，因为陪集的代表元不唯一。
+\end{block}
+}
+
+\frame{\frametitle{商环}
+\begin{lemma}
+\label{lem:qr_mul}
+设$R$是环，$I$是$R$中的理想。商群$R/I$中元素的乘法定义为：
+对任意的群元$r, s\in R$，
+\[(r + I)(s +I) = rs + I\]
+该乘法是一种良定义操作，且具有封闭性、结合律和对加法具有分配律。
+\end{lemma}
+}
+
+\frame{\frametitle{商环}
+\begin{block}{证明乘法是良定义操作的思路}
+要证明乘法是一种良定义操作，就是要证明乘法独立于陪集代表元的选择。即证明，如果$r + I = r' + I$，
+$s + I = s' + I$，则$(r + I)(s + I) = (r'+ I)(s' + I) $。根据乘法定义，即要证$r s+ I = r' s' + I$。
+即证明$r' s' \in rs + I$。另外，
+$r + I = r' + I$和$s + I = s' + I$分别意味着$r' \in r + I$，$s' \in s + I$。
+
+\end{block}
+}
+
+\frame{\frametitle{商环}
+\begin{proof}
+要证明乘法是一种良定义操作，即假设$r' \in r + I$，$s' \in s + I$，证明$r's' \in (rs + I)$。
+因为$r' \in r + I$，$s' \in s + I$，即存在$i_1, i_2 \in I$使得$r' = r + i_1$和$s' = s + i_2$，因此，
+\[ r' s' = (r + i_1) (s + i_2) = rs + r i_2 + i_1 s + i_1 i_2\]
+根据理想的吸收性，$r i_2 + i_1 s + i_1 i_2 \in I$，所以，$r's' \in rs + I $。
+\end{proof}
+
+\begin{alertblock}{课后练习}
+商环乘法的封闭性、结合律和分配律留作课后练习。
+\end{alertblock}
+
+}
+
+\frame{\frametitle{商环}
+\begin{theorem}
+设$R$是环，$I$是$R$中的理想。商群$R/I$在陪集加法与以上引理中定义的乘法上形成环，
+称为$R$模$I$的商环，同样记为$R/I$。
+\end{theorem}
+}
+
+\frame{\frametitle{商环}
+\begin{example}
+\label{exm:quo_ring}
+任取$n \in \Z$，$n\Z = \langle n \rangle$是整数环$\Z$的主理想，则$\Z / n \Z$是商环，其中元素
+刚好构成模$n$的完全剩余系。
+\end{example}
+}
+
+\frame{\frametitle{环的标准同态与第一同构定理}
+\begin{definition}
+	设$I$是环$R$的理想，定义环同态映射$\phi : R \mapsto R / I$为：对任意$r \in R$，$\phi(r) = r + I$ 。
+    并称该映射为环的\emph{标准同态}或者\emph{自然同态}，且$\mbox{Ker}\; \phi = I$。 
+\end{definition}
+
+\begin{theorem}
+[第一同构定理.] 
+设$\psi: R \mapsto S$是环同态，记$K= \mbox{Ker\;} \psi$是$R$的理想。如果$\phi: R \mapsto R/K$
+是标准同态，则存在唯一同构$\eta: R/K \mapsto \psi(R)$使得$\psi = \eta \phi$。
+\end{theorem}
+}
+\frame{\frametitle{环的标准同态与第一同构定理}
+\begin{proof}
+根据群论的第一同构定理，在$R$的加法群与$R$模$K$的加法商群之间，
+存在唯一的良定义的群同构$\eta: R/K \mapsto \psi(R)$。
+该映射定义为，对任意的$r \in R$，有
+\[\eta(r + K) = \psi(r)\]
+要证明$\eta$是一种环同态，只需要证明，对任意的$r, s \in R$，有
+$\eta((r+K)(s+K))= \eta(r+K)\eta(s+K)$。
+然而，这是容易的，因为
+\begin{eqnarray*}
+\eta((r+K)(s+K)) &=& \eta(rs + K)\\
+                                  &=& \psi(rs)\\
+                                  &=& \psi(r)\psi(s)\\
+                                  &=& \eta(r+K)\eta(s+K)                                  
+\end{eqnarray*}
+\end{proof}
+}
+\frame{\frametitle{环的标准同态与第一同构定理}
+\begin{example}
+\label{exm:Zn_mod_nZ}
+任取$n \in \Z$，构造映射$\phi: \Z \mapsto \Z_n$为，任取$a \in \Z$，$\phi(a) = a \bmod{n}$。可验证，这是
+一个环同态映射，且是满射。$\mbox{Ker}\; \phi = n \Z$，因为所有$n$的倍数都映射为$0$。根据第一同构定理，
+$\Z / n \Z \cong \Z_n$。
+\end{example}
+}
+
+\section{Field (域)}
+\subsection{定义与实例}
+\frame{\frametitle{域的定义}
+\begin{definition}
+如果一个带单位元的交换环$R$中的非$0$元素都存在唯一的乘法逆元，即
+$\forall a \in R$且$a \neq 0$，则存在唯一的$a^{-1}\in R$使得$a  a^{-1} = a^{-1}a =1$，则称这种代数结构
+为域。
+\end{definition}
+}
+
+\frame{\frametitle{域--实例}
+\begin{example}
+\begin{enumerate} 
+\item 在普通的加法与乘法上，$\mathbb{Q}, \mathbb{R}, \mathbb{C}$都是域。$\Z$不是域，因为乘法上$\Z$不是群。
+
+\item 任意给定素数$p$，在模$p$的加法与乘法上$\Z_p$是域。因为$\Z_p$在加法上是阿贝尔群，而$\Z_p^*$在乘法上
+也是阿贝尔群。对任意合数$n\in \Z$，$\Z_n$则不是域，因为$\Z_n - \{ 0\}$乘法上不成群。
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{域的乘法逆元与零因子}
+\begin{prop}[乘法逆元与零因子.]
+对任意的域$F$，任取$a, b \in F$，如果$ab = 0$则$a = 0$或者$b = 0$。即域中不存在零因子。
+\end{prop}
+
+\begin{proof}
+不妨设$a \neq 0$，否则证完。因为$a \neq 0$，则存在$a$的乘法逆元$a^{-1} \in F$且$a^{-1} \neq 0$，使得$a a^{-1} =1$。
+等式$ab = 0$两边乘上$a^{-1}$，根据之前的命题，则$b = 0$。
+\end{proof}
+}
+
+\subsection{整环与域}
+\frame{\frametitle{域的乘法逆元与零因子}
+\begin{prop}[整环与域.]
+每一个有限整环都是域。
+\end{prop}
+
+\begin{proof}
+证明的思路就是利用有限整环的性质，为每一个非$0$元素找到乘法逆元。
+设$D$是一个有限整环，记$D^*$为环中所有非$0$元素的集合。对任意的$a \in D^*$，
+构造映射$\lambda_a : D^* \mapsto D^*$为$\lambda_a(d) = ad$，$\forall d \in D^*$。
+首先，证明这确实是合理的映射，因为如果$a \neq 0$，$d \neq 0$，则$ad \neq 0$。
+然后，因为$D^*$是有限集且$\lambda_a$是从$D^*$到$D^*$的单射，所以$\lambda_a$必然是满射。
+因此，必然存在某个$d\in D^*$使得$ad = 1$，又因为$D$是交换环，所以这个$d$就是$a$的乘法逆元。
+结论：可为$D$中每一个非零元素都找到乘法逆元，所以$D$是一个域。
+\end{proof}
+}
+
+\frame{\frametitle{域的乘法逆元与零因子}
+\begin{alertblock}{注意.}
+由以上证明，读者能体会出为什么要求整环是交换环吗？
+\end{alertblock}
+}
+
+\subsection{特征}
+\frame{\frametitle{特征 (Characteristic)}
+\begin{definition}[特征.]
+环$R$的\emph{特征}（\emph{characteristic}）
+定义为最小的正整数$n$使得对任意的$r\in R$，$\underbrace{r + r + \cdots + r}_{n\mbox{个}} = nr = 0 $。
+如果不存在这样的$n$，则$R$的特征定义为$0$。
+\end{definition}
+
+\begin{example}
+\label{exm:char}
+\begin{enumerate} 
+\item 环$\mathbb{Q}, \mathbb{R}, \mathbb{C}$的特征都是$0$。
+
+\item 对任意素数$p$，域$\Z_p$的特征是$p$。因为$\Z_p$加法群的阶为$p$，
+即对任意的$a \in \Z_p$，$pa = 0$。
+\end{enumerate}
+\end{example}
+}
+
+\frame{\frametitle{特征的属性}
+\begin{lemma}
+设$R$为环，若$1$在加法群的阶为$n$，则$R$的特征为$n$。
+\end{lemma}
+
+\begin{proof}
+若$1$在加法群的阶为$n$，则$n$是最小正整数使得$n1 = 0$。那么，任取$r\in R$，有：
+\[n r = n(1 r) = (n1)r = 0r = 0\]
+即$n$是$R$的特征。
+\end{proof}
+}
+
+\frame{\frametitle{特征的属性}
+\begin{prop}
+整环的特征或者为素数，或者为$0$。
+\end{prop}
+
+\begin{proof}
+设整环$D$的特征为$n$，且$n \neq 0$。
+如果$n$不是素数，则$n = a b$，且$1 < a, b < n$。
+根据以上引理，有
+\[ 0 = n 1 = (ab)1 = (a1)(b1)\]
+因为$D$是整环，$D$中无零因子，所以必然$a1 = 0$或者$b1=0$。
+但是这都意味着$D$的特征小于$n$，矛盾。
+\end{proof}
+}
+
+\frame{\frametitle{域的特征与阶的关系}
+\begin{prop}[有限域的特征.]
+阶为$n$的有限域$F$的特征是一个素数$p$，且$p\mid n$。
+\end{prop}
+
+\begin{proof}
+因为有限域$F$的阶为$n$，且$F$是加法群，
+所以对任意的$a\in F$，有$na = 0$。
+所以，$F$的特征必然是素数$p$，且$p \mid n$。
+\end{proof}
+}
+
+\frame{\frametitle{有限域的阶}
+以下不加证明给出另一个重要结论。
+\begin{prop}[有限域的阶]
+如果有限域$F$的特征是素数$p$，则$F$的阶是$p^n$，$n$是某个正整数。
+进一步，对任意的素数$p$和正整数$n$，存在阶为$p^n$的有限域，并且
+所有的$p^n$阶有限域都同构。
+\end{prop}
+
+\begin{example}
+$p^n$阶的有限域也记为$\mbox{GF}(p^n)$，$\mbox{GF}$是Galois Field的缩写。
+\end{example}
+}
+
+\subsection{域的理想}
+\frame{\frametitle{域的理想}
+\begin{prop}[域的理想]
+任何一个域$F$的理想只有$0$和自己本身$F$。
+\end{prop}
+\begin{proof}
+首先，已知$0$和$F$都是$F$的理想。
+设$I$是域$F$的非$0$理想，则存在非零元素$a \in I$。因为$F$是域，则存在$a$的乘法逆元$a^{-1} \in F$。
+根据理想的吸收性，$a^{-1}a = 1 \in I$。包含$1$的理想$I$等于$F$，即$I = F$。
+\end{proof}
+}
+
+\frame{\frametitle{域同态是单射}
+\begin{prop}[域同态是单射.]
+任何一个域同态或者是单射或者是零同态。
+\end{prop}
+
+\begin{proof}
+域$F_1$到域$F_2$的域同态$\phi$是单射，当且仅当$\mbox{Ker}\; \phi = \{0\} \subset F_1$。
+因为$F_1$的理想只有$0$和$F_1$本身，所以当$\mbox{Ker}\; \phi = \{0\} $时$\phi$是单射，
+而当$\mbox{Ker}\; \phi = F_1$时，$\phi$是零同态。
+\end{proof}
+}
+
+\frame{\frametitle{极大理想与素理想}
+\begin{definition}[极大理想.]
+设$R$是环，$M$是$R$的真子集且是$R$的理想，则称$M$是$R$的\emph{真理想}。
+设$M$是$R$的真理想，
+如果$M$不是$R$的任意真理想的真子集，则称
+$M$是\emph{极大理想}（\emph{maximal ideal}）。
+即如果$M$是$R$的极大理想，则对$R$的任意理想$I$，若$M \subset I$，则$I = R$。
+\end{definition}
+\pause
+
+\begin{definition}[素理想.]
+    设$P$是交换环$R$的真理想，如果对任意$ab \in P$，则或者$a \in P$，或者$b \in P$，
+    就称$P$为\emph{素理想}（\emph{Prime Ideal}）。
+\end{definition}
+}
+
+
+\frame{\frametitle{极大理想与素理想}
+\begin{example}
+素理想的“素”确实有“素数”的意味。
+设$p$为素数，如果$p \mid ab$，则$p \mid a$或$p \mid b$。请体会素理想定义中要求与之类似之处：
+对任意$ab \in P$，则$a \in P$或$b \in P$。令$P=p \Z$，$p$是任意素数，$a \in P$当且仅当$p \mid a$。
+所以，从整数的角度上看，素理想确实是素数的倍数形成的理想。当然，理想不能仅停留于此，还需要进一步的抽象，
+但是这个例子告诉我们，抽象代数的“抽象”并非凭空而出，往往源自于具体的实例。
+\end{example}
+}
+
+\frame{\frametitle{极大理想与素理想}
+\begin{example}
+设$P = \{0, 2, 4, 6\}$为环$\Z_8$的理想，可验证$P$是极大理想，也是素理想。
+任取素数$p$，则$p \Z$是$\Z$的素理想。
+\end{example}
+}
+
+\frame{\frametitle{极大理想与域}
+\begin{theorem}[极大理想与域.]
+设$R$是交换环，$M$是$R$的理想，则$M$是$R$的极大理想，当且仅当$R/M$是域。
+\end{theorem}
+}
+
+\frame{\frametitle{极大理想与域}
+\begin{proof}
+\begin{enumerate}
+\item $\Rightarrow.$ 由条件可知$R/M$是交换环，只需要证明$R/M$中所有非零元都有乘法逆元，则$R/M$是域。%即不包括0 + M
+定义环同态$\phi: R \mapsto R/M$为$\phi(r) = r + M$，$\forall r \in R$。任取$r \in R$且$r \not \in M$，构造主理想$\langle r + M \rangle$。
+因为$\phi$是环同态，所以$I = \phi^{-1}(\langle r + M \rangle)$是$R$中的理想。并且$M$是$I$的真子集，因为$r\in I$但是$r\not \in M$。
+又因为$M$是极大理想，所以$I = R$。因此有：$$\phi(1) = 1 + M \in \langle r + M \rangle$$
+即存在$s \in R$使得$1 + M = (r + M) (s + M)$。因此，$r + M$有乘法逆元。
+%以上证明源自这里。
+%https://ttjones.wordpress.com/2011/08/29/rm-is-a-field-iff-m-is-maximal/ 
+\end{enumerate}
+\end{proof}
+}
+
+\frame{\frametitle{极大理想与域}
+\begin{proof}
+\begin{enumerate}
+
+\item $\Leftarrow.$ 因为$R/M$是域，所以它至少包含两个元素$0 + M$和$1 + M$，即$M$是$R$的真理想。假设存在$R$的理想$I$，且$M$是$I$的真子集，
+只需证$I = R$，则可证明$M$是$R$的极大理想。取$a \in I$且$a \not \in M$，可知$a + M$是域$R/M$的非零元素。因此存在$b + M \in R/M$使得：
+\[(a +M)(b +M) = ab +M = 1 + M \]
+即存在$m \in M$使得$ ab + m = 1$，根据环的封闭性和理想的“吸收性”，可知$1 \in I$。所以，$I = R$。
+\end{enumerate}
+\end{proof}
+}
+
+\frame{\frametitle{极大理想与域}
+\begin{example}
+任取素数$p$，已知$p \Z$是$\Z$的素理想。因为$\Z / p\Z \cong \Z_p$，$\Z_p$是域，所以$p \Z$是$\Z$的极大理想，
+\end{example}
+}
+
+\frame{\frametitle{素理想与整环}
+\begin{theorem}[素理想与整环.]
+设$R$是交换环，$P$是$R$的理想，则$P$是$R$的素理想，当且仅当$R/P$是整环。
+\end{theorem}
+}
+
+\frame{\frametitle{素理想与整环}
+\begin{proof}
+\begin{enumerate}
+\item $\Rightarrow$. 设$P$是素理想，若$R/P$中的两个元素使得：
+\[(a + P) (b + P) = ab + P = 0 + P = P\]
+可知，$ab \in P$。不失一般性，若$a \not \in P$，则根据素理想的定义，有$b \in P$。因此，有$b + P = 0 + P$。即$R/P$是整环。
+
+\item $\Leftarrow$. 设$P$是$R$的理想，且$R/P$是整环。假定$ab \in P$。则有：
+\[(a + P) (b + P) = ab + P = 0 + P = P\]
+根据整环属性，则或者$a + P = P$成立，或者$b + P = P$成立。这意味着，或者$a \in P$或者$b \in P$。说明$P$必须是素理想。
+\end{enumerate}
+\end{proof}
+}
+
+\frame{\frametitle{素理想与整环}
+\begin{example}
+设$p$是素数，则$p \Z$是$\Z$的理想。可知，$p \Z$是$\Z$的极大理想，因为$\Z / p \Z \cong \Z_p$是域。
+\end{example}
+}
+
+\frame{\frametitle{极大理想与素理想}
+\begin{cor}[极大理想与素理想.]
+交换环的每一个极大理想都是素理想。
+\end{cor}
+
+\begin{proof}
+容易。因为，所有的域都是整环。
+\end{proof}
+
+}
+
+\end{document}
