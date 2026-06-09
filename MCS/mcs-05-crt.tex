@@ -1,0 +1,446 @@
+% This text is a supplement of CINTA.
+% May. 2018
+% Author: Libin Wang
+% SCNU
+% additional use of \usepackage{beamerthemesplit}
+\documentclass{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xeCJK}
+%\usepackage[CJKbookmarks]{hyperref}
+
+%% Support Chinese with TeX Live fonts.
+
+\setCJKmainfont[
+  BoldFont=FandolHei-Regular.otf,
+  ItalicFont=FandolKai-Regular.otf,
+  BoldItalicFont=FandolKai-Regular.otf
+]{FandolSong-Regular.otf}
+\setCJKsansfont[AutoFakeBold, AutoFakeSlant]{FandolHei-Regular.otf}
+\setCJKmonofont{FandolFang-Regular.otf}
+
+%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
+
+\setmainfont{Times New Roman} % 设置默认英文衬线字体
+
+\setCJKfamilyfont{ls}{FandolSong-Regular.otf} %定义字体
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{beamerthemesplit} % new 
+\usepackage{beamerthemeshadow}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{amsmath, amsfonts, amssymb}
+
+%% Setup for Code
+\usepackage{listings}
+\lstset{language = Python,
+	showstringspaces = false,
+	columns = fullflexible,
+	numbers = left,
+	numberstyle = \tiny,
+	frame = single}
+%Can't work!
+%\usepackage{minted}
+
+%%\newproof{pf}{Proof} 
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{fact}[theorem]{Fact}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{rema}[theorem]{Remark}
+\newtheorem{clam}[theorem]{Claim}
+\newtheorem{exm}[theorem]{Example}
+%\title{A Concrete Introduction to Number Theory and Algebra--CRT} 
+\title{Mathematics for Computer Science -- CRT} 
+\author{Libin Wang} 
+\institute{School of Computer Science, South China Normal University}
+\date{\today} 
+
+\begin{document}
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of contents}\tableofcontents} 
+
+
+\section{The Chinese Remainder Theorem（中国剩余定理）-- 数论视角.} 
+\frame{\frametitle{导引.} 
+数论部分，主要目标是解方程。群论部分，主要目标是群结构。
+
+\begin{block}{思路.}
+\begin{itemize}
+	\item 数论部分，目前我们学习解方程方法包括：一元一次同余方程，一元$n$次同余方程。接下来需要扩展到一元同余方程组的解法。未来是多元同余方程等等。
+	\item 群论部分，主要目标是群结构。群结构与解同余方程有什么关系吗？
+\end{itemize}
+\end{block}
+\pause
+
+\begin{alertblock}{目标}
+	给出一种求解一元一次同余方程组的高效算法；探讨群结构与解同余方程组的关系。
+\end{alertblock}
+
+
+}
+
+\frame{\frametitle{导引.} 
+Chinese Remainder Theorem（中国剩余定理），或称为\emph{中国余数定理}则更准确。
+
+\begin{block}{历史.}
+中国剩余定理有着满满的中国传统文化元素，与之相关的名人包括：春秋时期的孙子、秦汉时期的韩信、宋朝的沈括和秦久韶等。
+南北朝时期（公元5世纪）的数学著作《孙子算经》卷下第二十六题所谓“物不知数”问题则为国人所熟知：
+有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二。问物几何？
+\end{block}
+}
+
+\frame{\frametitle{Motivation.} 
+中国剩余定理
+讨论一元同余方程组的高效解法。
+	\begin{example}[Example 1.]
+	Suppose we wish to solve:
+\begin{align*}
+		    x \equiv  2\pmod{5}\\
+		    x \equiv  3\pmod{7}
+\end{align*}
+	\end{example} \pause
+
+\begin{block}{Solution.}
+	1. We have $x = 5t + 2$ from the first congruence, for $t \in \mathbb{Z}$;\pause
+	
+	2. Substitute for $x$ in the second congruence, $ 5t + 2 \equiv 3  \pmod{7}$;\pause
+	
+	3. Simplifying, we get $5t \equiv 1 \pmod{7}$;\pause
+	
+	4. Multiplying both sides by $5^{-1}$, we get $t = 7s + 3$ for $s \in \mathbb{Z}$;\pause
+	
+	5. Finally, $x = 35s + 17$, which means $x \equiv 17 \pmod{35}$.
+	
+\end{block}
+}
+
+\frame{\frametitle{Question.} 
+	\begin{block}{思考.}
+	以上求解一元同余方程组的方法是否高效？如果不高效，能否给出更高效的算法？
+	\end{block} 
+}
+
+\frame{\frametitle{The Chinese Remainder Theorem--CRT.} 
+	For any system of equations like this, the \emph{Chinese Remainder Theorem}, short for CRT, tells us there is always a unique solution up to a certain modulus, and describes how to find the solution efficiently.
+	\begin{theorem}
+	     Let $p, q$ be primes, $n = pq$. For each $a \in \mathbb{Z}_p$, $b \in \mathbb{Z}_q$, there is a unique $x$, $0 \leq x < n$ such that
+	     $x \equiv a\pmod{p}$ and $x \equiv b\pmod{q}$.
+	\end{theorem}
+}
+
+\frame{\frametitle{The Chinese Remainder Theorem--CRT.} 
+	\begin{theorem}
+		Let $p, q$ be two relatively prime positive integers, $n = pq$. For each $a \in \mathbb{Z}_p$, $b \in \mathbb{Z}_q$, there is a unique $x$, $0 \leq x < n$ such that
+		$x \equiv a\pmod{p}$ and $x \equiv b\pmod{q}$.
+	\end{theorem}
+Proof Idea
+\begin{enumerate}
+\item Given $a$ and $p$, how can we find some $c$ s.t. $a c \equiv a \pmod{p}$? \pause
+
+\item $c$ must be some $1$ under modulo $p$\pause
+
+\item 模$p$下为$1$的数可能有哪些（可参考CINTA 附录D.）? \pause
+
+\item Find some $c$ s.t. $a c c^{-1} \equiv a \pmod{p}$ \pause
+
+\item Then $x$ must be something like that $x = (a c c^{-1} + b d d^{-1})$, what should be $c$ and $d$?
+\end{enumerate}
+}
+
+\frame{\frametitle{The Chinese Remainder Theorem--CRT.} 
+	\begin{theorem}
+		Let $p, q$ be coprime positive integers, $n = pq$. For each $a \in \mathbb{Z}_p$, $b \in \mathbb{Z}_q$, there is a unique $x$, $0 \leq x < n$ such that
+		$x \equiv a \pmod{p}$ and $x \equiv b \pmod{q}$.
+	\end{theorem}
+
+\begin{proof}
+	By construction. Since $p, q$ are coprime, there exist $p_1$ and $q_1$ such that $p_1 \equiv p^{-1}  \pmod{q}$ and $q_1 \equiv q^{-1} \pmod{p}$. Define $x$ by:
+		\[
+		x = a q q_1 + b p p_1
+		\]
+	It is easy to check that $x$ satisfies both equations.
+	It remains to show no other solutions exist modulo $n$. Suppose $\exists z \neq x$ is another solution. Then $(z - x ) = tp$ and $(z - x) = sq$, for some $t, s \in \mathbb{Z}$. 
+	Since $p$ and $q$ are coprime, then $(z - x) = kpq$, for $k \in \mathbb{Z}$. Hence $z \equiv x \pmod{n}$. 
+	
+\end{proof}
+}
+
+\frame{\frametitle{Example.} 
+	\begin{example}[Example 2.]
+		Suppose we wish to solve:
+		
+		\begin{align*}
+		    x \equiv  2\pmod{5}\\
+		    x \equiv  3\pmod{7}
+		\end{align*}
+		
+	\end{example}
+
+\begin{block}{Solution.}
+	1. Let $a=2$, $b = 3$, $p = 5$, $q = 7$, $n = pq = 35$;
+	
+	2. Compute $p_1 \equiv p^{-1} \pmod{q}$ and $q_1 \equiv q^{-1}\pmod{p}$ using $\operatorname{egcd}$ algorithm; $p_1 = 3 $, $q_1 = 3$;
+	
+	3. $ x \equiv a q q_1 + b p p_1 \pmod{n}$; $ x \equiv 17 \pmod{35}$;
+	
+	4. It is easy to check that $x$ is a correct solution.	
+\end{block}
+}
+
+\frame{\frametitle{Exercise.} 
+	\begin{block}{求解以下方程.}
+		Suppose we wish to solve:
+		\begin{align*}
+				    x \equiv  3\pmod{11}\\
+				    x \equiv  4\pmod{13}
+		\end{align*}
+		
+	\end{block}
+\pause
+\begin{block}{Ans.}
+	$69$
+\end{block}
+}
+
+\frame{\frametitle{Generalization.} 
+	For several equations, we have a generalized version of CRT.
+\begin{theorem}
+	Let $m_1, m_2, \ldots, m_n$ be a set of pairwise relatively prime positive integers. Then the system of $n$ equations:
+	\begin{align*}
+	  x &\equiv a_1 \pmod{m_1}\\
+	    &\cdots \\
+	  x &\equiv a_n \pmod{m_n}
+	\end{align*}
+	has a unique solution for $x$ modulo $M$ where $M = m_1 m_2 \ldots m_n$.
+\end{theorem}	
+
+}
+
+\frame{\frametitle{Generalization.} 
+	\begin{proof}
+		By construction. Let $M= \prod_{i = 1}^{n} m_i$, $b_i = M/m_i$, $b_i' = b_i ^{-1} \pmod{m_i}$. Then 
+		\[
+		y = \sum_{i=1}^{n} a_i b_i b_i' \pmod{M}
+		\]
+		is the unique solution.
+	\end{proof}
+}
+
+\frame{\frametitle{思考题-1.}
+\begin{block}{思考题.}
+设$m$和$n$为互素的正整数，$a>0$为一个正整数，如果
+\begin{align*}
+x &\equiv a \pmod{m}\\
+x &\equiv a \pmod{n}
+\end{align*}
+$x$模$mn$等于什么？为什么？
+\end{block}
+}
+
+\frame{\frametitle{思考题-2.} 
+	如果同余方程组的模数$m_1, m_2, \ldots, m_n$不两两互质，那么上述方程组是否还有解？如果有解，怎么求？请思考下面这题。
+\begin{block}{思考题.}
+	判定下列两个同余方程组是否有解。若有，求出模适当模数下的所有解。
+\[
+\text{(a)}\;
+\begin{cases}
+x \equiv 7 \pmod{12} \\
+x \equiv 3 \pmod{8}
+\end{cases}
+\qquad\qquad
+\text{(b)}\;
+\begin{cases}
+x \equiv 5 \pmod{12} \\
+x \equiv 2 \pmod{8}
+\end{cases}
+\]
+\end{block}	
+\pause
+
+\begin{block}{思路}
+	模数不互素，也就是说有大于$1$的公共因子$d$，这个$d$能起到什么作用？其次，反向应用思考题-1的结论，从一个方程式化为多个方程式。
+\end{block}
+}
+
+\section{CRT的抽象代数视角.}
+
+\frame{\frametitle{A perspective from Abstract Algebra.} 
+提醒：本节关注的不是算法，而是CRT背后的思想。
+	\begin{block}{Motivation.}
+		Let $n = pq$, where $p,q > 1$ are relatively prime. Given a positive integer $x$, it can be expressed as a unique pair $\bigl([x \bmod p], [x \bmod q ]\bigr)$.
+	\end{block}
+}
+
+\frame{\frametitle{A perspective from Abstract Algebra.} 
+\begin{theorem}
+	Let $p, q > 1$ be coprime, $n = pq$. Then
+	\[
+	\mathbb{Z}_n \cong \mathbb{Z}_p \times \mathbb{Z}_q \quad (\text{as an additive group})\] 
+	and,
+	\[ \quad \mathbb{Z}_n^* \cong \mathbb{Z}_p^* \times \mathbb{Z}_q^* \quad (\text{as a multiplicative group}).
+	\]
+\end{theorem}
+
+\begin{proof}
+1. Define $\phi: \mathbb{Z}_n \to \mathbb{Z}_p \times \mathbb{Z}_q$ by:
+\[
+\phi(x) \triangleq \bigl([x \bmod p ], [x \bmod q]\bigr)
+\]
+
+2. Show $\phi$ is bijective.
+
+3. Check that $\phi(x)$ preserves the group operation.\pause
+
+The proof that it is an isomorphism from $\mathbb{Z}_n^*$ to $\mathbb{Z}_p^* \times \mathbb{Z}_q^*$ is similar.
+\end{proof}
+}
+
+\frame{\frametitle{Remark.}
+\begin{rema}
+首先，注意到$\mathbb{Z}_p \times \mathbb{Z}_q$是加法群，请验证！
+\end{rema}
+}
+
+\frame{\frametitle{How to prove the bijection?}
+\begin{proof}
+证明映射$\phi$是一种双射，即证明$\phi$是满射且单射。满射显然，因为根据
+中国剩余定理，任意序对中的两个同余式在模$n$下存在唯一解。证明单射即证明，
+如果对任意整数$0 \le a, b < n$，有
+$\bigl([a \bmod p ], [a \bmod q ]\bigr) = \bigl([b \bmod p], [b \bmod q]\bigr)$，则$a = b$。再次根据
+中国剩余定理可得。
+\end{proof}
+} 
+
+\frame{\frametitle{How to prove the isomorphism?}
+\begin{proof}
+证明映射$\phi$保持群操作，即需要证明：
+\begin{align*}
+\phi(a+b) &= \bigl([(a+b) \bmod p ], [(a+b) \bmod q]\bigr) \\
+          &= \bigl([a \bmod p ], [a \bmod q] \bigr) + \bigl([b \bmod p ], [b \bmod q ]\bigr)\\
+          &= \phi(a) + \phi(b)
+\end{align*}
+\end{proof}
+}
+
+\frame{\frametitle{Example.} 
+	\begin{example}[Example 3.]
+		Take $n = 15 = 5 \cdot 3$.
+		$\mathbb{Z}_n^* = \{ 1, 2, 4, 7, 8, 11, 13, 14\}$ is isomorphic to $\mathbb{Z}_5^* \times \mathbb{Z}_3^*$ since we can give the following correspondence:
+		\[
+		1 \leftrightarrow (1, 1) \quad 2 \leftrightarrow(2,2) \quad 4 \leftrightarrow (4,1) \quad 7 \leftrightarrow (2,1)
+		\]
+		\[
+		8 \leftrightarrow (3,2) \quad 11\leftrightarrow(1,2) \quad 13 \leftrightarrow (3,1) \quad 14 \leftrightarrow (4,2)
+		\]
+	\end{example}
+}
+
+\frame{\frametitle{Example.} 
+	\begin{example}[Example 4.]
+		To compute $14\cdot 13 \bmod 15$. Since $14 \leftrightarrow (4, 2)$ and $13 \leftrightarrow (3, 1)$, we have:
+		\[
+		(4, 2) \cdot (3, 1) = ([4\cdot 3 \bmod 5], [2\cdot 1\bmod 3]) = (2,2).
+		\]
+		Note that $(2, 2) \leftrightarrow 2$, which is the correct answer.
+	\end{example}
+}
+
+\frame{\frametitle{Example.} 
+	\begin{example}[Example 5.]
+		To compute $11^{53} \bmod 15$. Since $11 \leftrightarrow (1, 2)$ and $2 \equiv -1  \bmod 3$ we have:
+		\[
+		(1, 2)^{53} = ([1^{53} \bmod 5], [(-1)^{53} \bmod 3]) = (1, -1 \bmod 3) = (1, 2).
+		\]
+	 Thus, $11^{53} \bmod 15 = 11$ 
+	\end{example}
+}
+
+\frame{\frametitle{Example.} 
+\begin{example}[Example 6.]
+\label{exm:eq_sqr_cong}
+	设$n = p \cdot q$为合数，$p$和$q$是两个不同的奇素数。以下等式在模$n$的意义上有多少个解？
+	\[ x^2 \equiv 1 \pmod{n}\]
+为此，需要解以下两个同余方程
+	\begin{align*}
+	x^2 &\equiv 1 \pmod{p} \\
+	x^2 &\equiv 1 \pmod{q}
+	\end{align*}
+以上两式分别有两个不同的解。因此在模$n$的意义上总共有$4$个解。
+同时，这也就解决了上一章的一个遗留问题。
+\end{example}
+}
+
+\frame{\frametitle{Example.} 
+	\begin{example}[Example 7.]
+		To compute $12^{12} \bmod 143 $ \pause
+		解：
+		\begin{itemize}
+		\item 记$n = 143$，$n = p \cdot q = 13 \cdot 11$；
+		
+		\item 求：$12^{12} \bmod 13$ 和 $12^{12} \bmod 11 $；
+		
+		\item 所以，$12^{12} \bmod 143  = 1$.
+		\end{itemize}
+	\end{example}
+	
+}
+
+
+\frame{\frametitle{Little thought.} 
+	\begin{rema}
+		A practical application: if we have many computations to perform on $x \in \mathbb{Z}_n^*$
+		(e.g. RSA signing and decryption), we can convert $x$ to $(a, b) \in \mathbb{Z}_p^* \times \mathbb{Z}_q^*$
+		and do all the computations on $a$ and $b$
+		instead before converting back. 
+		
+		This is often cheaper because for many algorithms, doubling the size of the input more than doubles the running time.
+	\end{rema}
+}
+
+
+\frame{\frametitle{Homework.} 
+	\begin{block}{Homework.}
+		1. Use CRT to solve:
+		\begin{align*}
+		x &\equiv 8 \pmod{11} \\
+		x &\equiv 13 \pmod{19}
+		\end{align*}
+		
+		2. Use CRT to solve the system of congruences:
+			\begin{align*}
+			x &\equiv 1 \pmod{5}\\
+			x &\equiv 2 \pmod{7}\\
+			x &\equiv 3 \pmod{9}\\
+			x &\equiv 4 \pmod{11}
+		\end{align*}
+		% ans = 1731
+		
+		3. Write a program (in C or Python) to solve CRT.	
+	\end{block}
+
+}
+
+\frame{\frametitle{Homework.} 
+	\begin{block}{Homework.}
+		4. Complete the proof that  it is an isomorphism from $\mathbb{Z}_n^*$ to $\mathbb{Z}_p^* \times \mathbb{Z}_q^*$.
+		
+		5. Let $p = 5$ and $q = 7$, $n = p \cdot q$. Please explicitly give the correspondence between $\mathbb{Z}_n^*$ and $\mathbb{Z}_p^* \times \mathbb{Z}_q^*$. Hint: Programming is permitted.
+	\end{block}
+	
+}
+
+\frame{\frametitle{Homework.} 
+	\begin{block}{Homework.}
+		6. 求解$x^{113} \equiv 15 \pmod{221}$[提示：这是一道似曾相识的习题，然而中国剩余定理能保证你顺利完成目标。]
+		
+	\end{block}
+	
+}
+\end{document}

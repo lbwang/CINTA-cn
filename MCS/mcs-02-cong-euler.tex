@@ -1,0 +1,1014 @@
+% This text is a supplement of CINTA.
+% May. 2018
+% Author: Libin Wang
+% SCNU
+% additional use of \usepackage{beamerthemesplit}
+\documentclass{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xeCJK}
+%\usepackage[CJKbookmarks]{hyperref}
+
+%% Support Chinese with TeX Live fonts.
+
+\setCJKmainfont[
+  BoldFont=FandolHei-Regular.otf,
+  ItalicFont=FandolKai-Regular.otf,
+  BoldItalicFont=FandolKai-Regular.otf
+]{FandolSong-Regular.otf}
+\setCJKsansfont[AutoFakeBold, AutoFakeSlant]{FandolHei-Regular.otf}
+\setCJKmonofont{FandolFang-Regular.otf}
+
+%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
+
+\setmainfont{Times New Roman} % 设置默认英文衬线字体
+
+\setCJKfamilyfont{ls}{FandolSong-Regular.otf} %定义字体
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{beamerthemesplit} % new 
+\usepackage{beamerthemeshadow}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{amsmath, amsfonts, amssymb}
+
+%% Setup for Code
+\usepackage{listings}
+\lstset{language = Python,
+	showstringspaces = false,
+	columns = fullflexible,
+	numbers = left,
+	numberstyle = \tiny,
+	frame = single}
+
+%%\newproof{pf}{Proof} 
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{fact}[theorem]{Fact}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lem}[theorem]{Lemma}
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{rema}[theorem]{Remark}
+\newtheorem{clam}[theorem]{Claim}
+\newtheorem{exm}[theorem]{Example}
+
+%\title{A Concrete Introduction to Number Theory and Algebra -- Chapter 3-4} 
+\title{Mathematics for Computer Science -- 2} 
+\author{Libin Wang} 
+\institute{School of Computer Science, South China Normal University}
+\date{\today} 
+
+\begin{document}
+
+\frame{\titlepage} 
+
+\frame{\frametitle{Table of contents}\tableofcontents} 
+
+\section{Congruence} 
+\frame{\frametitle{Definition of congruence（同余）.} 
+“同余”这个概念是CSers的好朋友。
+	\begin{definition}
+		We say that \textit{$a$ is congruent to $b$ modulo $m$}, and we write 
+		\[a \equiv b \;(\text{mod}\; m),\]
+		if $m$ divides $a - b$. The number $m$ is called the \textit{modulus}（模数） of the congruence.
+	\end{definition}
+
+}
+
+\frame{\frametitle{Notations of congruence（同余的表达）.}
+
+\begin{exampleblock}{Some notations.} 
+	$a \equiv b \pmod{m} \iff$ 
+\begin{itemize}
+\item $\exists k\in \mathbb{Z}$, $a = km + b$. 
+
+\item $(a \bmod m) = (b \bmod m)$
+
+\item $m \mid (a - b)$
+\end{itemize}
+\end{exampleblock}
+
+\pause
+\begin{block}{提示.}
+
+	表达是思维的指针。
+	
+\end{block}
+}
+
+\frame{\frametitle{Congruence--例.} 
+
+\begin{exm}
+\[26 \equiv 8 \pmod{9} \qquad \text{and}\qquad 6 \equiv 55 \pmod{7},\]
+since 
+\[9 | (26 - 8)\qquad \text{and}\qquad 7 | (6 - 55),\]
+or, equivalently:
+\[ 8 = 26 - 2 \cdot 9 \qquad \text{and}\qquad 55 = 6 + 7 \cdot 7.\]
+\end{exm}
+
+}
+
+\frame{\frametitle{Properties of Congruence.} 
+    \begin{lem}
+       	If $a_1 \equiv b_1 \pmod{m}$ and $a_2 \equiv b_2 \pmod{m}$, then
+       
+       \[a_1 \pm a_2 \equiv b_1 \pm b_2 \pmod{m}\]
+       
+       and
+       
+       \[a_1  a_2 \equiv b_1 b_2 \pmod{m}\]
+    \end{lem}
+课堂练习！
+}
+
+\frame{\frametitle{Properties of Congruence.} 
+	\begin{exampleblock}{练习}
+		 假设$x \equiv a \pmod{n}$，且$n = p \cdot q$，$p, q$是两个素数。请证明，因此必然有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$。
+	\end{exampleblock}
+}
+
+\frame{\frametitle{Modular Arithmetic(模算术).} 
+	\begin{exampleblock}{Examples}
+			Since $10000 \equiv 1 \pmod{3}$ and $998 \equiv 2 \pmod{3}$, then
+			\[ 10000 \cdot 998 \equiv 2 \pmod{3}.\]
+	\end{exampleblock}
+}
+
+\frame{\frametitle{Modular Arithmetic--Exercises.} 
+	\begin{exampleblock}{练习}
+		计算以下等式：
+		\[7^{500} \bmod 8\]
+		\[ 1! + 2! + 3! + \cdots + 99! + 100! \bmod 12\]
+		\[2^{20} - 1 \bmod 41\]
+	\end{exampleblock}
+	
+	\pause
+	
+	\begin{block}{答案}
+    $1$ 、$9$、 $0$。
+	\end{block}
+}
+
+
+\frame{\frametitle{Properties of Congruence.} 
+	\begin{block}{Negative number.}
+	Let $x$ and $n$ be two positive integers and $x < n$, what does $-x \bmod n$ mean?
+	\end{block}\pause
+
+    \begin{exampleblock}{Intuition.}
+     Consider that the negative of $x$ is the number $x'$ such that $x + x' = 0$, that is:
+     \[x + x' \equiv 0 \pmod{n}.\]
+     Since $x < n$, hence $x' = n - x$.
+   \end{exampleblock}
+}
+
+\frame{\frametitle{Two's Complement(二进制补码)}
+
+\begin{block}{Two's Complement}
+A signed number represented in $n$ bits. The range of the numbers is $[-2^{n-1}, 2^{n-1} - 1]$, and the rule is described as follows:
+\begin{itemize}
+	\item Positive integers, in the range $0$ to $2^{n-1} -1$, are stored in regular binary form. The sign bit is set to $0$.
+	
+	\item Negative integers $-x$, with $1 \leq x \leq 2^{n-1}$, are calculated by first constructing $x$ in binary, then inverting all the bits of $x$ and finally adding $1$. The sign bit is set to $1$.
+\end{itemize}
+\end{block}	
+}
+
+\frame{\frametitle{Two's Complement}
+	\begin{exampleblock}{Another way to remember two's complement.}
+		The negative of $x$ equals $ 2^n - x$. Since $2^n - x = \underbrace{111\cdots 11}_{n}  + 1  - x$, and $\underbrace{111\cdots 11}_{n} - x$ is the same as inverting all the bits of $x$.
+	\end{exampleblock}
+}
+
+\frame{\frametitle{Cancellation Law.} 
+\begin{theorem}[Cancellation Law.]
+    If $\gcd(c, m) = 1$ and
+    \[ac \equiv bc \pmod{m},\]
+    then
+    \[a \equiv b \pmod{m},\]
+	where $\gcd$ shorts for the \textit{greatest common divisor}.
+\end{theorem}
+}
+
+\frame{\frametitle{Cancellation Law.} 
+\begin{proof} 
+	By definition of  congruence, we have $m | (ac - bc)$, equivalently, $m | (a - b)c$. Since $\gcd(c,m) = 1$, it follows that $m \mid (a - b)$, so as claimed.
+
+\end{proof}
+}
+
+\frame{\frametitle{Cancellation Law.} 
+	\begin{exampleblock}{Another perspective.}
+		If $\gcd(c, m) = 1$ then $\exists r,s \in \mathbb{Z}$ s.t. 
+		\[r c + s m = 1\]
+		both sides of the equation modulo $m$, we have:
+		\[r c \equiv 1 \pmod{m}\]
+		means $r$ is the multiplicative inverse(乘法逆元) of $c \bmod m$, let it be $c^{-1}$.
+	\end{exampleblock}
+}
+
+\frame{\frametitle{Partially solve the congruence $a x \equiv b \pmod{m}$.}  
+
+\begin{exm}
+To solve $3 x \equiv 2 \pmod{11}$. 
+
+Firstly, by using $e\gcd$ algorithm, to compute that $3^{-1} = 4$, because $3 \cdot 4 \equiv 1 \pmod{11}$. Multiply $4$ to the equation and obtain
+\[x \equiv 8 \pmod{11}.\]
+\end{exm}
+}
+
+\frame{\frametitle{Cancellation Law-- Revisited.} 
+	\begin{alertblock}{问题.}
+		消去律源自于同余的定义与欧几里得引理。可以执行消去操作是因为存在唯一乘法逆元，乘法逆元源自于Bezout定理，但是Bezout系数不唯一。请问，为什么乘法逆元会唯一呢？
+	\end{alertblock}
+	\pause 
+	\begin{exampleblock}{回答.}
+			需要重新审视Bezout系数的形式。
+	\end{exampleblock}
+}
+\iffalse
+\frame{\frametitle{考察Bezout系数的形式.} 
+	\begin{exampleblock}{回归Bezout定理.}
+		If $\gcd(a, b) = 1$ then $\exists r, s \in \mathbb{Z}$ s.t. 
+		\[ar + b s = 1\]\pause
+		从以上形式出发，现在想构造出新的系数应该怎么做呢？\\ \pause
+		初始的想法：存在一个未知量$e$
+		\[ a r + bs + e - e = 1\]		\pause
+		然后分别把$e$与$ar$和$bs$“结合”起来：
+		\[ ar + e + bs -e = 1\] 
+	\end{exampleblock}
+}
+
+\frame{\frametitle{考察Bezout系数的形式--继续.} 
+	\begin{exampleblock}{回归Bezout定理.}
+		当然我们希望$e$与$ar$(或者$bs$)有共同的因子使得：
+		\[ a(r + e') + b(s - e') = 1\] 
+		请问，此时，我们判断$e$应该具有什么形式？\\ 
+		\pause
+		难道不是$e$必然同时具有$a$和$b$这两个分量吗？即$e = kab$，$k$是任意整数。把$e$带入最原始的方程得：
+		\[ a r + kab + bs - kab = a(r +kb) + b(s - ka) = 1\]
+		也就是说，我们构造出了一系列的Bezout系数$r + kb$和$s -k a$。
+	\end{exampleblock}
+}
+
+\frame{\frametitle{考察Bezout系数的形式--继续.} 
+\begin{alertblock}{问题.}
+		给定$a$和$b$，$r + kb$和$s -k a$确实是Bezout系数，即满足
+			\[ a(r +kb) + b(s - ka) = 1\]
+		但是所有的Bezout系数都形如$r + kb$和$s -k a$吗？
+	\end{alertblock}
+}
+
+\frame{\frametitle{考察Bezout系数的形式--继续.} 
+	\begin{exampleblock}{思路.}
+		如果同时存在两组Bezout系数满足：
+		\[ a r_0 + b s_0 = 1\]
+		\[ a r_1 + b s_1 = 1\]
+		请问，此时，我们如何把$r_0$(或者$s_0$)表达成$r_1$与$b$（或者$s_1$与$a$）组成的形式？\\ 
+		\pause
+		回忆中学的“消元法”！
+	\end{exampleblock}
+}
+
+\frame{\frametitle{考察Bezout系数的形式--继续.} 
+	\begin{exampleblock}{思路.}
+		式子一左右两边同乘$s_1$，式子二左右同乘$s_0$，所得相减：
+		\[ a r_0 s_1 - a r_1 s_0 = a(r_0 s_1 - r_1 s_0) = s_1 - s_0\]
+		同样的操作：
+		\[b s_0 r_1 - b s_1 r_0 = b(s_0 r_1 - s_1 r_0) = r_1 - r_0\]
+		\pause 
+		令$k = r_0 s_1 - r_1 s_0$，可得：
+		\[r_0 = r_1 + kb\]
+		\[s_0 = s_1 - ka \]
+	\end{exampleblock}
+}
+\fi
+\frame{\frametitle{Properties of Congruence.} 
+	\begin{lem}
+		For $n \in \mathbb{N}$, congruence modulo $n$ forms an equivalence relation(等价关系) of $\mathbb{Z}$.
+	\end{lem}	
+	
+	\begin{proof}
+		It is easy to check that: 
+		
+		1. Reflexive(自反性). $a \equiv a \pmod{n}$
+		
+		2. Symmetric(对称性). If $a \equiv b \pmod{n}$ then $b \equiv a \pmod{n}$
+		
+		3. Transitive(传递性).	If 	$a \equiv b \pmod{n}$ and $b \equiv c \pmod{n}$ then $a \equiv c \pmod{n}$
+	\end{proof}
+}
+
+\frame{\frametitle{equivalence relation.} 
+	\begin{block}{问题}
+		等价关系意味什么？
+	\end{block}	
+	\pause
+	\begin{block}{条件反射式回答.}
+		存在等价类，即对数据的划分(Partition)。
+	\end{block}
+}
+
+\frame{\frametitle{Equivalence relation and equivalence classes.} 
+\begin{defn}
+When a set $\mathbb{S}$ has an equivalence relation on it, then the equivalence relation partitions(划分、分割) the set $\mathbb{S}$ into disjoint subsets, called equivalence classes（等价类）, defined by the property that two elements are in the same equivalence class if they are equivalent.
+
+\end{defn}
+}
+
+\frame{\frametitle{Congruence classes modulo $m$.} 
+The set of congruence classes modulo $m$ is denoted by $\mathbb{Z}/m\mathbb{Z}$.
+There are exactly m congruence classes in $\mathbb{Z}/m\mathbb{Z}$. That is :
+\[\mathbb{Z}/m\mathbb{Z} = \{[0]_m, [1]_m, \cdots, [m-1]_m\}.\]
+
+\begin{exm}
+When $m = 2$, $\mathbb{Z}/2\mathbb{Z} = \{[0]_2, [1]_2\}$. The congruence class $[1]_2$ is the set of all integers congruent to $1$ modulo $2$. Thus $[1]_2$ is the set of all odd integers. Similarly, the congruence class $[0]_2$ is the set of all even integers.
+\end{exm}
+}
+
+\frame{\frametitle{Proposition of Congruence.}
+\begin{prop}
+\label{prop_residue}
+If $[a_1]_m = [a_2]_m$ and $[b_1]_m = [b_2]_m$, then
+\[[a_1 \pm b_1]_m = [a_2 \pm b_2]_m, \qquad \text{and}\qquad
+[a_1 b_1]_m = [a_2 b_2]_m.\]
+\end{prop}
+
+\begin{proof}
+It is easy. Transform the form $[a]_m = [b]_m$ to $a \equiv b \pmod{m}$ and use Proposition 2.2. 
+\end{proof}
+}
+
+\frame{\frametitle{Notations of Congruence classes modulo $m$.} 
+\begin{itemize}
+\item Any element $b$ of a congruence class $[a]_m$ is called a \emph{representative} (代表元) of that class. 
+
+\item The set of all the least nonnegative representative of $\mathbb{Z}/m\mathbb{Z}$ is the set of integers $\{0, 1, 2,\cdots, m - 1 \}$, that is called the \textit{least residue system} modulo $m$ (模$m$的最小剩余系). 
+
+\item Any set of $m$ integers, no two of which are congruent modulo $m$, is called a \textit{complete residue system} modulo $m$ (模$m$的完全剩余系).
+\end{itemize}
+
+}
+
+\frame{\frametitle{Notations of Congruence classes modulo $m$.} 
+
+\begin{exm}
+Let $m = 7$, the least residue system modulo $m$ is the set $\{0, 1, 2, 3, 4, 5, 6 \}$, 
+and a complete residue system modulo $m$ may be the set $\{14 , 8, 23, 46, 61, 13\}$.
+\end{exm}
+}
+
+\section{Modular Exponentiation}
+\label{sec:mod-pow}
+\frame{\frametitle{Mod Exponentiation.}
+In this section, we focus on modular exponentiation which is an important arithmetic primitive. Its task is that given integers $x$, $y$ and $m$ to compute 
+\[ x^ y \bmod m.\] 
+}
+ 
+\frame{\frametitle{Mod Exponentiation.}
+\begin{exm}
+\label{exm:pow}
+To compute $2^{16} \bmod 11$.  We compute:
+\[2^2 \bmod 11 = 4\] 
+\[2^4 \bmod 11 = 4 \cdot 4 \bmod 11 = 5\]
+\[2^8 \bmod 11 = 5 \cdot 5 \bmod 11 = 3 \]
+\[2^{16} \bmod 11 = 3 \cdot 3 \bmod 11 = 9 \]
+\end{exm}
+}
+
+\frame{\frametitle{Mod Exponentiation.}
+\begin{exm}
+\label{exm:pow-22}
+To compute $2^{22} \bmod 11$.  We compute:
+\[2^2 \bmod 11 = 4\] 
+\[2^4 \bmod 11 = 4 \cdot 4 \bmod 11 = 5\]
+\[2^8 \bmod 11 = 5 \cdot 5 \bmod 11 = 3 \]
+\[2^{16} \bmod 11 = 3 \cdot 3 \bmod 11 = 9 \]
+
+then \[(2^{22} = 2^2 \cdot 2^4 \cdot 2^{16}) \equiv 4 \cdot 5 \cdot 9 \equiv 4 \pmod{11}\]
+\end{exm}
+}
+
+\frame{\frametitle{Mod Exponentiation.}
+The process can be expressed as a recursive form, by that, we sharply improve the efficiency from performing $O(y)$ multiplications to $O(log (y))$.
+\begin{equation}  
+\label{eq:rec_pow}
+x ^ y = 
+\left\{  
+\begin{array}{lr}  
+(x ^{ \lfloor y/2 \rfloor })^2 &  \mbox{if $y$ is even;}\\  
+
+x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \mbox{if $y$ is odd.} \\  
+
+\end{array}  
+\right.  
+\end{equation}
+}
+
+
+\frame{\frametitle{Mod Exponentiation(Recursive Version).}
+\begin{center}
+\label{alg:rec_pow}
+	\lstinputlisting[caption = Recursive Modular Exponentiation]{../codes/chap2-3.py}
+\end{center}
+}
+
+\frame{\frametitle{Mod Exponentiation: from recursive to iterative.}
+We describe how to transform the recursive algorithm to an iterative algorithm as follows. 
+Firstly, we treat integer $y$ as a polynomial (or a binary string):
+\[ y = y_{n-1}2^{n-1} + y_{n-2}2^{n-2} \cdots + y_1 2 + y_0 ,\] where $y_i \in \{0, 1\}$. \pause
+
+Secondly, transform $x^y$ as:
+\[x^y = \prod_{i=0}^{n-1} x^{y_i 2^{i}}\] \pause
+
+Finally, start with x and repeatedly square modulo $m$,  multiply the terms with $y_i = 1$ and get the result.
+}
+
+\frame{\frametitle{Mod Exponentiation: Example.}
+
+\begin{exampleblock}{A comcrete example.}
+	Let $x=7$, $y= 10$, $m = 11$,
+	to compute $x^y \bmod m$. The bianry string of $y$ is $1010$, thus we compute:
+	\begin{align*}
+		y_0 &= 0, & x^{2^0} &\equiv 7 \pmod{m}\\
+		y_1 &= 1, & x^{2^1} &\equiv 5 \pmod{m}\\
+		y_2 &= 0, & x^{2^2} &\equiv 3 \pmod{m}\\
+		y_3 &= 1, & x^{2^3} &\equiv 9 \pmod{m}
+	\end{align*}
+Then, multiply the terms with $y_i = 1$, we have $x^y = (5 \cdot 9) \bmod 11 = 1$
+\end{exampleblock}
+}
+
+\frame{\frametitle{Mod Exponentiation: Exercise.}
+
+\begin{block}{练习.}
+	Let $x=5$, $y= 13$, $m = 13$,
+	to compute $x^y \bmod m$. 
+\end{block}
+\pause
+
+\begin{block}{答案.}
+5. 
+\end{block}
+}
+
+\frame{\frametitle{Mod Exponentiation (Iterative version).}
+
+Because the white board is too narrow to show the code, so it is your home work.
+\iffalse
+\begin{center}
+	\lstinputlisting[caption = Iterative Modular Exponentiation]{../codes/chap2-4.py}
+\end{center}
+\fi
+}
+
+\section{Fermat's Little Theorem} 
+
+\frame{\frametitle{Some topics using modular arithmetic.}
+
+Our following job is to play with number using modular arithmetic, and find some patterns or rules.
+
+}
+
+\frame{\frametitle{Find the patterns.}
+Let $p = 7$, and for very $1\leq a < p$, compute $a^i\; \text{mod}\; p$, where $1\leq i < p$. We have:
+\begin{center}
+	\begin{tabular}{ | c | c | c | c | c | c | }
+		\hline
+		$a$  & $a^2$ & $a^3$ & $a^4$ & $a^5$ & $a^6$ \\ \hline
+		1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+		2 & 4 & 1 & 2 & 4 & 1 \\ \hline
+		3 & 2 & 6 & 4 & 5 & 1 \\ \hline
+		4 & 2 & 1 & 4 & 2 & 1 \\ \hline
+		5 & 4 & 6 & 2 & 3 & 1 \\ \hline
+		6 & 1 & 6 & 1 & 6 & 1 \\
+		\hline
+	\end{tabular}
+\end{center}\pause 
+
+May you find some patterns?
+}
+
+\frame{\frametitle{More data to find the patterns.}
+	Let $p = 11$, and for very $1\leq a < p$, compute $a^i\; \text{mod}\; p$, where $1\leq i < p$. We have:
+	\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | c | c |}
+			\hline
+			$a$  & $a^2$ & $a^3$ & $a^4$ & $a^5$ & $a^6$ & $a^7$ & $a^8$ & $a^9$ & $a^{10}$ \\ \hline
+			1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\ \hline
+			2 & 4 & 8 & 5 & 10 & 9 & 7 & 3 & 6 & 1 \\ \hline
+			3 & 9 & 5 & 4 & 1 & 3 & 9 & 5 & 4 & 1 \\ \hline
+			4 & 5 & 9 & 3 & 1 & 4 & 5 & 9 & 3 & 1 \\ \hline
+			5 & 3 & 4 & 9 & 1 & 5 & 3 & 4 & 9 & 1 \\ \hline
+			6 & 3 & 7 & 9 & 10 & 5 & 8 & 4 & 2 & 1 \\ \hline
+			7 & 5 & 2 & 3 & 10 & 4 & 6 & 9 & 8 & 1 \\ \hline
+			8 & 9 & 6 & 4 & 10 & 3 & 2 & 5 & 7 & 1 \\ \hline
+			9 & 4 & 3 & 5 & 1 & 9 & 4 & 3 & 5 & 1 \\ \hline
+			10 & 1 & 10 & 1 & 10 & 1 & 10 & 1 & 10 & 1  \\ 
+			\hline
+		\end{tabular}
+	\end{center}
+	
+}
+
+\frame{\frametitle{Conjecture.}
+\begin{block}{猜想}
+For $p$ is a prime, and $\gcd(a,p) = 1$,  
+\[a^{p-1} \equiv 1 \pmod{p}\]
+\end{block}
+}
+
+
+\frame{\frametitle{Another computation.}
+$\forall 1 < a < p$, compute $a \cdot i \; \text{mod} \; p$, for $1 \leq i < p$. For example, let $a = 2$, $p = 7$, we have: 
+\begin{center}
+	\begin{tabular}{ | c | c | c | c | c | c | c | }
+		\hline
+		 $a \cdot i$  & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+		 $a=1$ & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline 
+		 $a=2$ & 2 & 4 & 6 & 1 & 3 & 5 \\ \hline 
+		 &  &  &  &  & &  \\ \hline 
+		 &  &  &  &  & & \\ \hline
+         &  &  &  &  & & \\ \hline
+		 &  &  &  &  & & \\ 
+		\hline
+	\end{tabular}
+\end{center}
+}
+
+\frame{\frametitle{Another computation.}
+ Continue the computation...
+	\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c | c | }
+			\hline
+			$a \cdot i$  & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+			$a=1$ & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline 
+			$a=2$ & 2 & 4 & 6 & 1 & 3 & 5 \\ \hline 
+			$a=3$ & 3 & 6 & 2 & 5 & 1 & 4 \\ \hline 
+			&  &  &  &  & & \\ \hline
+			&  &  &  &  & & \\ \hline
+			&  &  &  &  & & \\ 
+			\hline
+		\end{tabular}
+	\end{center}\pause
+Have a decision?
+}
+
+\frame{\frametitle{Another computation.}
+	Finally!
+	\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c | c | }
+			\hline
+			$a \cdot i$  & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+			$a=1$ & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline 
+			$a=2$ & 2 & 4 & 6 & 1 & 3 & 5 \\ \hline 
+			$a=3$ & 3 & 6 & 2 & 5 & 1 & 4 \\ \hline 
+			$a=4$& 4 & 1 & 5 & 2 & 6 & 3 \\ \hline
+			$a=5$& 5 & 3 & 1 & 6 & 4 & 2 \\ \hline
+			$a=6$& 6 & 5 & 4 & 3 & 2 & 1 \\ 
+			\hline
+		\end{tabular}
+	\end{center}
+}
+
+\frame{\frametitle{Conjecture.}
+The trick is, $p$ is a prime number!
+We conjecture:
+if $p$ is a prime, $\forall a$ which is not divided by $p$, $a \cdot i \bmod p$, for $1 \leq i < p$, is a permutation of numbers from $1$ to $p-1$.\pause
+That is,  the numbers
+\[a, 2a, 3a, \cdots, (p-1)a \pmod{p}\]
+are the same as the numbers:
+\[1, 2, 3, \cdots, p-1\]
+although they may be in a different order. \pause
+\[S  = \{ a \cdot i \bmod p, 1 \leq i < p \}\]
+is also called a complete system of residues modulo $p$.
+}
+
+\frame{\frametitle{Proof by contradiction.}
+	Of course, we need a proof!\pause
+	\begin{proof} {Proof by contradiction (informal and incomplete).} 
+		If we are wrong, then there exist $i$ and $j$ such that,
+		\[a \cdot i \equiv a \cdot j \pmod{p}\]
+		where $i \neq j$.
+		However, then we can cancel the $a$ from the equation! (Cancellation Law.)
+	\end{proof}
+	
+}
+
+\frame{\frametitle{Do a simple job!}
+	Multiply all $1 \leq i < p$, and all $a \cdot i \bmod p$ , we have:
+	
+	\[\prod_{i=1}^{p-1} i = \prod_{i=1}^{p-1} (a \cdot i \bmod p)\]
+	
+	\pause
+	 Convince yourself:
+	\[\prod_{i=1}^{p-1} i \equiv \prod_{i=1}^{p-1} a \cdot i \equiv a^{p-1}\prod_{i=1}^{p-1} i \pmod{p}\]  \pause
+	Cancel the big number, we have:
+	\[a^{p-1} \equiv 1 \pmod{p}\]
+}
+
+\frame{\frametitle{Fermat's little theorem.}
+	\begin{theorem}[Fermat's little theorem.]
+	Let $p$ be a prime number, and let $a$ be any number with $a \not \equiv 0 \pmod{p}$. Then
+	\[a^{p-1} \equiv 1 \pmod{p}.\]
+	\end{theorem}
+}
+
+\frame{\frametitle{An Exercise using Fermat's little theorem.}
+	\begin{exampleblock}{Exercise.}
+	Let $p = 17$ be a prime number, and let $a = 2$ , what is $a^{2024} \bmod p$? \pause
+	
+	\[2^{2024} \equiv 2^{126 \cdot 16 + 8 } \equiv 2^8 \equiv 1  \pmod{17}.\]
+	\end{exampleblock}
+}
+
+\frame{\frametitle{Exercises using Fermat's little theorem.}
+	\begin{exampleblock}{Exercises.}
+	\begin{itemize}
+	\item $a \equiv 9^{794} \pmod{73}$, find $a$ and $0 \le a \le 73$.
+	
+	\item Solve $x^{87} \equiv 6 \pmod{29}$.
+	\end{itemize}
+	\end{exampleblock}
+}
+
+\section{Euler's Theorem} 
+
+\frame{\frametitle{More computation.}
+	If the modulus is a composite number, then our trick will fail! For example, let $n = 6$, 
+		\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c |}
+			\hline
+			$a \cdot i$  & 1 & 2 & 3 & 4 & 5 \\ \hline
+			$a=1$ & 1 & 2 & 3 & 4 & 5 \\ \hline 
+			$a=2$ & 2 & 4 & 0 & 2 & 4 \\ \hline 
+			$a=3$ & 3 & 0 & 3 & 0 & 3 \\ \hline 
+			$a=4$ & 4  & 2 & 0 & 4 & 2 \\ \hline
+			$a=5$ &  5 & 4  & 3  & 2  & 1  \\ 
+			\hline
+		\end{tabular}
+	\end{center}
+
+}
+
+\frame{\frametitle{One more computation.}
+Let $n = 9$,
+	\begin{center}
+	\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
+		\hline
+		$a \cdot i$  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+		$a=1$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline 
+		$a=2$ & 2 & 4 & 6 & 8 & 1  & 3 & 5 & 7 \\ \hline 
+		$a=3$ & 3 & 6 & 0 & 3 & 6 & 0 & 3 & 6 \\ \hline 
+		$a=4$ & 4 & 8 & 3 & 7 & 2 & 6 & 1 & 5 \\ \hline
+		$a=5$ & 5 & 1 & 6  & 2  & 7 & 3 & 8 & 4 \\ \hline
+		$a=6$ & 6 & 3 & 0 & 6 & 3 & 0 & 6 & 3 \\ \hline 
+		$a=7$ & 7 & 5 & 3 & 1 & 8 & 6 & 4 & 2 \\ \hline
+		$a=8$ & 8 & 7  & 6  & 5  & 4 & 3 & 2 & 1 \\ 
+		\hline
+	\end{tabular}
+\end{center}
+}
+
+\frame{\frametitle{Observation.}
+\begin{block}{观察.}	
+	If $n$ is a composite number, the numbers
+	\[a, 2a, 3a, \cdots, (n-1)a \pmod {n}\]
+	may \textbf{NOT} the same as the numbers:
+	\[1, 2, 3, \cdots, n-1\]
+\end{block}
+}
+
+\frame{\frametitle{Check the observation.}
+	Let $n = 9$，for all $i \in [1, n-1]$，and $\gcd(i, n) =1$: 
+	\begin{center}
+		\begin{tabular}{ | c | c | c | c | c | c | c | }
+			\hline
+			$a \cdot i$  & 1 & 2 & 4 & 5 & 7 & 8 \\ \hline
+			$a=1$ & 1 & 2 & 4 & 5 & 7 & 8 \\ \hline 
+			$a=2$ & 2 & 4 & 8 & 1 & 5 & 7 \\ \hline 
+			$a=4$ & 4 & 8 & 7 & 2 & 1 & 5 \\ \hline
+			$a=5$ & 5 & 1 & 2 & 7 & 8 & 4 \\ \hline
+			$a=7$ & 7 & 5 & 1 & 8 & 4 & 2 \\ \hline
+			$a=8$ & 8 & 7 & 5 & 4 & 2 & 1 \\ 
+			\hline
+		\end{tabular}
+	\end{center}	
+}
+
+\frame{\frametitle{Conjecture.}
+	We conjecture:
+	Let $n$ be a composite number, denotes
+	\[S = \{ b: 1\leq b < n \; \text{and}\; \gcd(b,n)=1 \}\]
+	Then $\forall a$ with $\gcd(a,n)=1$, denotes
+	\[S' = a \cdot S  \pmod{n}\] 
+	we have:
+	\[S = S'\]
+}
+
+\frame{\frametitle{Notation.}
+	\begin{block}{Euler's phi function.}
+	Define:
+	\[\varphi(n) = | \{ b: 1\leq b < n \; \text{and}\; \gcd(b,n)=1 \}|\]
+	The function $\varphi$ is called \textit{Euler's phi function}.
+	\end{block}
+}
+
+\frame{\frametitle{Notation.}
+	Then:
+	\[
+	S =  \{ b_1, b_2, \cdots ,  b_{\varphi(n)}:
+	1\leq b_i < n \; \text{and}\; \gcd(b_i,n)=1 \}
+	\]
+	\[
+	\begin{split}
+	S' =  \{& a \cdot b_1, a \cdot b_2, \cdots , a \cdot b_{\varphi(n)}\pmod{n}:\\
+	& b_i \in S \; \text{and}\; \gcd(a,n)=1 \}.
+	\end{split}
+	\]
+}
+
+\frame{\frametitle{Proof.}
+	To prove
+	\[S = S'\]
+	
+	Check that if there exist: 
+	\[a \cdot b_i \equiv a \cdot b_j \pmod  n\]
+	where $b_i \neq b_j$. Then by Cancellation Law,
+    \[b_i \equiv b_j  \pmod  n.\] 
+    Contradiction!
+}
+
+\frame{\frametitle{Do a similar simple job!}
+	Multiply all the numbers in $S$ and $S'$ , we have:
+	
+	\[\prod_{i = 1}^{\varphi(n)} b_i = \prod_{i=1}^{\varphi(n)} (a \cdot b_i \bmod n)\]
+
+	\[\prod_{i = 1}^{\varphi(n)} b_i \equiv \prod_{i=1}^{\varphi(n)} a \cdot b_i \pmod  n\]
+	
+	\[\prod_{i = 1}^{\varphi(n)} b_i \equiv a^{\varphi(n)} \prod_{i=1}^{\varphi(n)} b_i \pmod n\]
+	
+	Cancel the big number, we have:
+	\[a^{\varphi(n)} \equiv 1 \pmod n\]
+	
+}
+
+\frame{\frametitle{Euler's Theorem.}
+	\begin{block}{(Euler's Theorem.)}
+	Let $n$ be a positive composite number, $a$ be a positive integer with $\gcd(a, n) = 1$, then:
+	\[a^{\varphi(n)} \equiv 1 \pmod{n}.\]
+	
+\end{block}
+}
+
+
+\frame{\frametitle{Example.}
+
+    \begin{exampleblock}{例.}
+    	设$n =  100$, 则$\varphi(n) = 40$, 所以$7^{40} \equiv 1 \pmod{n}$。同样，$9^{40} \equiv 1 \pmod{n}$。  
+    \end{exampleblock}
+    \pause
+    \begin{alertblock}{问题.}
+    为什么$\varphi(n) = 40$？或者，给定$n$，如何求$\varphi(n)$？
+    \end{alertblock}
+
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+	\begin{defn}[Euler's Phi Function.]
+		Define:
+		\[\varphi(n) = | \{ b: 1\leq b < n \; \text{and}\; \gcd(b,n)=1 \}|\]
+		The function $\varphi$ is called \textit{Euler's phi function}.
+	\end{defn}
+
+    \begin{exampleblock}{Observations}
+    	$\varphi(p) = p - 1$, where $p$ is a prime.
+    	
+    	$\varphi(p^k) = p^k - p^{k-1}$, where $p$ is a prime. 
+    \end{exampleblock}
+
+}
+
+\frame{\frametitle{More about Euler's Phi Function..}
+	
+	\begin{exampleblock}{Question.}
+		How to compute $\varphi(m)$ where $m = p^i q^j$ with $p$ and $q$ are prime. 
+	\end{exampleblock}\pause
+
+\begin{exampleblock}{A related question.}
+	How to compute $\varphi(mn)$ where $\gcd(m,n) = 1$. 
+\end{exampleblock}
+	
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+
+	\begin{exampleblock}{Compute $\varphi(mn)$}
+Display the positive integers not exceeding $mn$ in the following way.
+
+		\begin{tabular}{c c c c c}
+		$1$ & $m+1$  & $2m+1$ & $\cdots$ & $(n-1)m+1$ \\ 
+		$2$ & $m+2$ & $2m+2$ & $\cdots$ & $(n-1)m+2$ \\ 
+		$3$ & $m+3$ & $2m+3$ & $\cdots$& $(n-1)m+3$ \\ 
+		$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ \\ 
+		$r$ & $m+r$ & $2m+r$ & $\cdots$  &$(n-1)m+r$  \\  
+		$\cdots$&  $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ \\ 
+		$m$ & $2m$ & $3m$  & $\cdots$ & $mn$ \\ 
+		\end{tabular} 
+	
+	\end{exampleblock}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+\begin{block}{Basic idea.}
+Find all the elements which are relatively prime to both $n$ and $m$, then it is relatively prime to $mn$. Formally:
+\[ \forall a, \gcd(a, n) = 1 \; \text{and} \; \gcd(a, m) = 1 \implies \gcd(a, mn) = 1. \]
+\end{block}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+\begin{block}{Counting}
+\begin{itemize}
+	\item How many rows satisfy $\gcd(r,m) =1$? Ans : $\varphi(m)$. Note that, if  $\gcd(r,m) =1$ then $\gcd(km + r, m) =1$, for $k \in [0..n-1]$.
+	
+	\item At $r$th row, how many integers have $\gcd(km + r, n)=1$, for $k \in [0..n-1]$? Ans: $\varphi(n).$ Note that, we have $\gcd(n,m)=1$.
+	
+	\item Hence, there are $\varphi(m)$ rows, each containing $\varphi(n)$ integers relatively prime to $mn$.
+\end{itemize}
+\end{block}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+\begin{rema}[Why the conclusion holds?]
+   If $\gcd(a, m)=1$ and $\gcd(a, n)=1$ then $\gcd(a, mn) = 1$.
+\end{rema}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+\begin{rema}[Why the second item holds?]
+   The elements in $r$th row are: $r$, $m + r$, $\cdots$, $(n-1)m + r$ with $\gcd(m, n) = 1$. $\forall k_i \neq k_j$, $k_i m + r \not \equiv k_j m + r \pmod n$. Otherwise, $k_i = k_j$ by our Golden Law(Cancellation Law), contradiction! It means the $n$ elements in $r$th row form "a complete system of residues modulo $n$", that is $\{ r, m + r, \cdots, (n-1)m + r\} \pmod n = \{0, 1, 2, \cdots, n-1\}$. Hence, exactly $\varphi(n)$ of these integers are relatively prime to $n$.
+\end{rema}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+	\begin{theorem}
+		Let $m$ and $n$ be relatively prime positive integers. Then $\varphi(mn) = \varphi(m) \varphi(n)$.
+\end{theorem}
+}
+
+\frame{\frametitle{More about Euler's Phi Function.}
+	\begin{block}{Some easy generalizations.}
+		How to relate $\varphi(mn) = \varphi(m) \varphi(n)$ where $\gcd(m,n) =1$ with $\varphi(m)$ where $m = p^i q^j$ ? \pause
+		
+		Ans: $\gcd(p^i, q^j) = 1$ when $p$ and $q$ are relatively prime. Hence $\varphi(p^i q^j) = \varphi(p^i) \varphi(q^j).$\pause
+
+	   How to generalize the result to $\varphi(m)$ where $m = p_1^{a_1} p_2^{a_2}\cdots p_k^{a_k}$ ? \pause
+	
+    	Ans: Induction! Left as an exercise.
+\end{block}
+}
+
+\frame{\frametitle{Exercise.}
+	
+	\begin{block}{习题.}
+	
+	求$a$，使得$a$满足以下条件：
+	\begin{itemize}
+	\item $a \equiv 7^{2003} \pmod{3750}$
+	
+	\item $1\le a \le 5000$
+	
+	\item $a$不被$7$整除.
+	
+	\end{itemize}
+	
+    \end{block}
+}
+
+\frame{\frametitle{Exercise.}
+
+    \begin{block}{习题.}
+	使用费尔马小定理求解同余方程$x^{51} \equiv 2 \pmod{17}$和$x^{50} \equiv 2 \pmod{17}$。%ans: 8、6和11
+	
+    \end{block}
+	
+	\begin{block}{习题.}
+	
+	%%% 113 \cdot 17 = 1 mod 192, 所以2^17 mod 221 =  19即为所求.  
+	请求解$x^{113} \equiv 2 \pmod{221}$。[提示: $113$与$\varphi(221)$互素。]
+	
+    \end{block}
+}
+
+\frame{\frametitle{Exercise.}
+	Prove the following theorem.
+	\begin{theorem}[Euler's Phi Function.]
+	
+		Let $m = p_1^{a_1} p_2^{a_2}\cdots p_k^{a_k}$,  for all $p_i$ ($(1 \le i \le k)$) is a prime, then $\varphi(m) = m(1 - 1/p_1)(1 - 1/p_2) \cdots (1 - 1/p_k)$.
+	
+    \end{theorem}
+}
+
+%\iffalse
+
+\section{RSA}
+
+\frame{\frametitle{Public Key Cryptography.}
+\begin{itemize}
+	
+	\item $pk, sk \leftarrow KG(\lambda)$, $sk$ is local and secret, while $pk$ is public.
+	
+	\item Given plaintext $m$, compute ciphertext $ c \leftarrow Enc(m, pk)$ 
+	
+	\item Given ciphertext $c$, compute plaintext $m \leftarrow Dec(c, sk)$
+	\end{itemize}
+}
+
+\frame{\frametitle{RSA}
+	\begin{itemize}
+		
+		\item $pk, sk \leftarrow KG(\lambda)$:
+		\begin{itemize}
+		\item Choose two large primes $p$ and $q$, $n = p\cdot q$, let $\varphi(n) = (p-1)(q-1).$
+		
+		\item Choose a integer $e$, with $\gcd(e, \varphi(n))=1$, compute $d$, s.t. $ed \equiv 1 \pmod{\varphi(n)}.$
+		
+		\item Let $pk$ be $e$ and $n$; $sk$ be $d$ and $n$.
+		
+		\end{itemize}
+		\item $Enc(m, pk)$: let $c \equiv m^e \pmod{n}$
+		
+		\item $Dec(c, sk)$: let $m \equiv c^d \pmod{n}$
+	\end{itemize}
+}
+
+\frame{\frametitle{Why RSA is correct?}
+	Because of Euler's Theorem.
+	\begin{itemize}	
+		\item $KG(\lambda)$:
+		\begin{itemize}
+			
+			\item $e$ and $d$ satisfy  $ed \equiv 1 \pmod{\varphi(n)}.$
+			
+			\item means: $\exists k$, s.t. $ed = k\varphi(n) +1 $
+			
+		\end{itemize}
+		\item $Enc(m, pk)$: $c \equiv m^e \pmod{n}$
+		
+		\item $Dec(c, sk)$: $c^d \equiv m^{ed} \equiv m^{k\varphi(n)+1} \equiv m \pmod{n}$
+	\end{itemize}
+}
+
+\frame{\frametitle{RSA example.}
+	
+	\begin{itemize}
+		
+		\item $KG(\lambda)$:
+		\begin{itemize}
+			\item Choose two primes $p=7$ and $q=11$, $n = p \cdot q= 77$, let $\varphi(n) = (p-1)(q-1)=60.$
+			
+			\item Choose a integer $e =7$, with $\gcd(e, \varphi(n))=1$, compute $d$, s.t. $ed \equiv 1 \pmod{\varphi(n)}$, $d = 43$.
+			
+			\item Let $pk$ be $e=7$ and $n=77$; $sk$ be $d=43$ and $n=77$.
+			
+		\end{itemize}
+		\item $Enc(m,pk)$: Given $m=3$, then $c = 3^7 \; \bmod 77 = 31$.
+		
+		\item $Dec(c, sk)$: Let $m = 31^{43} \bmod 77 = 3$.
+	\end{itemize}
+}
+%\fi
+\section{Summary}
+\frame{\frametitle{What is a Concrete Introduction?}
+	\begin{itemize}
+		\item Play with numbers. 
+		\item Find the patterns, find the fun.
+		\item Programming is a good way to play.
+	\end{itemize}
+}
+
+\frame{\frametitle{What have been covered?}
+	\begin{itemize}
+		\item Congruence.
+		\item Fermat's little theorem.
+		\item Euler's theorem.
+		%\item Application: a PKC algorithm RSA.
+	\end{itemize}
+}
+
+\frame{\frametitle{What have been omitted?}
+	\begin{itemize}
+		\item Fast multiplication.
+		\item Powers: how to do fast power.
+	%	\item Many about RSA: security and efficiency.
+	\end{itemize}
+}
+
+\frame{\frametitle{What is the next step?}
+	\begin{itemize}
+		\item From a new perspective to view Fermat's and Euler's theorems.
+		
+		\item From arithmetic go to algebra.
+	\end{itemize}
+}
+
+\end{document}
