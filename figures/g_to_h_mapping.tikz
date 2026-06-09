@@ -1,0 +1,39 @@
+\begin{tikzpicture}[
+  line cap=round,
+  line join=round,
+  >=Stealth,
+  every node/.style={font=\large},
+  setline/.style={draw=black!88, line width=1.2pt},
+  mapline/.style={->, draw=black!88, line width=1.1pt},
+  innerarrow/.style={->, draw=black!88, line width=0.9pt}
+]
+  % Main sets.
+  \draw[setline] (0,0) circle (1.5);
+  \draw[setline] (6.25,-.05) circle (1.5);
+
+  \node[font=\Large] at (0,1.9) {$\mathbb{G}$};
+  \node[font=\Large] at (6.25,1.9) {$\mathbb{H}$};
+
+  % The quotient kernel/coset picture inside G.
+  \draw[setline] (-.55,-.62) circle (.58);
+  \node[font=\large] at (-.55,-.62) {$g\mathbb{K}$};
+
+  \draw[setline] (.42,.5) circle (.5);
+  \node[font=\large] at (.42,.5) {$\mathbb{K}$};
+  \node[font=\large] at (-.9,.75) {$g$};
+
+  \draw[innerarrow] (-.65,.73) -- (-.08,.7);
+  \draw[innerarrow] (.12,.22) -- (-.55,-.18);
+
+  % Homomorphism label and arrow.
+  \draw[mapline] (1.1,1.75) -- (5.35,1.75);
+  \node[font=\Large] at (3.25,2.2) {$\psi:\mathbb{G}\to\mathbb{H}$};
+  \node[font=\large] at (3.25,1.38) {$\operatorname{Ker}\psi=\mathbb{K}$};
+
+  % Images in H.
+  \node[font=\Large] (e) at (6.25,.5) {$e$};
+  \node[font=\Large] (q) at (6.15,-.75) {$?$};
+
+  \draw[mapline] (.92,.5) -- (e.west);
+  \draw[mapline] (-.02,-.86) -- (q.west);
+\end{tikzpicture}

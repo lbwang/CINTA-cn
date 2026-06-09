@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\usepackage{xcolor}
+\usepackage{ulem}
+\usepackage{amssymb}
+\newcommand\Scale{3}
+\newcommand\HEIGHT{54.5}
+\newcommand\WIDTH{90}
+\newcommand\HSPACEO{0.15cm}
+\newcommand\HSPACET{0.22cm}
+
+\newcommand\INDENT{1.00cm}
+
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+
+%\draw[help lines] (0,0) grid (\WIDTH,\HEIGHT);
+%\pgftransformscale{0.9} %∑≈Àı
+
+%Stronger One-Round Authenticated Key Exchange in the RO model
+
+%Side
+\draw[-,color=black,line width=2pt](24,\HEIGHT-3.5) -- (\WIDTH-24+0.8+0.4,\HEIGHT-3.5); %up
+\draw[-,color=black,line width=2pt](24,38-0.5-0.2)       -- (\WIDTH-24+0.8+0.4,38-0.5-0.2)        ; %down
+\draw[-,color=black,line width=2pt](24,38-0.5-0.2)       -- (24,\HEIGHT-3.5)      ; %left
+\draw[-,color=black,line width=2pt](\WIDTH-24+0.8+0.4,38-0.5-0.2)  -- (\WIDTH-24+0.8+0.4,\HEIGHT-3.5) ; %right
+
+%mark
+%\draw[-,color=black](10,21)       -- (\WIDTH-10,21)        ; %mark
+%\draw[-,color=black](10,19)       -- (\WIDTH-10,19)        ; %mark
+
+%%Title
+%\draw (\WIDTH/2,\HEIGHT+0.5) node[scale=\Scale]
+%{ww\_model};
+
+%Two Pass
+%line 1 A <--> B
+\draw[-,color=white]
+(20.69+4,\HEIGHT-5.3)          node[left,color=black,scale=\Scale] {} --
+(20.7+4,\HEIGHT-5.3)        node[right,color=black,scale=\Scale] {$\hat{\mathbf{A}} $};
+\draw[-,color=white]
+(\WIDTH/2,\HEIGHT-5.3)    node[left,color=black,scale=\Scale] {} --
+(\WIDTH-39.25,\HEIGHT-5.3)node[right,color=black,scale=\Scale]{$\hat{\mathbf{B}}$};
+
+%ephemeral secret key
+\draw[-,color=white]
+(20.69+4,\HEIGHT-7.3)          node[left,color=black,scale=\Scale] {} --
+(20.7+4,\HEIGHT-7.3)        node[right,color=black,scale=\Scale] {
+$x$ $\overset{\$}{\leftarrow}$ $Z_q^*$};
+\draw[-,color=white]
+(\WIDTH/2,\HEIGHT-7.3)    node[left,color=black,scale=\Scale] {} --
+(\WIDTH-39.25,\HEIGHT-7.3)node[right,color=black,scale=\Scale]{
+$y$ $\overset{\$}{\leftarrow}$ $Z_q^*$};
+
+%DH
+\draw[-,color=white]
+(20.69+4,\HEIGHT-8.8)          node[left,color=black,scale=\Scale] {} --
+(20.7+4,\HEIGHT-8.8)        node[right,color=black,scale=\Scale] {
+$X$ = $g^{x}$
+};
+\draw[-,color=white]
+(\WIDTH/2,\HEIGHT-8.8)    node[left,color=black,scale=\Scale] {} --
+(\WIDTH-39.25,\HEIGHT-8.8)node[right,color=black,scale=\Scale]{
+$Y$ = $g^{y}$
+};
+
+%A --> B
+\begin{scope}[>=latex]
+\draw[->,line width=3pt] (30,\HEIGHT-11.3) -- (\WIDTH-39,\HEIGHT-11.3);
+\end{scope}
+%%up word
+\draw (\WIDTH/2-5,\HEIGHT-10.6) node[scale=\Scale]{$X$};
+
+%A <-- B
+\begin{scope}[>=latex]
+\draw[<-,line width=3pt] (30,\HEIGHT-13.8) -- (\WIDTH-39,\HEIGHT-13.8);
+\end{scope}
+%%up word
+\draw (\WIDTH/2-5,\HEIGHT-13.1) node[scale=\Scale]{$Y$};
+
+%check if the element is belong to the group $G$
+\draw[-,color=white]
+(20.69+4,\HEIGHT-15.3)          node[left,color=black,scale=\Scale] {} --
+(20.7+4,\HEIGHT-15.3)        node[right,color=black,scale=\Scale/1.2] {
+$SK_A$ = $\textsf{H}(Y^x)$
+};
+\draw[-,color=white]
+(\WIDTH-39.25,\HEIGHT-15.3)    node[left,color=black,scale=\Scale] {} --
+(\WIDTH-39.25,\HEIGHT-15.3)node[right,color=black,scale=\Scale/1.2]{
+$SK_B$ = $\textsf{H}(X^y)$
+};
+
+%\input{tpmbox}
+
+\end{tikzpicture}
+\end{document}
