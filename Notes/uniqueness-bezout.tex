@@ -1,0 +1,182 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+% ---------- 基础包 ----------
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{mathrsfs}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+\usepackage{tikz-cd}
+\usepackage{xcolor}
+
+% ---------- 链接样式 ----------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=teal!50!black,
+  urlcolor=purple!60!black,
+  pdftitle={如何重新发明Beout定理？},
+  pdfauthor={Libin Wang},
+}
+
+% ---------- 段落与列表 ----------
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.3em}
+\setlist[itemize]{itemsep=0.25em,topsep=0.2em}
+\setlist[enumerate]{itemsep=0.25em,topsep=0.2em}
+
+% ---------- 定理环境 ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{conjecture}[theorem]{猜想}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{exercise}[theorem]{习题}
+\newtheorem{problem}[theorem]{问题}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+\newtheorem*{idea}{思路}
+
+% ---------- 常用数学命令 ----------
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\fp}{\mathbb{F}_p}
+
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\ideal}[1]{\left( #1 \right)}
+
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\charac}{char}
+
+% ---------- 学习笔记信息 ----------
+\newcommand{\CourseTitle}{为什么乘法逆元唯一？}
+\newcommand{\AuthorName}{王立斌}
+\newcommand{\Term}{2026 春季}
+
+\title{\vspace{-1.2cm}\textbf{\CourseTitle}}
+\author{\AuthorName}
+\date{\Term}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\vspace{0.8em}
+\hrule
+\vspace{1em}
+
+\section{动机}
+欧几里得算法引出了B\'zout定理，B\'zout定理之后，我们学习了扩展欧几里得算法。并且进一步引入了我们本课程的黄金定律：\emph{消去律}。即：
+\begin{proposition}[消去律]
+\label{prop:cancel}
+如果$\gcd(c, m) = 1$，则对于任意整数$a$和$b$，如果$ac \equiv bc \pmod{m}$，则有$a \equiv b \pmod{m}$。
+\end{proposition}
+
+消去律从表面上看是使用除法，把等式两边共有的因子$c$除掉。然而，我们引入\emph{乘法逆元}的概念，即：
+\begin{definition}
+\label{def:inverse}
+如果存在$c^{-1}\in \mathbb{Z}$，满足$c c^{-1} \equiv 1 \pmod{m}$。称$c^{-1}$为$c$模$m$的乘法逆元。
+\end{definition}
+那么，实际上消去律做的不是除法，而是乘法，即在等式$ac \equiv bc \pmod{m}$两边乘以$c^{-1}$，得到$a \equiv b \pmod{m}$。
+
+乘法逆元源自于B\'ezout定理,求乘法逆元的算法本质上是扩展欧几里得算法。我们还声称，如果$\gcd(c, m) = 1$，则$c$模$m$的乘法逆元存在且唯一。现在的问题是：B\'ezout系数是否唯一？如果不唯一，为什么乘法逆元会唯一？为此，我们需要重新审视B\'ezout系数的形式。
+
+\section{B\'ezout系数不唯一}
+回顾B\'ezout定理，并考察B\'ezout系数的形式。
+\begin{theorem}[B\'ezout定理]
+\label{thm:bezout}
+对整数 $a,b$，存在整数 $r,s$ 使得
+\[ar+bs=\gcd(a,b).
+\]\end{theorem}
+
+
+考虑互素的两个整数$a$和$b$，根据B\'ezout 定理，则存在$r, s \in \mathbb{Z}$使得：
+	\[ar + b s = 1\]
+从以上等式出发，现在想构造出新的B\'ezout系数应该怎么做呢？
+
+一种初始的想法：找一个未知量$e$
+		\[ a r + bs + e - e = 1\]
+然后分别把$e$与$ar$和$bs$“结合”起来：
+\begin{equation}
+\label{eq:init}
+  ar + e + bs -e = 1
+\end{equation}
+
+
+此时，我们希望$e$与$ar$(或者$bs$)有共同的因子使得：
+		\[ a(r + e') + b(s - e') = 1\]
+请问，此时，我们判断$e$应该具有什么形式？
+
+要使得$e$中能分别抽取出$a$和$b$，难道不是$e$必然同时具有$a$和$b$这两个分量吗？即$e = kab$，$k$是任意整数。把$e$带入方程\ref{eq:init}，通过简单计算得：
+		\[ a r + kab + bs - kab = a(r +kb) + b(s - ka) = 1\]
+也就是说，我们构造出了一系列的B\'ezout系数$r + kb$和$s -k a$。B\'ezout系数不唯一。
+
+\section{乘法逆元唯一性的分析}
+给定$a$和$b$，$r + kb$和$s -k a$确实是B\'ezout系数。
+但是，所有的B\'ezout系数是否都形如$r + kb$和$s -k a$呢？为此，我们需要更多的分析。
+
+假设同时存在两组B\'ezout系数满足：
+\begin{eqnarray*}
+  a r_0 + b s_0 = 1\\
+  a r_1 + b s_1 = 1
+\end{eqnarray*}
+
+请问，此时，我们如何把$r_0$(或者$s_0$)表达成$r_1$与$b$（或者$s_1$与$a$）组成的形式？请回忆中学的“消元法”！
+
+
+这种中学生应该熟悉的思路是：消去两个等式中含有$b$(或者$a$)的部分。即式子一左右两边同乘$s_1$，式子二左右同乘$s_0$，所得相减：
+		\[ a r_0 s_1 - a r_1 s0 = a(r_0 s_1 - r_1 s_0) = s_1 - s_0\]
+同样的操作：
+		\[b s_0 r_1 - b s_1 r_0 = b(s_0 r_1 - s_1 r_0) = r_1 - r_0\]
+
+		令$k = r_0 s_1 - r_1 s_0$，可得：
+		\[r_0 = r_1 + kb\]
+		\[s_0 = s_1 - ka \]
+  也就是说，任意两组B\'ezout系数$r_0, s_0$和$r_1, s_1$之间的关系是$r_0 = r_1 + kb$和$s_0 = s_1 - ka$。这也说明，所有的B\'ezout系数都形如$r + kb$和$s -k a$。
+
+  回到乘法逆元的唯一性问题，$c$模$m$的乘法逆元是B\'ezout系数中的$r \bmod m$，而且$r$的形式是$r + km$。虽然$r$不唯一，但是$r$在模$m$意义下的值都相同。因此$c$模$m$的乘法逆元唯一。
+
+\section{小结}
+请注意，以上分析不是仅仅为了证明乘法逆元的唯一性。如果仅仅为了证明乘法逆元的唯一性，完全可以直接构造以下证明。
+\begin{proof}[$c$模$m$的乘法逆元唯一.]
+如果存在两个不同的整数$c_0$和$c_1$是$c$模$m$的乘法逆元，则有$cc_0 \equiv 1 \pmod{m}$和$cc_1 \equiv 1 \pmod{m}$，两式相减得到$cc_0 - cc_1 \equiv 0 \pmod{m}$，即$c(c_0 - c_1) \equiv 0 \pmod{m}$。由于$\gcd(c, m) = 1$，$m$不能整除$c$，所以$m$整除$(c_0 - c_1)$，即$c_0 \equiv c_1 \pmod{m}$，即乘法逆元在模$m$意义下唯一。
+\end{proof}
+
+因此，本文的分析重点在回归到B\'ezout定理，分析B\'ezout系数的形式，进而分析乘法逆元的唯一性。从而得到更清晰的知识概貌。
+
+以上分析受到了FINT\cite{fint}的启发。记录下来的意图并非为了展示新的知识点，而为了强调：回归到中学知识，使用最基本的方法，无需任何高级的技巧，就可以分析理解新的知识点。从目前大家的学习状况看，缺乏阅读，缺乏思考是最大的问题。
+
+希望这篇小作文对大家有所启发(20260321)。
+
+\begin{thebibliography}{9}
+
+\bibitem{fint}
+Joseph H. Silverman.
+\newblock \emph{A Friendly Introduction to Number Theory}.
+\newblock 4th ed.
+\newblock Pearson, 2012.
+
+\end{thebibliography}
+\end{document}

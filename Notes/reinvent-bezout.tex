@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+% ---------- 基础包 ----------
+\usepackage[a4paper,margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{mathrsfs}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+\usepackage{tikz-cd}
+\usepackage{xcolor}
+
+% ---------- 链接样式 ----------
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=teal!50!black,
+  urlcolor=purple!60!black,
+  pdftitle={如何重新发明Beout定理？},
+  pdfauthor={Libin Wang},
+}
+
+% ---------- 段落与列表 ----------
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.3em}
+\setlist[itemize]{itemsep=0.25em,topsep=0.2em}
+\setlist[enumerate]{itemsep=0.25em,topsep=0.2em}
+
+% ---------- 定理环境 ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{conjecture}[theorem]{猜想}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{exercise}[theorem]{习题}
+\newtheorem{problem}[theorem]{问题}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+\newtheorem*{idea}{思路}
+
+% ---------- 常用数学命令 ----------
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\fp}{\mathbb{F}_p}
+
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\ang}[1]{\left\langle #1 \right\rangle}
+\newcommand{\ideal}[1]{\left( #1 \right)}
+
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\charac}{char}
+
+% ---------- 学习笔记信息 ----------
+\newcommand{\CourseTitle}{如何重新发明Bezout定理？}
+\newcommand{\AuthorName}{王立斌}
+\newcommand{\Term}{2026 春季}
+
+\title{\vspace{-1.2cm}\textbf{\CourseTitle}}
+\author{\AuthorName}
+\date{\Term}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\vspace{0.8em}
+\hrule
+\vspace{1em}
+
+\section{动机}
+2026年3月13日下午，我们的CINTA课程讲到B\'ezout定理。
+\begin{theorem}[B\'ezout定理]
+\label{thm:bezout}
+对整数 $a,b$，存在整数 $r,s$ 使得
+\[ar+bs=\gcd(a,b).
+\]\end{theorem}
+并且得到推论如下：
+\begin{corollary}
+\label{cor:bezout}
+对整数 $a,b$，存在整数 $r,s$ 使得
+\[ar+bs=1
+\]当且仅当 $\gcd(a,b)=1$。
+\end{corollary}
+
+B\'ezout定理的直观含义是，$\gcd(a,b)$ 是 $a$ 和 $b$ 的整数线性组合的最小值，即$\gcd(a,b)$是集合$S$中的最小正整数，其中
+\[S = \set{ar+bs \geq 0: r,s\in\Z}\]
+
+有同学问，是什么动机促使B\'ezout发现“$\gcd(a,b)$ 是 $a$ 和 $b$ 的整数线性组合的最小值”这个直观的呢？这是一个好问题，值得思考。
+
+\section{背景}
+在思考前，我们先了解若干背景。首先，$\gcd$算法源自公元前3世纪的Euclid，是他首先发现了$\gcd(a,b) = \gcd(b, a\bmod b)$。然后，不得不提的是Euclid对整数的另一个伟大的结论：任意整数都是素数的乘积的唯一分解。即任意给定整数$n$,都可以表示为:
+\[n=p_1^{\alpha_1}p_2^{\alpha_2}\cdots p_k^{\alpha_k},\]其中$p_i$是素数，$\alpha_i$是正整数，并且这种表示方式是唯一的。这个定理被称为\emph{算术基本定理}，是数论的基石。
+
+其次，B\'ezout定理的发现者是18世纪的法国数学家。假定他非常熟悉Euclid的贡献将非常合理。
+
+\section{思考}
+首先，以算术基本定理为基础，考虑如何求整数$a$ 和 $b$ 的最大公因子，而又不使用$\gcd$算法，应该如何入手？
+一个自然的想法是，先将$a$ 和 $b$ 分解成素数的乘积，即
+\[a=p_1^{\alpha_1}p_2^{\alpha_2}\cdots p_k^{\alpha_k},\]
+\[b=p_1^{\beta_1}p_2^{\beta_2}\cdots p_k^{\beta_k},\]其中$p_i$是素数，$\alpha_i$和$\beta_i$是非负整数。根据算术基本定理，$a$ 和 $b$ 的最大公因子$\gcd(a,b)$应该是这两个数的\emph{公有的素数部分}，即
+\[\gcd(a,b)=p_1^{\min(\alpha_1,\beta_1)}p_2^{\min(\alpha_2,\beta_2)}\cdots p_k^{\min(\alpha_k,\beta_k)}.\]
+
+也就是说，我们必然有：
+\begin{eqnarray}
+\label{eq:ab-gcd}
+  a &=& x \gcd(a,b)\\
+  b &=& y \gcd(a,b)
+\end{eqnarray}
+
+其中$x$ 和 $y$ 是整数。思考：$x$ 和 $y$ 会满足什么关系？互素！不是吗？因为$x$ 和 $y$ 没有共同的素因子。
+
+既然$x$ 和 $y$ 互素，我们揣测一下，B\'ezout 会不会发现，$x$ 和 $y$ 的整数线性组合可以表示为1？但是，不要忘记，Euclid的$\gcd$算法已经告诉我们，$\gcd(x,y) = 1$，并且通过已知的辗转相除法，很容易知道，$x$ 和 $y$ 的整数线性组合为1，即：
+\[\gcd(x, y) =  xr  + ys = 1\]其中$r$ 和 $s$ 是整数。接着，回到等式\ref{eq:ab-gcd}，我们可以得到：
+\[ ar + bs = x \gcd(a,b) r + y \gcd(a,b) s = (xr + ys) \gcd(a,b) = \gcd(a,b).\]
+
+\section{小结}
+以上思考从Euclid的贡献出发，揣测B\'ezout定理的发明动机。思考的结论是，我们有理由相信，B\'ezout定理的推论\ref{cor:bezout}非常可能是B\'ezout定理发现的出发点。
+
+由此我们想到，在数学的研究中，证明与结论不是以某种线性的方式出现，在“鸡生蛋”和“蛋生鸡”的选择中，还可能有“非鸡也非蛋”的状况。某些结论最初始的状况很可能是猜想，而猜想的出现通常源自于长期的思考与计算，也往往借助于直觉或者灵感。然后进入试错阶段，去寻找对猜想的证明。
+
+进一步思考，我们似乎发现B\'ezout的发现并没有什么超越Euclid的地方，甚至我们猜想Euclid自己都能完成B\'ezout定理的发明。实际情况是，距离Eulid两千多年后的B\'ezout首先给出了B\'ezout定理的证明。为什么？Euclid没有“良序公理”会是其中一个原因吗？我暂时没有答案。我们需要承认，对数学的发展我们有许多无知之处。也许，数学发展并不是完全由理性控制吧。
+
+无论如何，可能还需要强调，就算B\'ezout定理的基础是Euclid，但是B\'ezout定理依然是非常伟大的工作，它不但对$\gcd$算法给出新的视角，也是一种非常重要的工具，在数论和抽象代数中都有广泛的应用。
+
+希望这篇小文章对大家有所启发(20260314)。
+\end{document}
