@@ -8,5 +8,3 @@
 不要成为另一本抽象代数，而是具体代数。诚然，我们需要抽象性，但是走向抽象的过程必须是具体的学习、思考过程。
 本书的英文名拟定为：A Concrete Introduction to Number Theory and Algebra，
 因其大写首写字母而简称为CINTA。希望大家可以享受阅读CINTA的乐趣。
-
-最后，本书的排版应用了名为[ElegantBook](https://github.com/ElegantLaTeX/)的模板，在此表示感谢。
