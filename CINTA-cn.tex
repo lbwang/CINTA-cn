@@ -1,0 +1,82 @@
+\documentclass[cn,11pt,chinese]{elegantbook}
+
+% tikz 
+\usepackage{tikz-cd}
+
+%Making Table Heads with Diagonal Lines
+\usepackage{diagbox}
+
+%%%Make index 20200708
+\usepackage{makeidx}
+
+\title{具体数论与代数}
+\subtitle{数论与代数的计算性导论}
+
+\author{王立斌}
+\institute{华南师范大学}
+\date{5月23日, 2026年}
+\version{0.9999}
+\bioinfo{自定义}{AI封面版本}
+
+\extrainfo{The purpose of computing is insight, not numbers. --- Richard Hamming}
+
+\logo{scnu-logo.jpg}
+\cover{cinta-cover-spring-with-formulas.png}
+%20260523使用代数与数论封面
+
+% 本文档命令
+\usepackage{array}
+\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
+% 修改目录深度
+\setcounter{tocdepth}{2}
+
+\usepackage{cleveref}
+\crefformat{chapter}{#2第\zhnumber{#1}章#3}
+
+\makeindex             % used for the subject index
+                       % please use the style svind.ist with
+                       % your makeindex program
+% Some operatornames
+\DeclareMathOperator{\lcm}{lcm}                      
+\DeclareMathOperator{\egcd}{egcd}
+\DeclareMathOperator{\Ker}{Ker}
+
+\begin{document}
+\maketitle
+\frontmatter
+
+\include{sessions/00-preface}
+
+\tableofcontents
+%\listofchanges
+
+\mainmatter
+\include{sessions/01-integers}      %1. number theory 
+\include{sessions/02-gcd}     %2. gcd and egcd. 20200338
+\include{sessions/03-congruence}   % 3. Congruence
+\include{sessions/04-fermat-euler}        %4. Fermat little Thm and Euler's Theorem
+\include{sessions/05-primality} %5. Primaltiy Testing
+\include{sessions/06-groups}      %6. Group
+\include{sessions/07-cyclic-groups}      %7. Cyclic group
+\include{sessions/08-cosets}          %8. Coset and LaGrange' thm
+\include{sessions/09-isomorphism}       %9. Isomorphism and fit
+\include{sessions/10-crt}      %10. CRT
+\include{sessions/11-quadratic-residues}        %11. QR
+\include{sessions/12-rings-fields}    % 12. Ring and Field
+\include{sessions/13-polynomials}    % 13. Polynomial Ring and GF
+\include{sessions/14-factoring}       %14. Factoring
+\include{sessions/15-discrete-log}    %15. DLOG
+\include{sessions/16-elliptic-curves}       %16. EC
+
+\include{sessions/99-appendix}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\indexname}
+\printindex
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliography{reference}
+
+\end{document}
+
