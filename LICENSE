@@ -1,21 +1,97 @@
-MIT License
+CINTA License Notice / CINTA 授权说明
+=====================================
 
-Copyright (c) 2020 Bintou
+English Version
+---------------
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) Libin Wang.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Unless otherwise noted, the text, notes, slides, figures, images, and PDF
+materials in this repository are licensed under the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License
+(CC BY-NC-SA 4.0).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+You may copy, distribute, and modify these materials for non-commercial
+purposes, provided that you give appropriate credit, indicate whether changes
+were made, and distribute adapted materials under the same license.
+
+Commercial use is not permitted without prior written permission from the
+copyright holder.
+
+License text: https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+
+Code Examples
+-------------
+
+Code examples in the `codes/` directory are provided for educational and
+non-commercial use only.
+
+You may read, copy, distribute, and modify these code examples for educational
+and non-commercial purposes. Commercial use of these code examples requires
+prior written permission from the copyright holder.
+
+
+Third-Party Materials
+---------------------
+
+This license notice does not relicense third-party materials included in this
+repository. Third-party files retain their original copyright notices and
+license terms.
+
+For example, third-party LaTeX class files such as `elegantbook.cls`, and any
+other files that carry their own copyright or license notice, remain governed
+by their original licenses. Those notices must be preserved when such files are
+copied, distributed, or modified.
+
+
+No Warranty
+-----------
+
+The materials are provided as-is, without warranties of any kind, express or
+implied. The copyright holder is not liable for any claim, damages, or other
+liability arising from the use of these materials.
+
+
+中文版本
+--------
+
+版权所有 (c) Libin Wang。
+
+除非另有说明，本仓库中的正文、授课手记、幻灯片、图形、图片和 PDF 材料
+均采用 Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International License（CC BY-NC-SA 4.0）授权。
+
+在遵守该许可证的前提下，你可以基于非商业目的复制、分发和修改这些材料。
+你必须保留适当署名，说明是否进行了修改，并以相同许可证分发改编材料。
+
+未经版权所有者事先书面许可，不得将这些材料用于商业用途。
+
+许可证全文：https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+
+代码示例
+--------
+
+`codes/` 目录中的代码示例仅供教育和非商业用途使用。
+
+你可以基于教育和非商业目的阅读、复制、分发和修改这些代码示例。若需将这些
+代码示例用于商业用途，必须事先取得版权所有者的书面许可。
+
+
+第三方材料
+----------
+
+本授权说明不会重新授权本仓库中包含的第三方材料。第三方文件仍受其原有版权
+声明和许可证条款约束。
+
+例如，`elegantbook.cls` 等第三方 LaTeX class 文件，以及任何自带版权或许可
+声明的其他文件，仍由其原许可证管理。复制、分发或修改这些文件时，必须保留
+其原有版权和许可证说明。
+
+
+无担保
+------
+
+本材料按原样提供，不作任何明示或默示担保。版权所有者不对因使用本材料而
+产生的任何索赔、损害或其他责任承担责任。
