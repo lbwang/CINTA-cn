@@ -43,13 +43,8 @@
 %%\newproof{pf}{Proof} 
 %\newtheorem{thm}{Theorem}[section]
 %\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
 
 %\title{A Concrete Introduction to Number Theory and Algebra -- Chapter 3-4} 
 \title{Mathematics for Computer Science -- 2} 
@@ -97,18 +92,18 @@
 
 \frame{\frametitle{Congruence--例.} 
 
-\begin{exm}
+\begin{example}
 \[26 \equiv 8 \pmod{9} \qquad \text{and}\qquad 6 \equiv 55 \pmod{7},\]
 since 
 \[9 | (26 - 8)\qquad \text{and}\qquad 7 | (6 - 55),\]
 or, equivalently:
 \[ 8 = 26 - 2 \cdot 9 \qquad \text{and}\qquad 55 = 6 + 7 \cdot 7.\]
-\end{exm}
+\end{example}
 
 }
 
-\frame{\frametitle{Properties of Congruence.} 
-    \begin{lem}
+\frame{\frametitle{Properties of Congruence.}
+    \begin{lemma}
        	If $a_1 \equiv b_1 \pmod{m}$ and $a_2 \equiv b_2 \pmod{m}$, then
        
        \[a_1 \pm a_2 \equiv b_1 \pm b_2 \pmod{m}\]
@@ -116,7 +111,7 @@ or, equivalently:
        and
        
        \[a_1  a_2 \equiv b_1 b_2 \pmod{m}\]
-    \end{lem}
+    \end{lemma}
 课堂练习！
 }
 
@@ -208,12 +203,12 @@ A signed number represented in $n$ bits. The range of the numbers is $[-2^{n-1},
 
 \frame{\frametitle{Partially solve the congruence $a x \equiv b \pmod{m}$.}  
 
-\begin{exm}
+\begin{example}
 To solve $3 x \equiv 2 \pmod{11}$. 
 
 Firstly, by using $e\gcd$ algorithm, to compute that $3^{-1} = 4$, because $3 \cdot 4 \equiv 1 \pmod{11}$. Multiply $4$ to the equation and obtain
 \[x \equiv 8 \pmod{11}.\]
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Cancellation Law-- Revisited.} 
@@ -283,13 +278,13 @@ Firstly, by using $e\gcd$ algorithm, to compute that $3^{-1} = 4$, because $3 \c
 }
 \fi
 \frame{\frametitle{Properties of Congruence.} 
-	\begin{lem}
+	\begin{lemma}
 		For $n \in \mathbb{N}$, congruence modulo $n$ forms an equivalence relation(等价关系) of $\mathbb{Z}$.
-	\end{lem}	
-	
+		\end{lemma}
+
 	\begin{proof}
-		It is easy to check that: 
-		
+			It is easy to check that:
+
 		1. Reflexive(自反性). $a \equiv a \pmod{n}$
 		
 		2. Symmetric(对称性). If $a \equiv b \pmod{n}$ then $b \equiv a \pmod{n}$
@@ -309,10 +304,10 @@ Firstly, by using $e\gcd$ algorithm, to compute that $3^{-1} = 4$, because $3 \c
 }
 
 \frame{\frametitle{Equivalence relation and equivalence classes.} 
-\begin{defn}
+\begin{definition}
 When a set $\mathbb{S}$ has an equivalence relation on it, then the equivalence relation partitions(划分、分割) the set $\mathbb{S}$ into disjoint subsets, called equivalence classes（等价类）, defined by the property that two elements are in the same equivalence class if they are equivalent.
 
-\end{defn}
+\end{definition}
 }
 
 \frame{\frametitle{Congruence classes modulo $m$.} 
@@ -320,18 +315,18 @@ The set of congruence classes modulo $m$ is denoted by $\mathbb{Z}/m\mathbb{Z}$.
 There are exactly m congruence classes in $\mathbb{Z}/m\mathbb{Z}$. That is :
 \[\mathbb{Z}/m\mathbb{Z} = \{[0]_m, [1]_m, \cdots, [m-1]_m\}.\]
 
-\begin{exm}
+\begin{example}
 When $m = 2$, $\mathbb{Z}/2\mathbb{Z} = \{[0]_2, [1]_2\}$. The congruence class $[1]_2$ is the set of all integers congruent to $1$ modulo $2$. Thus $[1]_2$ is the set of all odd integers. Similarly, the congruence class $[0]_2$ is the set of all even integers.
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Proposition of Congruence.}
-\begin{prop}
+\begin{proposition}
 \label{prop_residue}
 If $[a_1]_m = [a_2]_m$ and $[b_1]_m = [b_2]_m$, then
 \[[a_1 \pm b_1]_m = [a_2 \pm b_2]_m, \qquad \text{and}\qquad
 [a_1 b_1]_m = [a_2 b_2]_m.\]
-\end{prop}
+\end{proposition}
 
 \begin{proof}
 It is easy. Transform the form $[a]_m = [b]_m$ to $a \equiv b \pmod{m}$ and use Proposition 2.2. 
@@ -351,10 +346,10 @@ It is easy. Transform the form $[a]_m = [b]_m$ to $a \equiv b \pmod{m}$ and use 
 
 \frame{\frametitle{Notations of Congruence classes modulo $m$.} 
 
-\begin{exm}
+\begin{example}
 Let $m = 7$, the least residue system modulo $m$ is the set $\{0, 1, 2, 3, 4, 5, 6 \}$, 
 and a complete residue system modulo $m$ may be the set $\{14 , 8, 23, 46, 61, 13\}$.
-\end{exm}
+\end{example}
 }
 
 \section{Modular Exponentiation}
@@ -365,18 +360,18 @@ In this section, we focus on modular exponentiation which is an important arithm
 }
  
 \frame{\frametitle{Mod Exponentiation.}
-\begin{exm}
+\begin{example}
 \label{exm:pow}
 To compute $2^{16} \bmod 11$.  We compute:
 \[2^2 \bmod 11 = 4\] 
 \[2^4 \bmod 11 = 4 \cdot 4 \bmod 11 = 5\]
 \[2^8 \bmod 11 = 5 \cdot 5 \bmod 11 = 3 \]
 \[2^{16} \bmod 11 = 3 \cdot 3 \bmod 11 = 9 \]
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Mod Exponentiation.}
-\begin{exm}
+\begin{example}
 \label{exm:pow-22}
 To compute $2^{22} \bmod 11$.  We compute:
 \[2^2 \bmod 11 = 4\] 
@@ -385,7 +380,7 @@ To compute $2^{22} \bmod 11$.  We compute:
 \[2^{16} \bmod 11 = 3 \cdot 3 \bmod 11 = 9 \]
 
 then \[(2^{22} = 2^2 \cdot 2^4 \cdot 2^{16}) \equiv 4 \cdot 5 \cdot 9 \equiv 4 \pmod{11}\]
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Mod Exponentiation.}
@@ -774,11 +769,11 @@ Let $n = 9$,
 }
 
 \frame{\frametitle{More about Euler's Phi Function.}
-	\begin{defn}[Euler's Phi Function.]
+	\begin{definition}[Euler's Phi Function.]
 		Define:
 		\[\varphi(n) = | \{ b: 1\leq b < n \; \text{and}\; \gcd(b,n)=1 \}|\]
 		The function $\varphi$ is called \textit{Euler's phi function}.
-	\end{defn}
+	\end{definition}
 
     \begin{exampleblock}{Observations}
     	$\varphi(p) = p - 1$, where $p$ is a prime.
@@ -838,15 +833,15 @@ Find all the elements which are relatively prime to both $n$ and $m$, then it is
 }
 
 \frame{\frametitle{More about Euler's Phi Function.}
-\begin{rema}[Why the conclusion holds?]
+\begin{remark}[Why the conclusion holds?]
    If $\gcd(a, m)=1$ and $\gcd(a, n)=1$ then $\gcd(a, mn) = 1$.
-\end{rema}
+\end{remark}
 }
 
 \frame{\frametitle{More about Euler's Phi Function.}
-\begin{rema}[Why the second item holds?]
+\begin{remark}[Why the second item holds?]
    The elements in $r$th row are: $r$, $m + r$, $\cdots$, $(n-1)m + r$ with $\gcd(m, n) = 1$. $\forall k_i \neq k_j$, $k_i m + r \not \equiv k_j m + r \pmod n$. Otherwise, $k_i = k_j$ by our Golden Law(Cancellation Law), contradiction! It means the $n$ elements in $r$th row form "a complete system of residues modulo $n$", that is $\{ r, m + r, \cdots, (n-1)m + r\} \pmod n = \{0, 1, 2, \cdots, n-1\}$. Hence, exactly $\varphi(n)$ of these integers are relatively prime to $n$.
-\end{rema}
+\end{remark}
 }
 
 \frame{\frametitle{More about Euler's Phi Function.}

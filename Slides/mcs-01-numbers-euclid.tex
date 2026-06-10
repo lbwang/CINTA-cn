@@ -17,8 +17,6 @@
 \setCJKsansfont[AutoFakeBold, AutoFakeSlant]{FandolHei-Regular.otf}
 \setCJKmonofont{FandolFang-Regular.otf}
 
-%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
-
 \setmainfont{Times New Roman} % 设置默认英文衬线字体
 
 \setCJKfamilyfont{ls}{FandolSong-Regular.otf} %定义字体
@@ -40,19 +38,8 @@
 	numbers = left,
 	numberstyle = \tiny,
 	frame = single}
-%Can't work!
-%\usepackage{minted}
 
-%%\newproof{pf}{Proof} 
-%\newtheorem{thm}{Theorem}[section]
-%\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
 
 %\title{A Concrete Introduction to Number Theory and Algebra--Chapter 1- 2} 
 \title{Mathematics for Computer Science -- 1} 
@@ -68,10 +55,9 @@
 
 %%%%%%%%%%%%%%%%%%%%% chapter.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Chapter 1. The integers
+% Chapter 1. Number Systems and Euclid Algorithm.
 %
-%%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
-%\motto{Use the template \emph{chapter.tex} to style the various elements of your chapter content.}
+%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction.}
 \frame{\frametitle{What is Mathematics for Computer Science -- 1?}
 According to LLM17-MCS:
@@ -555,7 +541,7 @@ Multiplication can be implemented using only addition and shifts, while division
 
 \frame{\frametitle{The Euclidean Algorithm.} 
 一个计算实例。
-	\begin{exm}
+	\begin{example}
 		\label{exm:gcd}
 		Given $a = 12345$ and $b = 678$, 
 		 \begin{align*}
@@ -569,7 +555,7 @@ Multiplication can be implemented using only addition and shifts, while division
          \end{align*}
   
 		Hence, $\gcd(12345, 678) = 3$.
-	\end{exm}
+	\end{example}
 }
 
 \frame{\frametitle{The Euclidean Algorithm.} 
@@ -609,9 +595,9 @@ $\gcd$算法的递归实现如下：
 \frame{\frametitle{Efficiency of The Euclidean Algorithm.} 
 \noindent\textbf{Efficiency.}
 	To understand that the $\gcd$ algorithm is quite fast, we should be aware of the fact that $a \mod b$ is a substantial reduction. It is easy to check:
-	\begin{lem}
+	\begin{lemma}
 		If $a \geq b$, then $(a \bmod b ) < a/2$. 
-	\end{lem}
+	\end{lemma}
 	Hence, after two consecutive rounds, both $a$ and $b$ are at least halved in value, which means that the algorithm will terminate after $\mathcal O(\log a)$ recursive calls.\\
 }
 
@@ -710,7 +696,7 @@ $\gcd(a,b)$等于$a$和$b$所有线性组合值的最小值。
 }
 
 \frame{\frametitle{The Extended Euclidean Algorithm.} 
-	\begin{exm}
+	\begin{example}
 		\label{exm:egcd1}
 		Given $a = 19$, $b = 13$, to find $r$ and $s$, such that $ar + bs = \gcd(19, 13)$. 
 		\begin{align}
@@ -724,7 +710,7 @@ $\gcd(a,b)$等于$a$和$b$所有线性组合值的最小值。
 		a \cdot (-2) + b\cdot 3 &= 1
 		\end{align}
 		Finally, we have $r = -2$, $s = 3$ and $d = 1$, which is the answer.
-	\end{exm}
+	\end{example}
 }
 
 \frame{\frametitle{The Extended Euclidean Algorithm.} 

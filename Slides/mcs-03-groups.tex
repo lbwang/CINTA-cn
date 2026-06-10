@@ -19,8 +19,6 @@
 \setCJKsansfont[AutoFakeBold, AutoFakeSlant]{FandolHei-Regular.otf}
 \setCJKmonofont{FandolFang-Regular.otf}
 
-%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
-
 \setmainfont{Times New Roman} % 设置默认英文衬线字体
 
 \setCJKfamilyfont{ls}{FandolSong-Regular.otf} %定义字体
@@ -41,19 +39,9 @@
 	numbers = left,
 	numberstyle = \tiny,
 	frame = single}
-%Can't work!
-%\usepackage{minted}
 
-%%\newproof{pf}{Proof} 
-%\newtheorem{thm}{Theorem}[section]
-%\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+
 %\title{A Concrete Introduction to Number Theory and Algebra--群、子群、循环群} 
 \title{Mathematics for Computer Science -- Group, Subgroup and Cyclic Group} 
 \author{Libin Wang} 
@@ -242,9 +230,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 \label{sec:prop_gr}
 
 \frame{\frametitle{Basic Properties of Groups.}
-\begin{prop}{Proposition 1.}
+\begin{proposition}[Proposition 1.]
 	The identity element in a group $\mathbb{G}$ is unique; that is, there exists only one element $e \in \mathbb{G}$ such that $eg= ge = g$ for all $g\in \mathbb{G}$.
-\end{prop}
+\end{proposition}
 
 \pause
 
@@ -260,9 +248,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 }
 
 \frame{\frametitle{Proposition 2.}
-	\begin{prop}{Proposition 2.}
+	\begin{proposition}[Proposition 2.]
 		If $\forall g \in \mathbb{G}$, then the inverse of $g$, $g^{-1}$, is unique.
-	\end{prop}
+	\end{proposition}
 	\begin{proof}
 			如果$g^{-1}$和$g'$都是$g$的逆元，则有
 			\[ g' = g' e = g' (g g^{-1}) = (g' g)g^{-1} = e g^{-1} = g^{-1}.\]
@@ -271,9 +259,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 
 \frame{\frametitle{Proposition 3.}
 	
-	\begin{prop}{Proposition 3.}
+	\begin{proposition}[Proposition 3.]
 		Let $\mathbb{G}$ be a group. If $a, b \in \mathbb{G}$, then $(ab)^{-1} = b^{-1} a^{-1}$.
-	\end{prop}
+	\end{proposition}
 
 	\begin{proof}
 		By construction.
@@ -287,9 +275,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 }
 
 \frame{\frametitle{Proposition 4.}
-	\begin{prop}{Proposition 4.}
+	\begin{proposition}[Proposition 4.]
 		Let $\mathbb{G}$ be a group, $\forall g \in \mathbb{G}$, $(g^{-1})^{-1} = g$.
-	\end{prop}
+	\end{proposition}
 	
 	\pause
 
@@ -306,9 +294,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 }
 
 \frame{\frametitle{Proposition 5.}
-	\begin{prop}{Proposition 5.}
+	\begin{proposition}[Proposition 5.]
 		Let $\mathbb{G}$ be a group. For any $a, b \in \mathbb{G}$. Then each of the equations $ax = b$ and $xa = b$ has a unique solution in $\mathbb{G}$.
-	\end{prop}
+	\end{proposition}
 	
 	\pause
 	
@@ -323,9 +311,9 @@ Let $n$ be an integer, the set $\mathbb{Z}_n = \{0, 1, 2, \cdots, n-1\}$ forms a
 }
 
 \frame{\frametitle{Proposition 6.}
-	\begin{prop}{Cancellation Law.}
+	\begin{proposition}[Cancellation Law.]
 		Let $\mathbb{G}$ be a group, and $a, b, c \in \mathbb{G}$. Then $ba = ca$ implies $b = c$ and $ab = ac$ implies $b = c$.
-	\end{prop}
+	\end{proposition}
 	
 	\pause
 	
@@ -433,9 +421,9 @@ Let $\mathbb{G}$ be a group, and $g \in \mathbb{G}$. For $n\in \mathbb{N}$.
 }
 
 \frame{\frametitle{Properties of subgroup.}
-	\begin{prop}{(Subgroup.)}
+	\begin{proposition}[(Subgroup.)]
 		A nonempty subset $\mathbb{H}$ of a group $\mathbb{G}$  is a subgroup of  $\mathbb{G}$ if and only if $\mathbb{H} \neq \emptyset$, and $ab^{-1} \in \mathbb{H}$ for all $a, b \in \mathbb{H}$.
-	\end{prop}
+	\end{proposition}
 
 \begin{proof}
 	Two directions. The $\rightarrow$ part is easy. For $\leftarrow$ part, you need to check that $\mathbb{H}$ satisfies all the axioms of a group.
@@ -569,7 +557,7 @@ Let $\mathbb{G}$ be a group, and $g \in \mathbb{G}$. For $n\in \mathbb{N}$.
 		\begin{itemize}
            \item ${Z}_p^*$ is a cyclic group, while $p$ is a prime.
         
-	       \item $\mathbb{Z}_n^*$ is \emph{NOT} a cyclic group, while $n$ is composite.
+	       \item $\mathbb{Z}_n^*$ is \emph{NOT} necessarily a cyclic group, while $n$ is composite.
 	    \end{itemize}
 	\end{exampleblock}\pause
 \begin{alertblock}{Check.}
@@ -585,9 +573,9 @@ Let $\mathbb{G}$ be a group, and $g \in \mathbb{G}$. For $n\in \mathbb{N}$.
 }
 
 \frame{\frametitle{Primitive Root（原根）}
-\begin{defn}
+\begin{definition}
 Let $a$ and $n$ be relatively prime integers with $n>0$. The order of $a$ modulo $n$ is the smallest exponent $e \geq 1$ such that $a^e \equiv 1 \pmod{n}$. If the order of $a$ modulo $n$ equals the largest possible order modulo $n$, then $a$ is called a primitive root modulo $n$.
-\end{defn}
+\end{definition}
 }
 
 \frame{\frametitle{Primitive Root}
@@ -599,15 +587,15 @@ and $2$ and $6$ are generators of $\mathbb{Z}_{11}^*$.
 }
 
 \frame{\frametitle{Properties of Cyclic Groups.}
-\begin{prop}
+\begin{proposition}
 	%\label{prop:cyc_abel}
 	所有的循环群都是阿贝尔群。
-\end{prop}
+\end{proposition}
 
-\begin{prop}
+\begin{proposition}
 	%\label{prop:sub_cyc}
 	循环群$\mathbb{G}=\langle g \rangle$的每一个子群都是循环群。
-\end{prop}
+\end{proposition}
 
 }
 
@@ -675,10 +663,10 @@ and $2$ and $6$ are generators of $\mathbb{Z}_{11}^*$.
 }
 
 \frame{\frametitle{Properties of Cyclic Groups.}
-\begin{cor}
+\begin{corollary}
 		\label{cor:cyc_gr1}
 			Let $\mathbb{G} = \langle g \rangle$ be a cyclic group of order $n$ then there are exactly $\varphi(n)$ generators in $\mathbb{G}$.
-		\end{cor}
+		\end{corollary}
 		\pause
 		
 \begin{proof}
@@ -690,10 +678,10 @@ and $2$ and $6$ are generators of $\mathbb{Z}_{11}^*$.
 
 \frame{\frametitle{Properties of Cyclic Groups.}
 
-\begin{cor}
+\begin{corollary}
 		\label{cor:cyc_gr2}
 			Let $\mathbb{G} = \langle g \rangle$ be a cyclic group of order $p$, where $p$ is a prime,  then all elements in $\mathbb{G}$ except $e$ are generators.
-\end{cor}
+\end{corollary}
 		
 		\begin{proof}
 		Trivially from Corollary \ref{cor:cyc_gr1}.		
@@ -702,11 +690,11 @@ and $2$ and $6$ are generators of $\mathbb{Z}_{11}^*$.
 
 \frame{\frametitle{Properties of Cyclic Groups.}
 	
-	\begin{cor}
+	\begin{corollary}
 		\label{cor:ord_div_n}
 		%\label{cor:ord_div_n}
 		设群$\mathbb{G} = \langle g \rangle$ 是阶为 $n$的循环群，则任意$h\in \mathbb{G} $的阶必整除$n$。
-	\end{cor}
+	\end{corollary}
 	\begin{proof}
 		该结论的正确性可直接由命题7.5得出。
 	\end{proof}
@@ -733,7 +721,7 @@ and $2$ and $6$ are generators of $\mathbb{Z}_{11}^*$.
 				\item 请问$\mathbb{U}_n$中有多少个生成元，
 				它们分别具有什么形式？
 				
-				\item 证明：如果$p$是素数，则$\mathbb{Z}_p$没有非平凡子群。
+				\item 证明：如果$p$是素数，则加法群$\mathbb{Z}_p$没有非平凡真子群。
 				
 	\end{itemize}
 	\end{exampleblock}
@@ -913,34 +901,34 @@ The group $\mathbb{Z}_n^*$ is cyclic if and only if $n=2,4,p^e$, or $2p^e$, wher
 }
 
 \frame{\frametitle{Corollaries from Lagrange's Theorem}
-	\begin{cor}
+	\begin{corollary}
 		Suppose that $\mathbb{G}$ is a finite group and $g \in \mathbb{G}$. Then the order of $g$ must divide $\vert \mathbb{G} \vert$.
-	\end{cor}
+	\end{corollary}
 	
-	\begin{cor}
+	\begin{corollary}
 		Let $\mathbb{G}$ be a group and $\vert \mathbb{G} \vert = p$ where $p$ is a prime. Then $ \mathbb{G}$ is cyclic and any $g \in \mathbb{G}$ such that $g \neq e$ is a generator.
-	\end{cor}
+	\end{corollary}
 	
-	\begin{cor}
+	\begin{corollary}
 		Let $\mathbb{H}$ and $\mathbb{K}$ be subgroups of a finite group $\mathbb{G}$ such that $\mathbb{K} \subset \mathbb{H} \subset \mathbb{G}$. Then
 		\[
 		\lbrack \mathbb{G}: \mathbb{K} \rbrack = \lbrack \mathbb{G} : \mathbb{H} \rbrack \lbrack \mathbb{H} : \mathbb{K} \rbrack
 		\]
-	\end{cor}
+	\end{corollary}
 }
 
 \frame{\frametitle{Corollaries from Lagrange's Theorem}
-	\begin{cor}{Fermat's Little Theorem.}
+	\begin{corollary}{Fermat's Little Theorem.}
 		\[
 		a^{p-1} \equiv 1 \pmod{p}.
 		\]
-	\end{cor}
+	\end{corollary}
 	
-	\begin{cor}{Euler's Theorem.}
+	\begin{corollary}{Euler's Theorem.}
 	     \[
 	     a^{\varphi(n)} \equiv 1 \pmod{n}.
 	     \]
-	\end{cor}
+	\end{corollary}
 
 }
 

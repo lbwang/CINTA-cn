@@ -19,8 +19,6 @@
 \setCJKsansfont[AutoFakeBold, AutoFakeSlant]{FandolHei-Regular.otf}
 \setCJKmonofont{FandolFang-Regular.otf}
 
-%\setCJKmainfont[BoldFont=Microsoft YaHei,ItalicFont=YouYuan]{SimSun} %设置默认中文字体
-
 \setmainfont{Times New Roman} % 设置默认英文衬线字体
 
 \setCJKfamilyfont{ls}{FandolSong-Regular.otf} %定义字体
@@ -43,23 +41,11 @@
 	numbers = left,
 	numberstyle = \tiny,
 	frame = single}
-%Can't work!
-%\usepackage{minted}
 
-%%\newproof{pf}{Proof} 
-%\newtheorem{thm}{Theorem}[section]
-%\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{claim}[theorem]{Claim}
 
-% New commands to keep things tidy.
-%\newcommand{\ket}[1]{$\left|#1\right\rangle$}
-%\newcommand{\Om}[1]{\small $\omega_{#1}$}
 \newcommand{\Grp}[1]{\mathbb{#1}}
 %\title{A Concrete Introduction to Number Theory and Algebra-- 群同构、群同态与商群} 
 \title{Mathematics for Computer Science -- Isomorphism, Homomorphism and Quotient Group.} 
@@ -100,7 +86,7 @@ Many groups may have different appearances, however they are essentially same.
 }
 
 \frame{\frametitle{Examples of Isomorphisms.} 
-\begin{exm}
+\begin{example}
 $\mathbb{Z}_4\cong \langle i \rangle$, since we can define a bijective map $\phi: \mathbb{Z}_4 \mapsto \langle i \rangle$ by $\phi(n) = i^n$. The map $\phi$ is one-to-one and onto, since
 \begin{eqnarray*}
 \phi(0) &=& 1\\
@@ -110,7 +96,7 @@ $\mathbb{Z}_4\cong \langle i \rangle$, since we can define a bijective map $\phi
 \end{eqnarray*}
 Moreover, $\phi$ preserves the group operation, since
 \[ \phi(m+n) = i^{m+n} = i^m i^n = \phi(m) \phi(n).\]
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Examples of Isomorphisms.} 
@@ -146,7 +132,7 @@ Moreover, $\phi$ preserves the group operation, since
 }
 
 \frame{\frametitle{Theorem about Isomorphisms.} 
-\begin{prop}
+\begin{proposition}
 \label{prop:iso_pr}
 Let $\phi: \mathbb{G} \mapsto \mathbb{H}$ be an isomorphism of two groups, then the following statements are true.
 \begin{enumerate}
@@ -160,7 +146,7 @@ Let $\phi: \mathbb{G} \mapsto \mathbb{H}$ be an isomorphism of two groups, then 
 
 \item if $\mathbb{G}$ has a subgroup of order $n$, then $\mathbb{H}$ has a subgroup of order $n$.
 \end{enumerate}
-\end{prop}
+\end{proposition}
 \begin{proof}
 Left as an exercise.
 \end{proof}
@@ -188,9 +174,9 @@ Left as an exercise.
 }
 
 \frame{\frametitle{Theorem about Isomorphisms.} 
-	\begin{cor}
+	\begin{corollary}
 		If $\mathbb{G}$ is a cyclic group of order $p$ where $p$ is a prime, then $\mathbb{G}$ is isomorphic to $\mathbb{Z}_p$.	
-	\end{cor}
+	\end{corollary}
 	\begin{proof}
 		Easy!
 	\end{proof}
@@ -302,14 +288,14 @@ Left as an exercise.
 }
 
 \frame{\frametitle{Basic Properties of Normal Subgroup.}
-\begin{prop}
+\begin{proposition}
 Let $\mathbb{G}$ be a group and $\mathbb{H}$ be a subgroup of $\mathbb{G}$. Then the following statements are equivalent.
 \begin{enumerate}
 \item The subgroup $\mathbb{H}$ is a normal subgroup of $\mathbb{G}$, namely, $g\mathbb{H} = \mathbb{H}g$ for all $g \in \mathbb{G}$.
 
 \item For all $g \in \mathbb{G}$, $g\mathbb{H}g^{-1} = \mathbb{H}$.
 \end{enumerate}
-\end{prop}
+\end{proposition}
 
 }
 
@@ -335,7 +321,7 @@ Similarly, we can prove that $\mathbb{H}g \subseteq g\mathbb{H}$.
 }
 
 \frame{\frametitle{Basic Properties of Homomorphisms.}
-	\begin{prop}{Proposition 1.}
+	\begin{proposition}{Proposition 1.}
 		Let $\phi : \mathbb{G}_1 \mapsto \mathbb{G}_2$ be a homomorphism of groups. Then
 		\begin{enumerate}
 			\item If $e$ is the identity of $\mathbb{G}_1$, then $\phi(e)$ is the identity fo $\mathbb{G}_2$;
@@ -346,7 +332,7 @@ Similarly, we can prove that $\mathbb{H}g \subseteq g\mathbb{H}$.
 			
 			\item If $\mathbb{H}_2$ is a subgroup of $\mathbb{G}_2$, then $\phi^{-1}(\mathbb{H}_2)$ is a subgroup of $\mathbb{G}_1$. Furtheremore, if $\mathbb{H}_2$ is normal in $\mathbb{G}_2$, then $\phi^{-1}(\mathbb{H}_2)$ is normal in $\mathbb{G}_1$.
 		\end{enumerate}
-	\end{prop}
+	\end{proposition}
 	
 	\pause
 	
@@ -372,9 +358,9 @@ Similarly, we can prove that $\mathbb{H}g \subseteq g\mathbb{H}$.
 
 \frame{\frametitle{Basic Properties of Homomorphisms.}
 	
-	\begin{prop}{(Kernel.)}
+	\begin{proposition}{(Kernel.)}
 		Let $\phi : \mathbb{G} \mapsto \mathbb{H}$ be a group homomorphism. Then the kernel of $\phi$ is a normal subgroup of $\mathbb{G}$.
-	\end{prop}
+	\end{proposition}
 	
 	\pause
 	
@@ -488,16 +474,16 @@ If $\mathbb{H}$ is a normal subgroup of a group $\mathbb{G}$, then the cosets of
 }
 
 \frame{\frametitle{Theorem  of Quotient Groups.}
-\begin{rema}{(良定义操作.)}
+\begin{remark}{(良定义操作.)}
 所谓良定义的操作，
 就是要求操作独立于所参与操作的\emph{代表元}。比如，对任意群$\mathbb{G}$和其上的某种操作$\psi: \mathbb{G}\mapsto \mathbb{G}$，
 要求$\psi$良定义就是要求对任意的群元$a, b\in \mathbb{G}$，如果$a = b$，则$\psi(a) = \psi(b)$。一眼看上去，这个要求很无理，毫无意义，
 但是对于商群来说就必不可少。请注意，商群中操作的是陪集，$a\mathbb{H}= b\mathbb{H}$并不意味$a = b$。
-\end{rema}
+\end{remark}
 }
 
 \frame{\frametitle{Theorem  of Quotient Groups.}
-	\begin{rema}{(群操作的良定义性.)}
+	\begin{remark}{(群操作的良定义性.)}
 	Let $a \mathbb{H} = b \mathbb{H}$, $c \mathbb{H} = d\mathbb{H}$. We must prove that
 			\[(a\mathbb{H})(c\mathbb{H}) = a c\mathbb{H} = bd \mathbb{H} = (b\mathbb{H})(d\mathbb{H})\]\pause	
 			
@@ -509,7 +495,7 @@ If $\mathbb{H}$ is a normal subgroup of a group $\mathbb{G}$, then the cosets of
 	& = & b \mathbb{H} d \\
 	& = & bd \mathbb{H}
 	\end{eqnarray*}
-	\end{rema}
+	\end{remark}
 }
 
 \frame{\frametitle{小结-商群的构造.}
