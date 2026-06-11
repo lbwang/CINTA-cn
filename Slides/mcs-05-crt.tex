@@ -47,13 +47,8 @@
 %%\newproof{pf}{Proof} 
 %\newtheorem{thm}{Theorem}[section]
 %\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
 %\title{A Concrete Introduction to Number Theory and Algebra--CRT} 
 \title{Mathematics for Computer Science -- CRT} 
 \author{Libin Wang} 
@@ -303,9 +298,9 @@ The proof that it is an isomorphism from $\mathbb{Z}_n^*$ to $\mathbb{Z}_p^* \ti
 }
 
 \frame{\frametitle{Remark.}
-\begin{rema}
+\begin{remark}
 首先，注意到$\mathbb{Z}_p \times \mathbb{Z}_q$是加法群，请验证！
-\end{rema}
+\end{remark}
 }
 
 \frame{\frametitle{How to prove the bijection?}
@@ -394,14 +389,14 @@ $\bigl([a \bmod p ], [a \bmod q ]\bigr) = \bigl([b \bmod p], [b \bmod q]\bigr)$�
 
 
 \frame{\frametitle{Little thought.} 
-	\begin{rema}
+	\begin{remark}
 		A practical application: if we have many computations to perform on $x \in \mathbb{Z}_n^*$
 		(e.g. RSA signing and decryption), we can convert $x$ to $(a, b) \in \mathbb{Z}_p^* \times \mathbb{Z}_q^*$
 		and do all the computations on $a$ and $b$
 		instead before converting back. 
 		
 		This is often cheaper because for many algorithms, doubling the size of the input more than doubles the running time.
-	\end{rema}
+	\end{remark}
 }
 
 

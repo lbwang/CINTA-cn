@@ -48,13 +48,8 @@
 %%\newproof{pf}{Proof} 
 %\newtheorem{thm}{Theorem}[section]
 %\newtheorem{fact}[theorem]{Fact}
-\newtheorem{prop}[theorem]{Proposition}
-\newtheorem{lem}[theorem]{Lemma}
-\newtheorem{defn}[theorem]{Definition}
-\newtheorem{cor}[theorem]{Corollary}
-\newtheorem{rema}[theorem]{Remark}
-\newtheorem{clam}[theorem]{Claim}
-\newtheorem{exm}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
 
 \newcommand{\Q}{{\mathbb Q}}
 \newcommand{\Z}{{\mathbb Z}}
@@ -235,12 +230,12 @@ The second column of each table is symmetric under reflection (反射对称), as
 }
 
 \frame{\frametitle{One formally stated property.}
-\begin{prop}
+\begin{proposition}
 \label{prop:num_qr}
  Let $p$ be an odd prime and $b$ an integer not divisible by $p$. Then, the congruence
  \[x^2 \equiv b \pmod{p} \]
  has either no solutions or exactly two incongruent solutions modulo $p$.
- \end{prop}
+ \end{proposition}
 }
 
 \frame{\frametitle{One formally stated property.}
@@ -261,16 +256,16 @@ means $x_0 \equiv x_1 \pmod{p}$ or $x_0 \equiv -x_1 \pmod{p}$. Therefore, if the
 }
 
 \frame{\frametitle{Quadratic Residues（二次剩余） and Quadratic Non-Residue（二次非剩余）.}
-\begin{defn}
+\begin{definition}
  Let $m,n \in \mathbb{Z}$ with $\gcd(m,n)=1$.  Then $m$ is called a \textit{quadratic residue modulo $n$}(模$n$的二次剩余)
   (short for $\mathbf{QR}$) if $m \equiv x^2 \pmod{n}$ for some $x \in \Z$, and $m$ is called a \textit{quadratic nonresidue modulo $n$}（模$n$的二次非剩余）(short for $\mathbf{QNR}$) otherwise. 
- \end{defn}
+ \end{definition}
 }
 
 \frame{\frametitle{QR and QNR.}
-\begin{exm}
+\begin{example}
   From these tables we see that, the $\mathbf{QR}$ modulo $7$ are $\{1, 2, 4\}$; the $\mathbf{QR}$ modulo $13$ are $ \{1, 3, 4, 9, 10, 12\}$; the $\mathbf{QNR}$ modulo $7$ are $\{3, 5, 6\}$; the $\mathbf{QNR}$ modulo $13$ are $\{2, 5, 6, 7, 8, 11\}$.
-  \end{exm}
+  \end{example}
 }
 
 \frame{\frametitle{QR and QNR.}
@@ -288,10 +283,10 @@ means $x_0 \equiv x_1 \pmod{p}$ or $x_0 \equiv -x_1 \pmod{p}$. Therefore, if the
 }
 
 \frame{\frametitle{Quadratic Residues Group.}
-\begin{prop}
+\begin{proposition}
   \label{prop:QR_gr}
   Let $\mathbb{QR}_p$ denote the set of every $\mathbf{QR}$ modulo $p$, $\mathbb{QR}_p$ is a group under multiplication. 
-  \end{prop}
+  \end{proposition}
   
   \begin{proof}
   It is easy to prove by checking all the group axioms.
@@ -306,7 +301,7 @@ The map $\phi:\mathbb{Z}_p^* \to \mathbb{QR}_p$ is a group homomorphism. From ea
 }
 
 \frame{\frametitle{Quadratic Residues vs Quadratic Non-Residues.}
-  \begin{prop}
+  \begin{proposition}
   \label{prop:qr_mul}
   Let $p$ be an odd prime. Then
   
@@ -324,7 +319,7 @@ The map $\phi:\mathbb{Z}_p^* \to \mathbb{QR}_p$ is a group homomorphism. From ea
  \[
  \mathbf{QNR} \times \mathbf{QNR} = \mathbf{QR}.
  \]
-  \end{prop}
+  \end{proposition}
 }
 
 \frame{\frametitle{Quadratic Residues vs Quadratic Non-Residues.}
@@ -388,7 +383,7 @@ The map $\phi:\mathbb{Z}_p^* \to \mathbb{QR}_p$ is a group homomorphism. From ea
 \section{Legendre Symbol and Euler's Criterion.}
 \label{sec:ls_ec}
 \frame{\frametitle{Legendre symbol.（勒让德符号）}
-\begin{defn}
+\begin{definition}
 Let $p$ be an odd prime and let $n \in \Z$. The \textbf{Legendre symbol} $(n/p)$ is defined as
 \[\left(\frac{n}{p}\right) = 
 \left\{ \begin{array}{rl} 
@@ -397,11 +392,11 @@ Let $p$ be an odd prime and let $n \in \Z$. The \textbf{Legendre symbol} $(n/p)$
 0 & \mbox{if } p\mid n.
   \end{array} 
  \right.  \] 
-\end{defn}
+\end{definition}
 }
 
 \frame{\frametitle{Legendre symbol的属性.}
-\begin{prop}
+\begin{proposition}
    设$p$是奇素数，$a, b \in \mathbb{Z}$且不被$p$整除。则有：
    \begin{enumerate}
    \item 如果$a \equiv b \pmod{p}$，则$\left(\frac{a}{p} \right) = \left(\frac{b}{p} \right)$；
@@ -410,7 +405,7 @@ Let $p$ be an odd prime and let $n \in \Z$. The \textbf{Legendre symbol} $(n/p)$
    
    \item $\left(\frac{a^2}{p} \right) = 1$。
    \end{enumerate}
-   \end{prop}
+   \end{proposition}
    
    \pause
    
@@ -421,15 +416,15 @@ Let $p$ be an odd prime and let $n \in \Z$. The \textbf{Legendre symbol} $(n/p)$
 
 
 \frame{\frametitle{Legendre symbol.}
- \begin{exm}
+ \begin{example}
 \[ \left(\frac{75}{97} \right) = \left(\frac{3\cdot 5 \cdot 5}{97} \right) = \left(\frac{3}{97} \right) = 1\]
 Since $10^2 \equiv 3 \pmod{97}$, so $3$ is a $\mathbf{QR}$.
- \end{exm}
+ \end{example}
 \pause 
-\begin{exm}
+\begin{example}
 \[ \left(\frac{269}{97} \right) = \left(\frac{2 \cdot 97 + 75 }{97} \right) = \left(\frac{75}{97} \right) = 1. \]
 
-\end{exm}
+\end{example}
 }
 
 \frame{\frametitle{Euler's Criterion.（欧拉准则）}
@@ -470,10 +465,10 @@ Since $10^2 \equiv 3 \pmod{97}$, so $3$ is a $\mathbf{QR}$.
     }
    
 \frame{\frametitle{Euler's Criterion.}
-    \begin{exm}
+    \begin{example}
     \[ \left(\frac{3}{97} \right) = 3^{(97- 1)/2} \bmod 97 = 3^{48} \bmod 97 = 1. \]
     Thus $3$ is a $\mathbf{QR} \bmod 97$.
-    \end{exm}
+    \end{example}
 }
 
 \frame{\frametitle{Euler's Criterion: Finding the patterns.}
@@ -532,9 +527,9 @@ Let $p = 7$, and for very $1\leq a < p$, compute $a^i\; \text{mod}\; p$, where $
  }
  
  \frame{\frametitle{Theorem about   primes of the form $4k+1$.}
- \begin{prop}
+ \begin{proposition}
   模$4$余$1$的素数有无穷多。
-  \end{prop}
+  \end{proposition}
  
  \begin{proof}
  假设模$4$余$1$的素数有限，枚举之$S = \{1, p_1, p_2, \ldots, p_n\}$。
@@ -599,10 +594,10 @@ Let $p = 7$, and for very $1\leq a < p$, compute $a^i\; \text{mod}\; p$, where $
    }
   
    \frame{\frametitle{Quadratic Reciprocity.}
-    \begin{exm}
+    \begin{example}
        \[ \left(\frac{14}{137} \right) = \left(\frac{2}{137} \right) \left(\frac{7}{137} \right) = \left(\frac{7}{137} \right) = \left(\frac{137}{7} \right) = \left(\frac{4}{7} \right) = 1  . \]
        Thus $14$ is a $\mathbf{QR}$.
-       \end{exm}
+       \end{example}
    }
 
 \frame{\frametitle{Quadratic Reciprocity.}
