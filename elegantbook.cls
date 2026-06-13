@@ -846,16 +846,29 @@
   \par\noindent\textbf{\color{main}{\problemname} \theprob #1 }\rmfamily}{
   \par\ignorespacesafterend}
 
+\newcounter{thinking}[chapter]
+\setcounter{thinking}{0}
+\renewcommand{\thethinking}{\thechapter.\arabic{thinking}}
+
+\newcounter{property}[chapter]
+\setcounter{property}{0}
+\renewcommand{\theproperty}{\thechapter.\arabic{property}}
+
+\newcounter{remark}[chapter]
+\setcounter{remark}{0}
+\renewcommand{\theremark}{\thechapter.\arabic{remark}}
+
 \newenvironment{note}{
   \par\noindent\makebox[-3pt][r]{
     \scriptsize\color{red!90}\textdbend\quad}
     \textbf{\color{second}\notename} \citshape}{\par}
 
 % add by lbwang 20200326  
-\newenvironment{thinking}{
+\NewDocumentEnvironment{thinking}{g}{
+  \refstepcounter{thinking}
   \par\noindent\makebox[-3pt][r]{
     \scriptsize\color{red!90}\textdbend\quad}
-    \textbf{\color{second}\thinkingname} \citshape}{\par}
+    \textbf{\color{second}\thinkingname~\thethinking\IfValueT{#1}{~#1}} \citshape}{\par}
 
 \newenvironment{proof}{
   \par\noindent\textbf{\color{second}\proofname\;}
@@ -864,11 +877,26 @@
   \par}
 
 \newenvironment{solution}{\par\noindent\textbf{\color{main}\solutionname} \citshape}{\par}
-\newenvironment{remark}{\noindent\textbf{\color{second}\remarkname}}{\par}
+\NewDocumentEnvironment{remark}{g}{
+  \refstepcounter{remark}
+  \par\noindent\textbf{\color{second}\remarkname~\theremark\IfValueT{#1}{~#1}}}{\par}
 \newenvironment{assumption}{\par\noindent\textbf{\color{third}\assumptionname} \citshape}{\par}
 \newenvironment{conclusion}{\par\noindent\textbf{\color{third}\conclusionname} \citshape}{\par}
-\newenvironment{property}{\par\noindent\textbf{\color{third}\propertyname} \citshape}{\par}
+\NewDocumentEnvironment{property}{g}{
+  \refstepcounter{property}
+  \par\noindent\textbf{\color{third}\propertyname~\theproperty\IfValueT{#1}{~#1}} \citshape}{\par}
 \newenvironment{custom}[1]{\par\noindent\textbf{\color{third} #1} \citshape}{\par}
+
+\AtBeginDocument{
+  \@ifpackageloaded{cleveref}{
+    \crefname{thinking}{\thinkingname}{\thinkingname}
+    \Crefname{thinking}{\thinkingname}{\thinkingname}
+    \crefname{property}{\propertyname}{\propertyname}
+    \Crefname{property}{\propertyname}{\propertyname}
+    \crefname{remark}{\remarkname}{\remarkname}
+    \Crefname{remark}{\remarkname}{\remarkname}
+  }{}
+}
 
 \RequirePackage{multicol}
 \tcbset{
