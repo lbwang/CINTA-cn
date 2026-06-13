@@ -104,7 +104,7 @@ $2^7 - 1 = 127$，它的二进制表达就是$\mathtt{0b}\underbrace{1111111}_{7
 请将以上计算过程的结论归纳成一个定理，并证明。你可以使用任何的证明方法。请问，以上“硬”算的方法能否推广为一种证明方法？
 \end{thinking}
 
-例子\ref{exm:binary}有意思之处不在于提倡一种“炫技式”的蛮干，而是在于提醒我们，如果要将任意一个整数$b$表达为二进制数，
+例子~\ref{exm:binary}有意思之处不在于提倡一种“炫技式”的蛮干，而是在于提醒我们，如果要将任意一个整数$b$表达为二进制数，
 只需要考虑到，其实$b$就是某些$2^i$之和，$0 \le i < n$, $n$是$b$的比特长度。
 如下式所示，$b_i \in \{0, 1\}$可视为取舍某个$2^i$项的标识符，也是整数$b$的二进制表达。
 
@@ -193,7 +193,7 @@ a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
 
 也许你不能立即看出所给出递归算法与这种思想的关系，但是作为读者，你的任务就是要理解这种等价性。并且，还要求读者使用以上思想实现一种迭代式的简单乘法，这是课后习题。
 
-最后，我们还必须问，能否有更高效的乘法算法？答案是肯定的，只是这并非本章的任务，有兴趣的读者可以参考附录的第\ref{chap:fast_mul} 节。
+最后，我们还必须问，能否有更高效的乘法算法？答案是肯定的，只是这并非本章的任务，有兴趣的读者可以参考附录的第~\ref{chap:fast_mul} 节。
 
 \section{除法算法}
 \label{sec:Division}
@@ -206,7 +206,7 @@ a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
 且$0 \leq r < b$。
 \end{theorem}
 
-图\ref{fig:division} 展示了除法算法背后的几何直观。数轴上一系列的等距离点代表所有$b$的倍数，而表达$a$值的点肯定落在某两个等距点的中间，
+图~\ref{fig:division} 展示了除法算法背后的几何直观。数轴上一系列的等距离点代表所有$b$的倍数，而表达$a$值的点肯定落在某两个等距点的中间，
 比如在$qb$和$(q+1)b$之间。这就表示$a - bq = r$，其中$r$表示一段比$b$要小的长度。因此，正如定理所要求，$0 \leq r < b$。
 
 %%% Reuse the figure of mod. 20260613
@@ -219,8 +219,8 @@ a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
 \end{figure}
 
 除法算法是数论的重要基础，在未来的章节中还会多次出现，值得关注。
-而图\ref{fig:division}的直观也非常具有启发性，除了可以直观地表示出$a - bq = r$，很多算法设计的思路也源自于这种直观。
-接下来我们要证明定理\ref{thm:DivAlgo}，该证明使用了以下公理，一种强有力的证明工具。
+而图~\ref{fig:division}的直观也非常具有启发性，除了可以直观地表示出$a - bq = r$，很多算法设计的思路也源自于这种直观。
+接下来我们要证明定理~\ref{thm:DivAlgo}，该证明使用了以下公理，一种强有力的证明工具。
 \begin{axiom}{良序原则}{POWO}
 自然数的非空子集必然存在一个最小元素。\index{principle of well-ordering} \index{良序原则}
 \end{axiom}
@@ -265,7 +265,7 @@ $\phi(x) = y$，则称映射$\phi$为\emph{满射}（\emph{surjection}）\index{
 如果$c \mid a$，$c \mid b$，则对任意$m, n \in \Z$，有$c \mid (ma + nb)$。
 \end{proposition}
 
-讲到互素就必须提一下\emph{素数}与\emph{合数}这两个概念。关于素数，我们将在第\ref{chap:prime}章进一步进行讨论。
+讲到互素就必须提一下\emph{素数}与\emph{合数}这两个概念。关于素数，我们将在第~\ref{chap:prime}章进一步进行讨论。
 \begin{definition}{素数与合数}{prime_compos}
 若$p \in \Z$且$p > 1$。如果整除$p$的正整数只有$1$和$p$自己本身，则称$p$为素数\index{prime number}\index{素数}。
 如果整数$n > 1$不是素数，则称之为合数\index{composite number}\index{合数}。
@@ -288,7 +288,7 @@ $\phi(x) = y$，则称映射$\phi$为\emph{满射}（\emph{surjection}）\index{
 \addcontentsline{toc}{section}{章注}
 虽然本章的内容较简单，然而其内涵与被关注的程度远超出初学者的预期。比如，位置计数法、除法算法等知识点，在计算领域，可以说是显得无处不在。
 又比如，目前科学家们依然在研究整数乘法算法，
-除了附录第\ref{chap:fast_mul} 节给出的效率为$\mathcal{O}(n^{1.58})$的算法外，在2021年，Harvey 等人提出了一种复杂性为$\mathcal{O}(n \log n)$的算法\cite{harvey2021integer}。有意思的是，该算法的理论结果虽好，但是却不会应用在一般的场合，因为
+除了附录第~\ref{chap:fast_mul} 节给出的效率为$\mathcal{O}(n^{1.58})$的算法外，在2021年，Harvey 等人提出了一种复杂性为$\mathcal{O}(n \log n)$的算法~\cite{harvey2021integer}。有意思的是，该算法的理论结果虽好，但是却不会应用在一般的场合，因为
 它的速度优势只有在非常大的整数相乘时才能体现出来。
 %% https://www.quantamagazine.org/mathematicians-discover-the-perfect-way-to-multiply-20190411/
 %% https://mathscholar.org/2019/04/an-n-log-n-algorithm-for-multiplication/
@@ -303,11 +303,11 @@ $\phi(x) = y$，则称映射$\phi$为\emph{满射}（\emph{surjection}）\index{
 
   \item 用 C 语言编程实现一种迭代版本的简单乘法。
 
-  \item 证明命题\ref{pro:divisible}。
+  \item 证明命题~\ref{pro:divisible}。
 
-  \item 完成定理\ref{thm:DivAlgo}（\textbf{除法算法}）的证明。
+  \item 完成定理~\ref{thm:DivAlgo}（\textbf{除法算法}）的证明。
 
-  \item 利用定理\ref{thm:DivAlgo}（\textbf{除法算法}）证明，任意整数的平方都形如$3k$或者$3k+1$，$k$是整数。%%%Bur11-ENT，P19. 穷举法。
+  \item 利用定理~\ref{thm:DivAlgo}（\textbf{除法算法}）证明，任意整数的平方都形如$3k$或者$3k+1$，$k$是整数。%%%Bur11-ENT，P19. 穷举法。
 
   \item 证明：设$n$是大于零的整数。对任意$n + 1$个正整数，其中必然存在两个数的差是$n$的倍数。%%除法算法+鸽巣定理，2024年8月.
 
