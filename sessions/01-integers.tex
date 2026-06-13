@@ -166,7 +166,6 @@ a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
 \end{equation}
 
 \begin{center}
-\label{alg:rec_mul}
 	\lstinputlisting[label = alg:rec_mul, title = 简单乘法(递归版)]{codes/chap1-4.py}
 \end{center}
 
@@ -210,16 +209,17 @@ a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
 图\ref{fig:division} 展示了除法算法背后的几何直观。数轴上一系列的等距离点代表所有$b$的倍数，而表达$a$值的点肯定落在某两个等距点的中间，
 比如在$qb$和$(q+1)b$之间。这就表示$a - bq = r$，其中$r$表示一段比$b$要小的长度。因此，正如定理所要求，$0 \leq r < b$。
 
+%%% Reuse the figure of mod. 20260613
 \begin{figure}
 \begin{center}
-\includegraphics[scale=1]{figures/mod.pdf}
+\input{figures/mod.tikz}
 \caption{除法的几何解释.}
 \label{fig:division}
 \end{center}
 \end{figure}
 
 除法算法是数论的重要基础，在未来的章节中还会多次出现，值得关注。
-而图\ref{fig:division}的直观也非常具有启发性。
+而图\ref{fig:division}的直观也非常具有启发性，除了可以直观地表示出$a - bq = r$，很多算法设计的思路也源自于这种直观。
 接下来我们要证明定理\ref{thm:DivAlgo}，该证明使用了以下公理，一种强有力的证明工具。
 \begin{axiom}{良序原则}{POWO}
 自然数的非空子集必然存在一个最小元素。\index{principle of well-ordering} \index{良序原则}
