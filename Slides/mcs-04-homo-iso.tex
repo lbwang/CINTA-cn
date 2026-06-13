@@ -88,12 +88,12 @@ Many groups may have different appearances, however they are essentially same.
 \frame{\frametitle{Examples of Isomorphisms.} 
 \begin{example}
 $\mathbb{Z}_4\cong \langle i \rangle$, since we can define a bijective map $\phi: \mathbb{Z}_4 \mapsto \langle i \rangle$ by $\phi(n) = i^n$. The map $\phi$ is one-to-one and onto, since
-\begin{eqnarray*}
-\phi(0) &=& 1\\
- \phi(1) &=& i\\
- \phi(2) &=& -1\\
- \phi(3) &=& -i.
-\end{eqnarray*}
+\begin{align*}
+\phi(0) &= 1\\
+ \phi(1) &= i\\
+ \phi(2) &= -1\\
+ \phi(3) &= -i.
+\end{align*}
 Moreover, $\phi$ preserves the group operation, since
 \[ \phi(m+n) = i^{m+n} = i^m i^n = \phi(m) \phi(n).\]
 \end{example}
@@ -105,12 +105,12 @@ Moreover, $\phi$ preserves the group operation, since
 		find an isomorphism $\phi$ to show that:
 		$$\mathbb{Z}_8^* \cong \mathbb{Z}_{12}^* $$
 			An isomorphism $\phi : \mathbb{Z}_8^*  \mapsto \mathbb{Z}_{12}^*$ is defined by :
-				\begin{eqnarray*}
-				1 &\mapsto& 1 \\
-				3 &\mapsto& 5 \\
-				5 &\mapsto& 7\\
-				7 &\mapsto& 11
-				\end{eqnarray*}
+				\begin{align*}
+				1 &\mapsto 1 \\
+				3 &\mapsto 5 \\
+				5 &\mapsto 7\\
+				7 &\mapsto 11
+				\end{align*}
 		Can you find another isomorphism between these two groups?
 	\end{exampleblock}
 	
@@ -442,11 +442,11 @@ under the operation $(a \mathbb{H}) (b \mathbb{H}) = ab \mathbb{H}$. This group 
 \begin{proof}
 要证明 $(a \mathbb{H}) (b \mathbb{H}) \subseteq ab \mathbb{H}$，即任取$a h_1 b h_2 \in a \mathbb{H} b \mathbb{H}$，
 证$a h_1 b h_2 \in ab \mathbb{H}$。但是，这是容易的，因为：
-\begin{eqnarray*}
-	a h_1 b h_2 & = & h_3 a b h_2  \\
-	& = & ab h_4 h_2\\
-	& = & ab h_5  \in  ab \mathbb{H}
-	\end{eqnarray*}
+\begin{align*}
+	a h_1 b h_2 &= h_3 a b h_2  \\
+	&= ab h_4 h_2\\
+	&= ab h_5  \in  ab \mathbb{H}
+	\end{align*}
 	
 另一个方向，证明$ab \mathbb{H} \subseteq (a \mathbb{H}) (b \mathbb{H}) $则留给大家作为练习。	
 \end{proof}
@@ -488,13 +488,13 @@ If $\mathbb{H}$ is a normal subgroup of a group $\mathbb{G}$, then the cosets of
 			\[(a\mathbb{H})(c\mathbb{H}) = a c\mathbb{H} = bd \mathbb{H} = (b\mathbb{H})(d\mathbb{H})\]\pause	
 			
 	For $a = b n_1$ and $c = dn_2$ for some $n_1$ and $n_2$ in $\mathbb{H}$. Hence,
-	\begin{eqnarray*}
-	ac \mathbb{H} & = & b n_1 d n_2 \mathbb{H} \\
-	& = & b n_1 d \mathbb{H} \\
-	& = & b n_1 \mathbb{H} d \\
-	& = & b \mathbb{H} d \\
-	& = & bd \mathbb{H}
-	\end{eqnarray*}
+	\begin{align*}
+	ac \mathbb{H} &= b n_1 d n_2 \mathbb{H} \\
+	&= b n_1 d \mathbb{H} \\
+	&= b n_1 \mathbb{H} d \\
+	&= b \mathbb{H} d \\
+	&= bd \mathbb{H}
+	\end{align*}
 	\end{remark}
 }
 
@@ -656,12 +656,12 @@ $\mathbb{Z}_p^* / \mathbb{S} = \{ \mathbb{S}, 2\mathbb{S}, 3\mathbb{S} \}$。
 	\begin{block}{(证明第三步.)}
 		\begin{itemize}
 		\item 可证明$\eta$是同态且是双射。$\eta$是同态，因为：
-				\begin{eqnarray*}
-					\eta(g_1\mathbb{K} g_2 \mathbb{K}) & = & \eta(g_1 g_2 \mathbb{K}) \\
-					& = &  \psi(g_1 g_2) \\
-					& = & \psi(g_1)\psi(g_2)\\
-					& = & \eta(g_1\mathbb{K})\eta(g_2\mathbb{K})
-					\end{eqnarray*}
+				\begin{align*}
+					\eta(g_1\mathbb{K} g_2 \mathbb{K}) &= \eta(g_1 g_2 \mathbb{K}) \\
+					&=  \psi(g_1 g_2) \\
+					&= \psi(g_1)\psi(g_2)\\
+					&= \eta(g_1\mathbb{K})\eta(g_2\mathbb{K})
+					\end{align*}
 				$\eta$显然是满射，最后，只需证明$\eta$是单射。
 		\end{itemize}
 	\end{block}\pause
