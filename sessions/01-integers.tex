@@ -1,0 +1,367 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%% chapter01.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 1. The integers
+% This document was released as open source on 2026-06-13.
+% Copyright 2023, Boaz Barak. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{整数与二进制}
+\label{chap:int}
+
+\begin{introduction}
+  \item 二进制的性质
+  \item 整数加法
+  \item 整数乘法
+  \item 整数除法
+\end{introduction}
+
+本书的数学历程开始于古老的且假定读者已经熟知的数学系统：整数，记为$\mathbb{Z}$，它包括了$0$, $\pm 1$, $\pm 2$, $\pm 3$, $\ldots$。而包含所有正整数的集合称为自然数，记为$\mathbb{N}$。 以下数学系统非本书重点，作为常识还是需要以下记号：
+\begin{itemize}
+\item $\mathbb{Q}$：有理数
+
+\item $\mathbb{R}$：实数
+
+\item $\mathbb{C}$：复数
+\end{itemize}
+
+\section{二进制}
+\label{sec:binary}
+从计算机科学的角度去理解数学首先要认识二进制数，因为它是计算机系统中使用的数值表达系统。
+所谓二进制就是用$0$和$1$这两种数位（又称为比特）去表达所有数值的系统。本书并不会系统地去讲解二进制的知识点，
+仅通过实例展示若干关于二进制的整数运算规则，这些都是计算机专业学生（简记为 CSers）应该熟知但又往往被忽略的规则。
+准确地说，以下内容的重点并非展示规则，而是鼓励大家去发现\emph{模式}（\emph{pattern}）\index{pattern}，进而总结出规则，这一思路基本贯穿了
+整本 CINTA，值得提请读者重视。
+
+让我们先考虑所有的正整数。因为二进制中只有$0$和$1$两种数位，所以用$0$和$1$表达的自然数只能是：
+\[0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, \ldots \]
+显然，这些数字分别对应的十进制数就是：
+\[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, \ldots\]
+
+为了区分十进制与二进制，往往会在二进制数值前加上$0b$标识。为方便阅读，只在容易发生歧义时才加上这种标记。从以上数列可以归纳出：
+\begin{property}{(二进制性质一)}
+\label{prop:binary1}
+
+偶数二进制最末尾的比特是$0$；奇数二进制最末尾的比特是$1$。
+\end{property}
+相信大多数 CSers 立即可以认可这个规律。接着，
+关注以下十进制数列的二进制表示：
+\[0, 2, 4, 8, 16, 32, 64, 128, 256, \ldots \]
+发现它们分别是：
+\[0, 10, 100, 1000, 10000, 100000, 1000000, 10000000, \ldots \]
+于是，可以有以下结论吗？
+
+\begin{property}{(二进制性质二)}
+\label{prop:binary2}
+在一个二进制数末尾增加一个$0$等同于在十进制中对这个数乘$2$。反过来说，对一个十进制数进行乘$2$操作等同于对其二进制表达左移一个比特。
+\end{property}
+在稍微犹豫片刻之后，我们也会认可它的。
+
+\begin{thinking}
+\label{rem:binary2}
+请问，你认为对一个十进制数进行除$2$等于对其二进制表达右移一个比特吗？
+\end{thinking}
+
+考虑任意自然数$n$，所谓$2$的$n$次方（$2^n$）只是不断对$1$乘$n$次$2$，所以有以下规律。
+
+\begin{property}{(二进制性质三)}
+\label{prop:binary3}
+
+给定任意自然数$n$, 十进制数$2^n$的二进制数表达就是在$1$后加$n$个$0$：$\mathtt{0b}1 \underbrace{000 \cdots 0}_{n}$。
+\end{property}
+如果性质三是对的，那么我们还会有以下规律：
+
+\begin{property}{(二进制性质四)}
+\label{prop:binary4}
+
+给定任意自然数$n$, 十进制数$2^n - 1$的二进制数表达就是$n$个$1$：$\mathtt{0b}\underbrace{111 \cdots 1}_{n}$。
+\end{property}
+例如，
+$2^7 - 1 = 127$，它的二进制表达就是$\mathtt{0b}\underbrace{1111111}_{7}$。
+
+\begin{example}
+\label{exm:binary}
+请计算以下等式：
+	\[1 + 2 + 2^2 + 2^3 + \cdots + 2^{10}\]
+虽然并非每一个人都具有高斯一般聪明的头脑，但是我们 CSers 熟悉二进制啊，所以可以考虑用二进制“硬”算。显然，我们有：
+\[
+\begin{array}{r@{\;}l}
+1      &= \mathtt{0b1}\\
+2      &= \mathtt{0b10}\\
+2^2    &= \mathtt{0b100}\\
+\vdots &= \vdots\\
+2^9    &= \mathtt{0b1000000000}\\
+2^{10} &= \mathtt{0b10000000000}
+\end{array}
+\]
+把上面的式子左右分别累加起来。太幸运了，没有任何进位，于是我们得到：
+\[ \sum_{i=0}^{10} 2^i = \mathtt{0b}\underbrace{11111111111}_{11}\]
+又因为$\mathtt{0b}\underbrace{11111111111}_{11}$等于十进制的$2^{11}-1$，所以答案是$2047$。
+\end{example}
+
+\begin{thinking}
+请将以上计算过程的结论归纳成一个定理，并证明。你可以使用任何的证明方法。请问，以上“硬”算的方法能否推广为一种证明方法？
+\end{thinking}
+
+例子\ref{exm:binary}有意思之处不在于提倡一种“炫技式”的蛮干，而是在于提醒我们，如果要将任意一个整数$b$表达为二进制数，
+只需要考虑到，其实$b$就是某些$2^i$之和，$0 \le i < n$, $n$是$b$的比特长度。
+如下式所示，$b_i \in \{0, 1\}$可视为取舍某个$2^i$项的标识符，也是整数$b$的二进制表达。
+
+\begin{align*}
+b &=  {\color{red}b_{n-1}} 2^{n-1} + {\color{red}b_{n-2}} 2^{n-2} + \cdots + {\color{red}b_1} 2 + {\color{red}b_0}\\
+    &=  \sum_{i=0}^{n-1} {\color{red}b_i} 2^{i}
+\end{align*}
+这就是二进制表达中常用的\emph{位置计数法}（position notation）\index{位置计数法}\index{position notation}。
+位置计数法不仅仅是一种概念性的符号表达法，而应该把它视为一种常用的有效工具。很快我们就会看到这样的实例。
+
+\section{加法与乘法}
+\label{sec:int_add_mul}
+毫无疑问，我的读者肯定会手算整数的加法和乘法，但是是否知道计算机如何做加法和乘法，那就不好说了。先让我们检验以下实现整数加法的算法：
+\begin{center}
+	\lstinputlisting[label = alg:add, caption = 整数加法]{codes/chap1-add.c}
+\end{center}
+这个算法表达的主要思想是，计算机中的加法仅仅使用到比特的逻辑操作：异或操作、与操作及移位操作。
+
+\begin{thinking} 要理解这个加法算法只需要正确回答出以下三个问题：
+
+\begin{enumerate}
+\item $a \wedge b$ 得到的是什么？
+
+\item $(b \mathbin{\text{\ttfamily \&}} a) \mathbin{\text{\ttfamily <<}} 1$ 得到的是什么？
+
+\item 该算法为什么会终止？
+
+\end{enumerate}
+另外，如果你希望正确地编程实现这个算法，比如使用 C 语言，你还需要做什么改进呢？
+\end{thinking}
+
+关于加法我们就讨论到这里，如果读者对以上问题还是没有答案，建议找相关入门教材自行阅读。
+接下来我们考察整数乘法的计算机实现。请阅读以下最朴素的（如果不能称为愚蠢的话）整数乘法算法。
+
+\begin{center}
+	\lstinputlisting[label = alg:naive_mul, caption = 朴素的整数乘法]{codes/chap1-3.py}
+\end{center}
+
+一般而言，当我们思考一个新的算法，会重点考虑以下三个关键要素：
+\begin{itemize}
+	\item \textbf{正确性}. 该算法是否正确地达成既定目标？
+
+	\item \textbf{效率}.  算法执行多少时间（步骤）才会终止？
+
+	\item \textbf{优化}. 我们能否给出效率更佳的算法？
+\end{itemize}
+
+假定$a$和$b$都是$n$比特的整数，该算法显然正确。因为：
+\[a \cdot b = \underbrace{a + a + a + \cdots a}_{b} \]
+该算法使用了$b$次加法，每次加法使用$\mathcal{O}(n)$次比特操作，因此粗略地说，该算法的总体开销是$\mathcal{O}(bn)$次比特操作。
+如何提高效率？考察下面递归式，据此可以很容易地得到乘法的递归版本。
+
+\begin{equation}
+a \cdot b =
+\begin{cases}
+2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是偶数},\\
+a + 2(a\cdot \lfloor b/2 \rfloor), & \text{若 } b \text{ 是奇数}.
+\end{cases}
+\end{equation}
+
+\begin{center}
+\label{alg:rec_mul}
+	\lstinputlisting[label = alg:rec_mul, title = 简单乘法(递归版)]{codes/chap1-4.py}
+\end{center}
+
+正确性显然成立。为什么这个算法提高了效率？分析递归调用的次数可知。每次递归调用$b$值减半，即$b$除$2$，或者说 $b$被右移了一个比特，所以该算法在执行最多$n$次递归调用之后必然终止。算法总的比特运算开销是$\mathcal{O}(n^2)$。
+
+该算法的直观思想还可以用下面的方式解释。
+对任意两个$n$比特的整数$a$和$b$，用位置记数法把$b$表示为二进制数，可得以下等式：
+
+		\begin{align*}
+	      a \cdot b &= a \cdot (b_{n-1} 2^{n-1} + b_{n-2} 2^{n-2} + \cdots + b_1 2 + b_0)\\
+	                      &= b_{n-1}(a \cdot 2^{n-1}) + b_{n-2} (a \cdot 2^{n-2})+ \cdots + b_1(a\cdot 2) + b_0 a
+		\end{align*}
+
+观察可知：
+\begin{enumerate}
+\item 上式的每一项都包含有 $a \cdot 2^i$，也就是说我们必须重复地对$a$ 乘$2$。
+
+\item 每一项中的$b_i$比特可视为一个标识符，当$b_i = 1$时，我们就把$a\cdot 2^i$加到最终结果当中。
+\end{enumerate}
+
+\begin{example}
+		计算$3 \times 10$。
+		重复对$3$乘$2^i$，其中$0 \le i \le 3$（因为$10$是一个$4$比特数），得到：$3$，$6$，$12$和$24$。因为$10$的二进制表达是$1010$，所以要累加的项是$6$和 $24$，因此最终结果是$30$。
+\end{example}
+
+也许你不能立即看出所给出递归算法与这种思想的关系，但是作为读者，你的任务就是要理解这种等价性。并且，还要求读者使用以上思想实现一种迭代式的简单乘法，这是课后习题。
+
+最后，我们还必须问，能否有更高效的乘法算法？答案是肯定的，只是这并非本章的任务，有兴趣的读者可以参考附录的第\ref{chap:fast_mul} 节。
+
+\section{除法算法}
+\label{sec:Division}
+乘法的直接对应操作就是除法。整数$a$除以非零整数$b$产生商值$q$和余数$r$，除法可形式化表达为以下名为\emph{除法算法}（\emph{division algorithm}）的定理。
+
+\begin{theorem}{除法算法}{DivAlgo}\index{除法算法}\index{division algorithm}
+%\label{thm:DivAlgo}
+对任意给定的整数$a$和$b$，其中$b > 0$，存在唯一的整数对$q$（商）和$r$（余数）使得，
+	\[a = qb + r\]
+且$0 \leq r < b$。
+\end{theorem}
+
+图\ref{fig:division} 展示了除法算法背后的几何直观。数轴上一系列的等距离点代表所有$b$的倍数，而表达$a$值的点肯定落在某两个等距点的中间，
+比如在$qb$和$(q+1)b$之间。这就表示$a - bq = r$，其中$r$表示一段比$b$要小的长度。因此，正如定理所要求，$0 \leq r < b$。
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=1]{figures/mod.pdf}
+\caption{除法的几何解释.}
+\label{fig:division}
+\end{center}
+\end{figure}
+
+除法算法是数论的重要基础，在未来的章节中还会多次出现，值得关注。
+而图\ref{fig:division}的直观也非常具有启发性。
+接下来我们要证明定理\ref{thm:DivAlgo}，该证明使用了以下公理，一种强有力的证明工具。
+\begin{axiom}{良序原则}{POWO}
+自然数的非空子集必然存在一个最小元素。\index{principle of well-ordering} \index{良序原则}
+\end{axiom}
+
+% 源自 a Survey of Modern Algebra. 2026年3月16日增补。
+\begin{thinking}
+	如何使用良序原则证明，$0$与$1$之间不存在其他整数？
+\end{thinking}
+
+\begin{proof}
+ 证明包括两部分：\emph{存在性}和\emph{唯一性}。
+
+\begin{itemize}
+\item 存在性.
+
+构造集合
+	 \[S = \{ a - bk : k \in \mathbb{Z} \; \text{且}\; a - bk \geq 0 \}.\]
+	 显然，集合$S$非空。由良序原则，存在一个最小元$r \in S$，且$r = a - qb$。因此，$a = qb + r$, $r \geq 0$。证明$r < b$则留作课后习题。
+
+\item 唯一性证明留作课后习题。
+\end{itemize}
+\end{proof}
+
+以下是一些常用术语和常用定义。
+
+\begin{definition}{单射、满射与双射}{inj_onto_bij}
+给定映射$\phi\colon A \to B$，如果对任意$\phi(x_1) = \phi(x_2)$，则有$x_1 = x_2$，
+则称映射$\phi$为\emph{单射}（\emph{injection}）\index{单射}\index{injection}，
+也称为\emph{一一映射}。
+如果对任意$y \in B$，都存在$x \in A$，使得
+$\phi(x) = y$，则称映射$\phi$为\emph{满射}（\emph{surjection}）\index{满射}\index{surjection}。
+如果映射$\phi$同时满足单射性和满射性，则称映射$\phi$为\emph{双射}（\emph{bijection}）\index{双射}\index{bijection}。
+\end{definition}
+
+设$a$和$b$是整数。如果存在整数$q$使得$a = qb$，则称$a$可被 $b$整除\index{divisible}，又记为$b \mid a$。
+如果整数$d$满足$d \mid a$且$d \mid b$，则称$d$为$a$和$b$的公因子\index{common divisor}。如果整数$d$是$a$和$b$的公因子，且
+对$a$和$b$的其他公因子$d'$都有$d' \mid d$，则称$d$是$a$和$b$的\emph{最大公因子}（greatest common divisor）\index{greatest common divisor}，
+记为$d=\gcd(a, b)$。如果$\gcd(a, b) = 1$，则称$a$和$b$\emph{互素}\index{relatively prime}。
+关于整除，有些简单的结论，证明留给读者作为练习。
+\begin{proposition}{整除性}{divisible}
+设$a,b,c \in \Z$，如果$a \mid b$，$b \mid c$，则$a \mid c$。
+如果$c \mid a$，$c \mid b$，则对任意$m, n \in \Z$，有$c \mid (ma + nb)$。
+\end{proposition}
+
+讲到互素就必须提一下\emph{素数}与\emph{合数}这两个概念。关于素数，我们将在第\ref{chap:prime}章进一步进行讨论。
+\begin{definition}{素数与合数}{prime_compos}
+若$p \in \Z$且$p > 1$。如果整除$p$的正整数只有$1$和$p$自己本身，则称$p$为素数\index{prime number}\index{素数}。
+如果整数$n > 1$不是素数，则称之为合数\index{composite number}\index{合数}。
+\end{definition}
+
+为了与乘法比较，下面展示两种除法算法，读者可自行分析其正确性与效率，这作为课后练习。
+\begin{center}
+	\lstinputlisting[label = alg:naive_div, caption  = 朴素除法]{codes/chap1-5.py}
+\end{center}
+
+\begin{center}
+	\lstinputlisting[label = alg:simple_div, caption  = 简单除法]{codes/chap1-6.py}
+\end{center}
+
+从以上算法实现中看到：乘法的实现依靠加法与比特位移操作，而除法的实现依靠减法与比特位移操作。需要提醒的是，
+这其实不仅仅是算法实现上问题，而是关于计算思想的问题，或者说认识乘法、除法的本质有助于我们认识其他的算法问题。很快我们就会体会到这一点。
+
+%%2023年4月22日
+\section*{章注}
+\addcontentsline{toc}{section}{章注}
+虽然本章的内容较简单，然而其内涵与被关注的程度远超出初学者的预期。比如，位置计数法、除法算法等知识点，在计算领域，可以说是显得无处不在。
+又比如，目前科学家们依然在研究整数乘法算法，
+除了附录第\ref{chap:fast_mul} 节给出的效率为$\mathcal{O}(n^{1.58})$的算法外，在2021年，Harvey 等人提出了一种复杂性为$\mathcal{O}(n \log n)$的算法\cite{harvey2021integer}。有意思的是，该算法的理论结果虽好，但是却不会应用在一般的场合，因为
+它的速度优势只有在非常大的整数相乘时才能体现出来。
+%% https://www.quantamagazine.org/mathematicians-discover-the-perfect-way-to-multiply-20190411/
+%% https://mathscholar.org/2019/04/an-n-log-n-algorithm-for-multiplication/
+
+\begin{problemset}
+  \item 用 C 语言编程实现判断输入是否为偶数的函数\texttt{is\_even}，即输入一个整数，如果输入为偶数，返回\texttt{True}，否则返回\texttt{False}。
+  另外，实现判断输入是否为奇数的函数\texttt{is\_odd}，即输入一个整数，如果输入为奇数，返回\texttt{True}，否则返回\texttt{False}。[提示，小心体会这两个函数的区别。]
+
+  \item  给定一个整数$v$，如何判断$v$是否$2$的某次方？
+  比如，$v = 4 = 2^2$，返回\texttt{True}；$v = 9 = 2^3 + 1$ 并非$2$的次方，返回\texttt{False}。
+  请写一个 C 语言的函数来实现以上功能。%%%def  is_power_2(a): return (a&(a-1)) == 0 http://aggregate.org/MAGIC/ ... 暴露课后习题答案系列。
+
+  \item 用 C 语言编程实现一种迭代版本的简单乘法。
+
+  \item 证明命题\ref{pro:divisible}。
+
+  \item 完成定理\ref{thm:DivAlgo}（\textbf{除法算法}）的证明。
+
+  \item 利用定理\ref{thm:DivAlgo}（\textbf{除法算法}）证明，任意整数的平方都形如$3k$或者$3k+1$，$k$是整数。%%%Bur11-ENT，P19. 穷举法。
+
+  \item 证明：设$n$是大于零的整数。对任意$n + 1$个正整数，其中必然存在两个数的差是$n$的倍数。%%除法算法+鸽巣定理，2024年8月.
+
+  \item 用 C 语言编程实现一个函数，判断输入的正整数是否为平方数，即输入整数$n$，判断$n$是否等于某个整数的平方。
+  %%%https://www.johndcook.com/blog/2008/11/17/fast-way-to-test-whether-a-number-is-a-square/
+
+  \item 证明当在$n > 2$时，任意形如$\underbrace{111\cdots 111}_{n}$的整数都不是平方数。%%%Bur11-ENT，P19. 111111 = 111108 + 3 = 4k +3。
+
+  \item 检验朴素除法与简单除法的正确性，并分别给出它们的算法效率，假定输入为$n$比特整数。
+
+  %% 以下三题出自 Higgin's Problems Collection.
+
+  \item 找一个正整数的集合$S$，使得$1$到$1000$之间每一个数都可以表达为$S$中某些数的和，且这些数都只被使用一次。
+
+  \item 证明：给定任意正整数$n$，$2^n$不能表达为若干连续正整数之和。
+
+  \item 证明：$n$是任意正整数，除了$2^n$以外，所有正整数都能表达成若干连续正整数的和。[提示：构造法。]
+
+  \item 给定一个天平和四个以克为单位的砝码，请问如何选择这四个砝码的重量，使得天平可以秤出从$1$克到$n$克的连续重量，并使得$n$尽可能大。
+
+  \item
+  请证明，对任意的素数$p$，$p^2 + 26$必然不是素数\footnote{这是我的一位学生在抖音上看到的题目，用来考我。我把写到这里，是希望每一位同学都不要害怕思考。}。
+
+  \item 请证明，给定任意正整数$a$，$a$都可以唯一地表达为以下形式：
+  \[a = \sum_{i = 0 }^{n-1} e_i 3^i,\]
+  其中，$e_i \in \{0, 1, -1\}$。这种表达被称为平衡三进制（balanced ternary）。
+
+  \item 函数$\tau(n)$表示正整数$n$所有不同因子的个数。证明，$n$所有不同因子的乘积等于$n^{\tau(n)/2}$. %20250726源自NT4B.
+
+  \item \label{prob:gf}
+  简单乘法算法只使用了“乘$2$”操作和加法完成了乘法，该思想本质上可容纳一系列算法。
+  定义集合$\mathrm{GF} \triangleq \{0,1\}^8$，即所有$8$比特长的二进制串集合。定义集合$\mathrm{GF}$中元素的加法、乘法如下。
+           (1) 加法等同于异或，即任取$a, b \in \mathrm{GF}$，$a + b \triangleq a \oplus b$；
+           (2) 乘$2$操作定义为：任取$a\in \mathrm{GF}$，如果$a$的最高比特为$0$，则$a\ast 2 \triangleq a \mathbin{\text{\ttfamily <<}} 1$(左移一个比特)。
+            如果$a$的最高比特为$1$，则$a\ast 2 \triangleq (a \mathbin{\text{\ttfamily <<}} 1) \oplus \mathtt{0x1B}$，也就是说，左移一个比特位之后再异或一个$8$比特的十六进制值$\mathtt{0x1B}$。
+            当然，还需要有，$a \ast 0 \triangleq 0$和$a \ast 1 \triangleq a$。
+  根据简单乘法的思想，由此可以得到$\mathrm{GF}$中任意值的乘法。
+  \begin{itemize}
+     \item 请写一个程序\texttt{GF\_mul}（使用 C 或者 Python）完成任意$\mathrm{GF}$中元素的乘法。[测试用例：
+     $\mathtt{0x40}\ast\mathtt{0x03} = \mathtt{0xc0}$，$\mathtt{0x80}\ast\mathtt{0x03} = \mathtt{0x9b}$，$\mathtt{0x45}\ast\mathtt{0x45} = \mathtt{0xba}$，$\mathtt{0xff}\ast\mathtt{0xff} = \mathtt{0x13}$。]
+
+     \item 观察$\mathrm{GF}$中所有元素的乘法表，并发现规律。比如，乘法满足结合律、交换律吗？加法乘法满足分配律吗？
+      给定任意的$x\in \mathrm{GF}$，且$x \ne 0$，$\operatorname{GF\_mul}(x, \cdot)$是单射吗？
+
+     \item 思考，$\mathrm{GF}$中的元素还会满足某种“除法算法”吗？
+  \end{itemize}
+ %%%% 2024年3月增补
+  \item 分析以下两种数列求积算法，分别给出它们的渐进复杂度，然后说明并编程验证它们之间有不同的计算效率。
+
+	\begin{center}
+		\lstinputlisting[language=Python]{codes/product1.py}
+	\end{center}
+
+		\begin{center}
+			\lstinputlisting[language=Python]{codes/product2.py}
+		\end{center}
+\end{problemset}
