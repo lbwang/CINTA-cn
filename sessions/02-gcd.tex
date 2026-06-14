@@ -1,0 +1,440 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%% chapter02.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 1. The integers
+% This document was released as open source on 2026-06-13.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{欧几里得算法及相关定理}
+\label{chap:euclid} 
+\begin{introduction}
+  \item 欧几里得算法
+  \item 二进制欧几里得算法
+  \item 扩展欧几里得算法
+\end{introduction}
+
+\section{欧几里得算法}
+\label{sec:gcd}
+% Always give a unique label
+除法算法是一个重要的开始，以除法算法为基础，可定义整除性、公因子、最大公因子等概念。本章讨论与最大公因子相关的算法与理论。
+\emph{欧几里得算法} (\emph{Euclidean algorithm})\index{Euclidean algorithm}计算两个整数的最大公因子，
+也简记为 $\gcd$ 算法 \index{gcd algorithm} 。
+这是一种古老的、著名的，且目前依然应用广泛的算法，其历史可以追溯到古希腊数学家欧几里得（Euclid）。
+
+\begin{theorem}{欧几里得算法}{gcd}
+给定两个整数$a$和$b$，设$a \geq b$，则$a$和$b$的最大公因子等于$b$和$(a \bmod b)$的最大公因子。
+即
+\[\gcd(a, b) = \gcd(b, a \bmod b)\]
+其中，$a \bmod b$表示用$a$除以$b$所得到的余数$r$。
+\end{theorem}
+目前，先把$a \bmod b$理解为除法，不同的是，之前是求$a$除以$b$的商和余数，现在只考虑所得的余数$r$，即表示存在某个整数$q$使得$a = qb + r$。借助上一章表示除法直观的图~\ref{fig:division}可清晰展示这种取余操作。在下一章我们会讨论另一种直观。
+%Delete a figure which demonstrate mod operator, 20260613
+
+\begin{example}
+\label{exm:gcd1}
+	给定$a = 12345$和$b = 678$，求它们的最大公因子。 
+	\[\gcd(12345, 678) = \gcd(678, 141) = \gcd(141,114)\]
+	\[= \gcd(114, 27) = \gcd(27, 6) = \gcd(6, 3) = \gcd(3, 0) \]
+	
+	因此，$\gcd(12345, 678) = 3$.
+\end{example}
+
+%增加Sage命令来提高学生的动手积极性。20200418
+\begin{example}
+\label{exm:gcd-in-sage}
+使用 SageMath 命令 \lstinline{gcd} 我们可以很容易计算两个整数的最大公因子。
+\begin{lstlisting}
+sage: gcd(12345, 678)
+3
+sage: gcd(12^20, 18^20)
+3656158440062976
+\end{lstlisting}
+\end{example}
+
+%%%Sth new added on 20191108
+\begin{example}
+\label{exm:remainder}
+证明，对任意两个正整数$a$和$b$，有 $\gcd(2^a - 1, 2^b -1) =  2^{\gcd(a,b)} -1$。
+
+首先，我们证明，
+\[(2^a - 1) \bmod (2^b - 1) = (2^r -1),\]
+其中$r = (a \bmod b)$。考虑任意$i\in \N$，$2^i -1$ 的二进制表达，不难看出：
+
+\[2^a - 1  =0b \underbrace{\underbrace{11\cdots 1}_{b} \underbrace{11\cdots 1}_{b} \cdots \underbrace{11\cdots 1}_{b} \underbrace{11\cdots 1}_{r}}_{a}\]
+
+因此，我们有 $\gcd(2^a - 1, 2^b -1) =  2^{\gcd(a,b)} -1$, 因为
+
+$\gcd(2^a - 1, 2^b -1) =  \gcd(2^b - 1, 2^{r_1} -1)$, 其中 $r_1 = a \bmod b$；
+
+$\gcd(2^b - 1, 2^{r_1} -1) = \gcd(2^{r_1} - 1, 2^{r_2} -1)$, 其中 $r_2 = b \bmod r_1$；
+
+$\cdots$
+
+$\gcd(2^{r_{k-1}} - 1, 2^{r_{k}} - 1) = 2^{r_{k}} - 1$，其中 $r_k | r_{k-1}$，或者，等价地$r_k = \gcd(a, b)$。
+\end{example}
+
+\begin{thinking}
+很显然，这是一个特定选择的例子。建议读者给出另一种数学家的证明，也可阅读参考 Kenneth Rosen 的《初等数论及其应用》\cite{Ros11ENTA}的第 4 章 Lemma 4.3。
+\end{thinking}
+
+以下直接给出一种计算$\gcd(a, b)$的递归程序，建议读者自己完成迭代版本的程序。
+
+\begin{center}
+	\lstinputlisting[label = alg:gcd, caption  = 欧几里得算法]{codes/chap1-7.py}
+\end{center}
+
+\noindent\textbf{正确性.} 要证明算法的正确性，只需要验证以下计算成立即可： 
+\[\gcd(a, b) = \gcd(a - b,  b)\]
+然后，利用这条规则，我们能不断地从$a$中减去$b$而最终得到余数。请回忆算法~\ref{alg:naive_div}（朴素除法算法）的过程，不难导出以下计算过程：
+\[\gcd(a, b) = \gcd(a - b,  b) = \gcd((a - b) - b, b) = \cdots = \gcd(a \bmod b,  b)\]
+
+要证明$\gcd(a, b) = \gcd(a - b,  b)$, 必须证明两个方向。首先，任何整除$a$和$b$的整数必然整除$a - b$，因此$\gcd(a, b) \leq \gcd(a - b, b)$。也就是说
+任意$a$与$b$的公因子必然小于等于$a-b$和$b$的最大公因子，而$\gcd(a, b)$只是$a$与$b$的一个公因子而已。反方向类似，
+容易证明任意整除$a-b$和$b$的整数必然整除$a$和$b$，因此，$\gcd(a-b, b) \leq \gcd(a, b)$。 这种证明方法频繁用于证明两个集合的相等，本质上以上证明也是
+证明两个集合（$a$与$b$公因子的集合与$a-b$与$b$公因子的集合）的相等，值得初学者重视。
+
+\noindent\textbf{效率.} 要理解 $\gcd$ 算法是一种高效算法，我们必须意识到$a \bmod b$这步操作对输入数据作出了重大的消减。容易验证：
+\begin{lemma}{}{}
+	如果$a \geq b$，则$(a \bmod b ) < a/2$。 
+\end{lemma}
+如果该引理成立，那么算法连续两次迭代后，$a$与$b$的值都至少消减了一半，意味着算法在$\mathcal O(\log a) $步之后会终止。验证引理的正确性很容易，
+因为如果$b < a/2$，由除法算法即得。如果$b > a/2$， 则$(a \bmod b) = a - b$，证完。
+进一步，容易看出$\mathcal O(1 + \log b) $，或等价的$\mathcal O(\log b) $是一种更好的上界。\\
+
+\noindent\textbf{算法优化.} 是否存在更高效的算法？二进制欧几里得德算法（\emph{binary Euclidean algorithm}）\index{binary Euclidean algorithm}，简记为 $\operatorname{binary-gcd}$ 算法\index{binary gcd algorithm}，也被称为\emph{Stein 算法}，它与 $\gcd$ 算法功能相同，但效率更好。
+该算法避免使用复杂的计算操作，比如除法和乘法，使用减法和更高效的比特移位操作来提高效率。$\operatorname{binary-gcd}$ 算法的分析留做课后练习，以下直接给出代码。
+
+\begin{center}
+	\lstinputlisting[label = alg:bgcd, caption  = 二进制欧几里得算法]{codes/chap1-8.py}
+\end{center}
+
+在本节的最后，补充关于 $\gcd$ 算法的正确性的另一种证明。之前的证明非常简洁直观，而补充证明则更具有通用性。除法算法、欧几里得算法在以后章节（或者未来的学习中）会以另外的形式出现。希望大家能记住以下并不复杂的证明，并体会除法算法在证明中的应用。
+\begin{proof}[$\gcd$ 算法正确性的另一种证明.]
+设$d = \gcd(a, b)$，$r = (a \bmod b)$。根据除法算法，存在唯一的$q\in \Z$使得$r = a - qb$。
+根据命题~\ref{pro:divisible}，有$d \mid r$，所以$d$是$b$和$r$的公因子。
+要证明$d$是$b$和$r$的最大公因子只需要证明对$b$和$r$任意的公因子$c$有$c \leq d$。
+然而因为$c \mid b$和$c \mid r$，再次根据命题~\ref{pro:divisible}，$c \mid (qb + r)$，即$c\mid a$，
+所以$c$是$a$和$b$的公因子。因为$d$是$a$和$b$的最大公因子，所以$c \leq d$。
+\end{proof}
+
+\section{扩展欧几里得算法}
+\label{sec:egcd}
+
+欧几里得算法计算两个非零整数$a$和$b$的最大公因子，而扩展欧几里得算法（\emph{extended Euclidean algorithm} \index{extended Euclidean algorithm}，
+简记为 $\egcd$ 算法\index{egcd 算法}）不但计算出最大公因子，还同时计算出这个公因子如何表达为$a$和$b$的线性组合。$\egcd$ 算法在模算术运算中起到重要作用，很快我们就会看到。
+
+整数$a$和$b$的公因子一定能表达为$a$和$b$的线性组合吗？直观上，$\gcd$ 算法每一迭代步骤做了一次除法，也即若干次的减法，所得到的余数必为$a$和$b$的线性组合。
+迭代下去，无非就是得到$a$和$b$
+的线性组合的线性组合，当然还是$a$和$b$的线性组合。为了严谨性，需要以下定理。
+
+\begin{theorem}{B\'{e}zout定理}{bezout}\index{B\'{e}zout定理}
+%\label{thm:bezout}
+	设$a$和$b$为非零整数，存在整数$r$和$s$使得：
+	\[\gcd(a,b) = ar + bs\]
+	而且，$a$与$b$的最大公因子是惟一的。称$r$和$s$为 \emph{B\'{e}zout 系数}\index{B\'{e}zout 系数}。
+\end{theorem}
+B\'{e}zout 定理的证明可在标准数论教材中找到。以下给出证明思路，请读者完成其中细节，留作课后练习。
+\begin{proof}
+构造集合
+	 \[S = \{ am + bn : m,n  \in \mathbb{Z} \; \text{且}\; am + bn > 0 \}\]
+显然，集合$S$非空，根据良序原则，取其中最小值$d = ar + bs$。然后证明两个属性：$d$是$a$和$b$的公因子；
+如果存在$a$和$b$的公因子$d'$，则$d' \mid d$。这样就证明了$d= \gcd(a,b)$。\qed
+\end{proof}
+
+B\'{e}zout 定理说明两个非零整数$a$和$b$的公因子一定能表达为$a$和$b$的线性组合，强调的是存在性，$\egcd$算法则高效地计算出$a$和$b$的最大公因子及其相应的 B\'{e}zout 系数。而且以上定理的证明还显示这样一个重要的事实：
+\begin{property}{(最大公因子的属性)}
+\label{prop:gcd}
+\begin{center}
+	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 11cm]
+$\gcd(a,b)$等于$a$和$b$所有大于零的线性组合值的最小值。
+	\end{tcolorbox}
+	\end{center}
+\end{property}
+	
+记住这个事实，它可经常帮助我们解题。比如，我们立即可得以下推论。
+
+\begin{corollary}{}{bezout_coro}
+整数$a$和$b$互素当且仅当存在整数$r$和$s$使得$ar + bs = 1$。
+\end{corollary}
+
+%%% 以下几个定理都是在2024年3月左右完善、改进、增补。
+利用以上推论，很容易能证明以下定理，历史上又称之为“欧几里得引理”，因为它出自欧几里得《几何原本》第七卷的命题$30$。
+\begin{theorem}{欧几里得整除引理}{euclid1}
+%	\label{thm:euclid1}
+	设$a, b \in \Z$，$p$为素数。如果$p \mid ab$，则$p \mid a$或$p \mid b$。
+\end{theorem}
+\begin{proof}
+假设$p \nmid a$，证明$p \mid b$。因为$p \nmid a$且$p$是素数，则$\gcd(a, p)= 1$，即存在$r,s \in \Z$使得$ar + ps = 1$。因此，
+$$b = b(ar + ps) = abr + pbs$$
+既然$p \mid ab$，那么$p$同时整除$abr$和$pbs$，则$p$必然整除$b$。\qed
+\end{proof}
+
+\begin{corollary}{}{euclid11}
+%\label{cor:euclid1}
+	设$a, b , n\in \Z$，$n>0$。如果$n \mid ab$且$\gcd(a, n)=1$，则$n \mid b$。
+\end{corollary}
+\begin{proof}
+使用以上类似的方法，易得，留作练习。
+\end{proof}
+
+% 源自 a Survey of Modern Algebra. 2026年3月16日增补。
+\begin{thinking}
+	证明：整数$a$和$b$整除$m$，且$\gcd(a,b)=1$，则$ab$整除$m$。[提示：使用以上结论。]
+\end{thinking}
+
+同样的方法，我们还可以得到以下归功于欧几里得的定理，它同样出自欧几里得的《几何原本》第七卷（命题$24$）。因为以后常用，特此展示证明如下。
+该定理是说，任意两个整数$a$和$b$如果都与整数$c$互素，则$ab$也与$c$互素。
+\begin{theorem}{欧几里得互素引理}{euclid24}
+%	\label{thm:euclid24}
+设$a, b, c\in \Z$，若$\gcd(a,c) = 1$且$\gcd(b, c)=1$，则$\gcd(ab, c) =1$。
+\end{theorem}
+\begin{proof}
+因为$\gcd(a,c) = 1$且$\gcd(b, c)=1$，则存在$r_0, r_1, s_0, s_1 \in \Z$使得：
+\begin{align*}
+a r_0 + c s_0 &= 1 \\
+b r_1 + c s_1 &= 1
+\end{align*}
+以上两式相乘，得到：
+\[(a r_0 + c s_0) (b r_1 + c s_1) = 1\]
+将上式左边进行乘法并整理得到：
+\[ab(r_0r_1) + c(b r_1 s_0 + a r_0 s_1 + c s_0 s_1) = 1\]
+根据B\'{e}zout 定理，可知$\gcd(ab, c)=1$。\qed
+\end{proof}
+
+\begin{example}
+\label{exm:egcd-in-sage}
+使用 SageMath 命令\lstinline{xgcd}可以容易计算两个整数的最大公因子及其相应的 B\'{e}zout 系数。
+\begin{lstlisting}
+sage: xgcd(12345, 678)
+(3, 101, -1839)
+sage: xgcd(12^20, 18^20)
+(3656158440062976, -1312176233, 394609)
+\end{lstlisting}
+\end{example}
+
+%20250928 晚，修改，增加两个思考。
+以下重点解释 $\egcd$ 算法的具体过程。在此之前，先思考以下问题。
+\begin{thinking}
+	$\egcd$ 算法的输入是两个不为$0$的正整数$a$和$b$，求B\'{e}zout 系数$r$和$s$和$\gcd(a,b)$，且$\gcd(a,b)$是$a$和$b$的线性组合。根据已知条件，我们显然有以下线性方程组。
+		\begin{align*}
+		a\cdot 1 + b\cdot 0 &= a \\
+		a\cdot 0 + b\cdot 1 &= b 
+	\end{align*}
+	请思考，如何从以上两式得到任意一组$a$和$b$的线性组合？
+\end{thinking}
+
+\begin{thinking}
+	根据以上思考，我们知道，$\egcd$ 算法的任务是从两个明显成立的线性等式出发，不断迭代得到$a$和$b$新的线性组合。并且，我们的目标很明确：是求结果为$\gcd(a,b)$的线性组合。假定我们借助了某种神秘力量，不断通过等式的线性组合完成了B\'{e}zout 系数和$\gcd(a,b)$的求解，计算过程是以下一系列等式。
+	\begin{align*}
+		a\cdot 1  + b\cdot 0 &= a  \\
+		a\cdot 0 + b\cdot 1 &= b  \\
+		a\cdot \mathcolor{red}{r_1} + b \cdot \mathcolor{red}{s_1} &= \mathcolor{red}{d_1}  \\ 
+		&\cdots \\
+		a \cdot r + b\cdot s &= \gcd(a,b)
+	\end{align*}
+	请思考，以上等式的最右手的一列在做什么工作？也就是说，我们从$a$和$b$出发，得到了$\gcd(a,b)$，那么$d_1$你认为应该是什么值。
+	如果你给出了$d_1$的表达，请问，为了保持等式的平衡，$r_1$和$s_1$应该是什么？
+\end{thinking}
+
+为巩固以上思考，让我们理解以下手动计算的实例。
+\begin{example}
+\label{exm:egcd1}
+	给定$a = 19$，$b = 13$，求$r$和$s$，使得$ar + bs = gcd(19, 13)$。为展示其计算过程，首先我们写出以下两条
+	显然成立的等式：
+		\begin{align}
+			a\cdot 1 + b\cdot 0 &= 19 \label{eq:egcd1} \\
+			a\cdot 0 + b\cdot 1 &= 13 \label{eq:egcd2}
+		\end{align}
+	
+让公式~\ref{eq:egcd1}减公式~\ref{eq:egcd2}，可得新的等式如下：
+	 \begin{align}
+	 a \cdot 1 + b\cdot (-1) &= 6 \label{eq:egcd3}
+	 \end{align}
+然后，让公式~\ref{eq:egcd2}减去公式~\ref{eq:egcd3}的两倍，得到：
+	\begin{align}
+	a \cdot (-2) + b\cdot 3 &= 1 \label{eq:egcd4}
+	\end{align}
+最终，得到答案：$r = -2$，$s = 3$和$d = 1$。
+\end{example}
+
+要理解这个计算过程，只需要知道，本质上这是在迭代地计算$a$和$b$的线性组合，并且，最后等式的右边出现了$a$和$b$的最大公因子。让我们归纳以上计算过程：
+\begin{itemize}
+	\item 写出两个显然成立的等式；
+	
+	\item 不断用某个等式减去另一个等式的倍数（求新的线性组合），直到某个等式的右边出现$\gcd(a,b)$。
+\end{itemize}
+至少要注意到两个事实。第一，迭代过程中，所有等式的右边一直在执行$\gcd$算法的计算过程，表面上是做一次加减法，本质上需要一次除法，求商与余数。
+其次，等式的左边根据等式右边的计算而不断在维持等式的平衡。
+注意到，
+$a$和$b$只是占位符，并不参与计算，也不改变。既然如此，何不省略它们，把等式表达为矩阵的形式？请看使用这种表示法的例子。
+
+\begin{example}
+\label{exm:egcd2}
+	给定$a = 13$，$b = 9$，计算$r$和$s$，使得$ar + bs = \gcd(13, 9)$。写成以下矩阵：
+		\begin{align}
+		  &\begin{pmatrix} 
+		   1 && 0 && 13\\
+		   0 && 1 && 9
+		\end{pmatrix}
+		\end{align}
+	用第一行减第二行，得到一个新的行。接着，把第一行替换为第二行，而新的一行替换原来的第二行，得到一个新的矩阵：
+	   \begin{align}
+	      &\begin{pmatrix} 
+	      0 && 1 && 9\\
+	      1 && -1 && 4
+	   \end{pmatrix}
+	\end{align}
+	接着，第一行减去两倍的第二行，同样进行行调整得到：
+	     \begin{align}
+	        &\begin{pmatrix} 
+	         1 && -1 && 4\\
+	         -2 && 3 && 1
+	      \end{pmatrix}
+	\end{align}
+	最终，我们得到答案：$r = -2$，$s = 3$和$d = 1$。
+\end{example}
+这个例子让你想起了\emph{高斯消元法}了吗？很类似，但并不是。高斯消元法的目标是从任意矩阵出发得到一个单位矩阵，而这里却是从一个单位矩阵出发。
+%%% From a perspective of matrix,  
+
+以矩阵为表达工具，进一步抽象以上算法过程。对任意的非零整数$a$和$b$，构造矩阵$M$:
+\begin{align}
+M &=
+\begin{pmatrix} 
+1 && 0 && a\\
+0 && 1 && b
+\end{pmatrix}
+\end{align}
+$M$满足以下矩阵乘法：
+\begin{align}
+M
+\begin{pmatrix} 
+	 a\\
+	b\\
+	-1
+\end{pmatrix}
+&=
+\begin{pmatrix} 
+0\\
+0
+\end{pmatrix}
+\end{align}
+不断对$M$进行迭代“消元”，即某一行减去另一行的倍数，并进行行交换等操作，最终我们得到另一个矩阵$M'$
+\begin{align}
+M' &=
+\begin{pmatrix} 
+r && s && d\\
+R && S && 0
+\end{pmatrix}
+\end{align}
+$d$是$a$和$b$的最大公因子，$r$和$s$是对应的B\'{e}zout系数，且$M'$同样满足以下乘法：
+\begin{align}
+M'
+\begin{pmatrix} 
+a\\
+b\\
+-1
+\end{pmatrix}
+&=
+\begin{pmatrix} 
+0\\
+0
+\end{pmatrix}
+\end{align}
+矩阵乘法表明：$ar + bs = d$。$\operatorname{egcd}$ 算法明确地描述了这个计算过程，请参看以下算法描述。
+
+\begin{center}
+	\lstinputlisting[label = alg:egcd, caption = 扩展欧几里得算法]{codes/chap1-9.py}
+\end{center}
+
+$\operatorname{egcd}$ 算法的正确性显然，其效率与 $\gcd$ 算法相同。同样也存在 $\operatorname{binary-egcd}$ 算法，其分析留为课后练习，以下直接给出代码。
+\begin{center}
+	\lstinputlisting[label = alg:begcd, caption = 二进制扩展欧几里得算法]{codes/begcd.py}
+\end{center}
+%%%
+%2020年9月20日完成begcd的代码。补充进来。
+
+%%% 2023年4月24日
+\section*{章注}
+\addcontentsline{toc}{section}{章注}
+
+本章 $\gcd$ 算法的正确性证明和效率分析源自于《Algorithms》\cite{DPV08algorithms}，他们的证明分析方法简洁清晰，让人耳目一新。
+而讲解 $\operatorname{egcd}$ 算法的方式则源自于 Benjamin McKay 的~\href{https://github.com/Ben-McKay/concrete-algebra}{Concrete Algebra}，一本开源教材。McKay 的讲解让 $\operatorname{egcd}$ 算法的直观一目了然，
+而在此之前，非常著名的《算法导论》\cite{CLRS22}给出的
+递归算法却让作者感觉无助于理解算法的直观。$\operatorname{binary-egcd}$ 算法则来自于 Victor Shoup 的《A computational introduction to number theory and algebra》\cite{Sho09nta}第四章的一道习题。
+
+\begin{problemset}
+  
+  \item 写一个迭代版本的 $\gcd$ 算法程序和一个 $\operatorname{binary-gcd}$ 算法程序。
+  
+  \item 写一个递归版本的 $\egcd$ 程序和一个迭代版的 $\egcd$ 程序。
+  
+  \item 写一个迭代版本的 $\operatorname{binary-egcd}$ 算法程序，并分析其算法的正确性和算法复杂度。
+  
+  \item 请完成定理~\ref{thm:bezout}的证明。
+  
+  \item 利用 $\egcd$ 算法的思路，手动计算以下数值的 B\'{e}zout 系数和最大公因子：
+  \begin{itemize}
+  \item $a = 132$，$b = 78$  %ans (6, 3, -5)
+  \item $a = 273$，$b = 131$ %ans (1, 12, -25)
+  \item $a = 9527$，$b = 1729$ %ans (7, -49, 270)  20250128
+  \end{itemize}
+  
+  \item 请完成以下扩展版本的 B\'{e}zout 定理证明。
+  	设$a_0, a_1, \cdots , a_{n-1}$为$n$个非零整数，则存在$n$个整数$r_0, r_1, \cdots, r_{n-1}$使得：
+  	\[\gcd(a_0, a_1, \cdots, a_{n-1}) =\Sigma a_i r_i \]
+  	而且，这个最大公因子是惟一的。
+  
+ \item 假设$g^a \equiv 1 \pmod{m}$且$g^b \equiv 1 \pmod{m}$，请证明$g^{\gcd(a,b)} \equiv 1 \pmod{m}$。%出自IMC p.51
+ 
+  \item 对任意正整数$n$，记$T_n = 2^{2^n} + 1$，这就是所谓的\emph{费尔马数}（\emph{Fermat number}）。
+  请证明，对任意不同的正整数$m$和$n$，$T_m$与$T_n$互素。
+  \index{费尔马数}\index{Fermat number}
+  % T_n - 2 = T_{n-1} T_{n-2} ... T_0，所以任意$T_m$与$T_n$的公因子都整除2，但是所有的T_n都是奇数。出自SatoNT
+  
+ \item 给定任意正整数$n$，从$1$，$2$，$\cdots$，$2n$中选取任意$n+1$个数，证明这些数中必然存在两个互素的数。%Higgins Problems
+ 
+  \item 证明：如果$\gcd(a,b) =d$，则$\gcd(a/d, b/d) =1$。
+   
+   \item 证明：如果$\gcd(a,b) =1$，则$\gcd(a, b^n) =1$，$n$是任意正整数。[提示：利用欧几里得互素定理。]
+   
+   \item 证明：如果$\gcd(a,b) =1$，则$\gcd(a^n, b^n) =1$，$n$是任意正整数。[提示：利用以上习题的结论。]
+  
+  \item 证明：对任意整数$a$，$b$和$d$，$\gcd(a^d, b^d) = \gcd(a,b)^d$。%https://math.stackexchange.com/questions/166839/if-gcda-b-1-then-gcdan-bn-1
+  
+  \item 证明：对任意正整数$k$，有$\gcd(ka,kb) = k \gcd(a,b)$。%提示：Bezout theorem.
+  %%%Bur11, or https://math.stackexchange.com/questions/477957/let-a-k-m-be-integers-prove-that-gcdka-km-k-gcda-m
+  
+  \item 证明：对任意整数$n$，$2n + 1$与$9n + 4$互素。%250NT第41题。
+  
+  \item 求满足方程$4x + 8y + 15z = 1$的整数解$x$，$y$ 和 $z$。满足什么条件的整数$a$，$b$和$c$使得等式$ax + by + cz = 1$有解？
+  请给出自己的解法，并用程序实现。
+  
+  %% Input a, b > 0
+  % # Output: the largest divisor of a (c | a), s.t (a+b) % c == 1, 
+  % if there is no such c exist, then return 1.
+  % 从https://projecteuler.net/problem=854 得到的灵感.
+  \item 给定两个正整数$a$和$b$，不妨设$a > b$。请设计一种算法，求可整除$a$的最大正整数$c$，并且$c$满足$(a + b) \bmod c$等于$1$。
+  如果不存在这样的整数，则算法输出为$1$。
+  
+  
+  %%% 思路来源与FINT和Bur11 20220726 添加。
+  \item 对非零整数$a$和$b$，如果整数$m$满足：$a | m$且$b | m$，则称$m$为$a$和$b$的\emph{公倍数}（\emph{common multiple}）。
+  对任意的正整数$c$，如果$a | c$且$b | c$，则$m \leq c$，则称$m$为$a$和$b$的\emph{最小公倍数}（\emph{least common multiple}），简记为
+  $\lcm(a, b)$。比如，$\lcm(3, 5) = 15$，$\lcm(9, 15) = 45$。\index{最小公倍数}\index{least common multiple}
+  \begin{itemize}
+   \item 求以下最小公倍数：
+      $\lcm(8, 14)$，$\lcm(30, 50)$，$\lcm(63, 81)$, $\lcm(72, 80)$。
+       
+   \item 根据以上的计算（或者读者可以做更多的计算），试着找出$\gcd(a, b)$与$\lcm(a, b)$之间的关系。并证明自己的发现。
+    
+   \item 写一个 Python 程序计算$\lcm$，请利用以上发现的关系。
+   
+   \item 证明：$\gcd(a, b) = \lcm(a, b)$ 当且仅当 $a = \pm b$。
+   
+   \item 证明或者证伪：$k > 0$，$\lcm(ka, kb) = k \lcm(a, b)$。
+  \end{itemize}
+  
+%%% Todo：Batch-gcd
+\end{problemset}
