@@ -1,0 +1,541 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%% chapter.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Chapter 3 Congruences and Powers
+% 20200503、20200513
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
+%\motto{Use the template \emph{chapter.tex} to style the various elements of your chapter content.}
+\chapter{同余与模运算}
+\label{chap:cong} % Always give a unique label
+% use \chaptermark{}
+% to alter or adjust the chapter heading in the running head
+
+\begin{introduction}
+  \item 同余
+  \item 二进制补码
+  \item 模指数运算
+  \item 同余方程
+\end{introduction}
+
+\section{同余与模算术运算}
+\label{sec:congruence}
+% Always give a unique label
+% and use~\ref{<label>} for cross-references
+% and \cite{<label>} for bibliographic references
+% use \sectionmark{}
+% to alter or adjust the section heading in the running head
+
+在开始本章学习之前用以下 C 程序作为热身，先阅读程序，尝试给出程序的输出，然后编译运行它们，看看自己的答案是否对。
+答案与结论并不重要，只是邀请众位与数字玩耍，也许从中可以找到一些规律与乐趣。
+
+%use "title" instead of "caption" to avoid the confusion.
+%updated on 20190812
+\begin{center}
+	\lstinputlisting[language = C, title = 热身练习-1.]{codes/chap1-1.c}
+\end{center}
+
+\begin{center}
+	\lstinputlisting[language = C, title = 热身练习-2]{codes/chap1-2.c}
+\end{center}
+
+通过以上练习，想强调的是，在计算机系统中每一个数值都表达为定长的二进制形式，其中的所有运算都是\emph{定长计算}\index{fixed-size computation}。
+定长的长度可能是$8$比特、$16$比特、$32$比特或者$64$比特，通常是$8$的倍数，但不大可能是$7$比特或者其他。
+计算机系统最基础的计算是二进制数值的与、或、非、异或、移位等逻辑操作，其次就是\emph{模算术运算}，即二进制数值的加、减、乘、除等运算操作。 
+在这一章我们将学习一种自然、方便的描述模算术运算的方法：\emph{同余}( congruence)\index{congruence} 。
+
+如果整数$a$、$b$和$m$满足$m\mid (a - b)$，我们称\emph{$a$与$b$模$m$同余}，记为：
+\begin{equation}
+\label{eq:congruence}
+a \equiv b \pmod{m}
+\end{equation}
+称整数$m$为同余式的\emph{模数}(\emph{modulus}) 。等价地，等式~\ref{eq:congruence}也意味着存在整数$k$使得：
+\begin{equation}
+\label{eq:congru}
+b = a + km
+\end{equation}
+等式~\ref{eq:congru}让我们想起定理~\ref{thm:DivAlgo}(除法算法)，$a$除$m$的余数等于$b$ 除 $m$的余数，也就是说：
+\begin{equation}
+\label{eq:congru_eq}
+a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
+\end{equation}
+有理由相信，这两种不同的同余的表示方式具有同等的重要性，在不同的情形下选择正确的表示法会给我们带来方便。
+%The two forms of congruence are equivalently important.
+
+\begin{example} 
+\[26 \equiv 8 \pmod{9} \qquad \text{且}\qquad 6 \equiv 55 \pmod{7}\]
+因为
+\[9 | (26 - 8)\qquad \text{且}\qquad 7 | (6 - 55),\]
+或者，等价地：
+\[ 8 = 26 - 2*9 \qquad \text{且}\qquad 55 = 6 + 7*7.\]
+\end{example}
+
+%% 20260520
+在继续讲解模运算的各种属性之前，让我们稍微停顿一次，思考模运算的另一种相对隐含的直观内涵，即\emph{模运算是用一把尺子（模数）对特定的数值进行测度}，根据模运算的结果把特定的数值分类放入不同的桶中。图~\ref{fig:cong_motivation}有趣地表示出这种直观~\footnote{该图片由 Codex CLI 辅助生成。}。
+
+%20260615
+首先，图~\ref{fig:cong_motivation}清晰地展示出了公式~\ref{eq:congru_eq}的内涵，即两个整数$a$和$b$落在同一个桶中，是因为它们用 $m$ “测”出的余数相同。然后，我们能立即看出，如果两个数$a$和$b$落在同一个桶中，则$a - b$会落在$0$号桶，即$(a - b) \equiv 0 \pmod{m}$。
+
+图~\ref{fig:cong_motivation}还说明，通过模运算和同余关系，我们还可以得到关于整数的若干属性。例如，对任意正整数$a$，$a \bmod 2$把所有的数分为两类，展示的是$a$的奇偶性，模数$2$就是一把尺子。如果模数是$m=4$，能测度出更多的信息吗？比如，对所有的奇数$a$，此时会有两种情形$a \equiv 1 \pmod{n}$和$a \equiv 3 \pmod{m}$，即把奇数进一步分成了属性不同的两个集合。在此意义上，确实可以说更大的模数能测出更多的信息。
+
+%%% Create the figure by Codex. 20260615
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{mod-congruence-buckets.png}
+    \caption{同余理解为模 $m$ 的测度}
+    \label{fig:cong_motivation}
+  \end{figure}
+
+\begin{thinking}
+\label{thinking:cong}
+	如果模数 $m = 8$ 会怎样？请做简单的计算，看所有奇数在模$8$时会被分为多少类，并从中体会出：模数越大，同余关系施加的约束就越紧。
+\end{thinking}
+
+在本章，这种直观体现在同余方程的求解，特别是模数与系数不互素的情况下。在以后讲中国剩余定理时，这种直观会作用在求解同余方程组当模数之间不互素的情形。考虑更广阔更抽象的范畴，抽象代数中商群的定义中，一个群“模”一个正规子群的概念也有类似的内涵。换而言之，模运算并不仅仅是整数专有的运算。读者此时如果觉得困惑完全可以不需理会以上讨论，因为在深入到这些内容之前，我们会回到相对简单的整数模运算。
+
+模加法、模乘法可以最直接的方式定义如下，并写成以下命题的形式：
+\begin{proposition}{}{congru}
+%\label{prop:congru}
+如果$a_1 \equiv b_1 \pmod{m}$而且$a_2 \equiv b_2  \pmod{m}$，则
+\[a_1 \pm a_2 \equiv b_1 \pm b_2  \pmod{m} \qquad \text{且} \qquad 
+     a_1  a_2 \equiv b_1 b_2  \pmod{m}\text{。}\]
+\end{proposition}
+
+\begin{proof}
+容易，作为课后练习。\qed
+\end{proof}
+
+命题~\ref{pro:congru}是说，如果对两个整数$a$和$b$进行模$m$加法或者乘法，可以首先算出$a' = (a \bmod m)$ 和 $b' = (b \bmod m)$，然后
+对 $a'$ 和 $b'$ 做模 $m$ 的加法或者乘法，得到最终答案。 通过使用这种方法可以赢得效率，因为我们总是在尽可能小的数值上进行计算。或者，在某种意义上，同余的值将被视为同一个值。
+% Should remark on Divide and Conquer. To do list.
+
+\begin{example}
+因为 $10000 \equiv 1 \pmod{3}$ ，且$998 \equiv 2 \pmod{3}$，所以：
+\[ 10000*998 \equiv 2 \pmod{3}\]
+\end{example}
+
+\begin{example}
+口算$7^{500} \bmod 8$ 。因为$7 \equiv -1 \pmod{8}$，所以$7^{500} \equiv 1 \pmod{8} $。
+\end{example}
+
+类似地，可以口算$998^{2} \bmod 999 = 1$，因为$998 \equiv -1 \pmod{999}$。利用命题~\ref{pro:congru}，我们还可以解带一个未知变量的同余式。
+\begin{example}
+求解以下带变量$x$的同余式：
+ \[x + 7 \equiv 3 \pmod{11}\]
+因为\[ -7 \equiv -7 \pmod{11},\]
+将上两式相加，得到：
+ \[x \equiv 3 - 7 \equiv -4 \pmod{11}.\]
+\end{example}
+
+因此，有一个好消息：
+	\begin{center}
+	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 10cm]
+对形如以下的同余式：
+\[ x + a \equiv b \pmod{m},\]
+其解是：
+\[ x \equiv b - a \pmod{m}.\]
+	\end{tcolorbox}
+	\end{center}
+然而坏消息就是，要解以下带乘法的同余方程 
+\[ ax \equiv b \pmod{m},\]
+解必须是：
+\[ x \equiv \frac{b}{a} \pmod{m}.\]
+一个显然的问题就是：$(\frac{b}{a} \bmod m)$可能并不存在。到底什么是除法？幸运的是，我们还有以下规则：
+
+\begin{proposition}{消去律}{cancel}\index{Cancellation Law}
+%\label{pro:cancel}
+设$a, b, c \in \Z$，$m$是一个正整数。如果$\gcd(c, m) = 1$，且$ac \equiv bc \pmod{m}$，则$a \equiv b \pmod{m}$。
+\end{proposition}
+
+\begin{proof} 
+	根据同余的定义和条件，有$m \mid (ac - bc)$，等价地，$m \mid (a - b)c$。因为$\gcd(c,m) = 1$，根据推论~\ref{cor:euclid11}，则$m \mid (a - b)$，即得。\qed
+\end{proof}
+以上证明过程和消去律为什么要求 $c$ 与 $m$ 互素，借助图~\ref{fig:cong_motivation}可以解释为：因为两个数 $ac$ 和 $bc$ 落在同一个桶中，所以 $ac - bc$ 会落在$0$号桶，即$m \mid (a - b)c$。然后，为了确保 $(a - b)$ 也落在$0$号桶，就只能要$c$不会为 $(a - b)$贡献 $m$ 中大于$1$的因子。
+%%% 20251016
+\begin{thinking}
+	思考在中小学中学到的消去律：设$a, b, c$为正整数，如果$ac = bc$，则$a = b$。证明过程可以是：由条件得到$ac - bc = (a - b)c = 0$，因为$c\neq 0$，所以$a-b = 0$，即$a = b$。或者，也可以这样证明：因为 $ac = bc$，且$c \neq 0$，所以等式两边同除$c$，得到$a = b$。请问以上两种证明有什么区别？你更倾向于哪一种证明呢，为什么？
+\end{thinking}
+
+%%% 20260615, add a label which will be used later in the chapter 7
+\begin{thinking}
+\label{thk:ab_mod_m}
+	设$a, b, m$为正整数，且$a b \equiv 0 \pmod{m}$。证明：$b \equiv 0 \pmod{m/d}$，其中$d =\gcd(a, m)$。
+\end{thinking}
+
+%Ideas about cancellation.
+消去律本质是什么？
+由方程$ac \equiv bc \pmod{m}$推导出$a \equiv b \pmod{m}$，表面上看我们需要的是除法，实际上需要的是乘法。
+其过程是，先求出一个记为$c^{-1}$的值，
+它满足\[cc^{-1} \equiv 1 \pmod{m}\] 
+然后将它乘在同余式的两边：
+\[acc^{-1} \equiv bcc^{-1}\pmod{m},\]
+\noindent 因此得到：
+\[a \equiv b \pmod{m}.\]
+	
+这个$c^{-1}$被称为$c$在模$m$下的\emph{乘法逆元}(multiplicative inverse) \index{multiplicative inverse}\index{inverse}。注意，既然强调
+是\emph{模 $m$ 下}的乘法逆元，就只考虑小于 $m$ 的 $c^{-1}$，或者所有同余的逆元都视为同一个逆元。在不引起误会的场合，为了
+表述方便，往往会省略\emph{模$m$}这个限定语。
+
+\begin{example}
+设$m = 11$，$c = 3$，那么$c$模$m$的乘法逆元$c^{-1}$是$4$，因为$3*4 \bmod m =  1$。虽然，$15$也满足$3 * 15 \bmod m = 1$，
+但是$15 \equiv 4 \pmod{m}$，所以，还是认为乘法逆元是$4$。
+\end{example}
+
+给定互素的$c$和$m$，$c^{-1}$是一个唯一确定的值。
+首先，$c^{-1}$会必然存在吗？必然存在，因为消去律的前提条件为$\gcd(c,m)=1$，根据B\'{e}zout定理(定理~\ref{thm:bezout})，$c^{-1}$必然存在。
+唯一性的具体证明留给读者作进一步探讨。
+这样，至少我们已经可以部分地解决了同余方程$a x \equiv b \pmod{m}$的求解问题。
+
+%% 20220912 
+%% 20240314
+\begin{thinking} 
+上面提到，根据B\'{e}zout定理(定理~\ref{thm:bezout})，乘法逆元必然存在。请问读者，B\'{e}zout系数是唯一的吗？
+如果B\'{e}zout系数不唯一，相应的乘法逆元为什么唯一呢？这里需要一些思考和计算，或者参考FINT~\cite{silverman2014friendly}的第六章，或者~\href{https://github.com/lbwang/CINTA-cn/blob/master/Notes/uniqueness-bezout.tex}{本书的授课手记}。
+\end{thinking} 
+
+\begin{example}
+求解 $3 x \equiv 2 \pmod{11}$。首先，使用egcd算法(算法~\ref{alg:egcd})计算模$11$下$3^{-1} = 4$。
+具体而言，是算出B\'{e}zout系数$s$和$t$使得
+\[ 3s + 11t = 1\]
+此时，$s = 4$，$t = -1 $，然后对以上等式两边同时模整数$11$，则可得：
+\[ 3 * 4 \equiv 1 \pmod{11}\]
+即，$3$模$11$的乘法逆元是$4$。因此，对所需求解的同余方程两边
+同乘$3$的乘法逆元$4$，得到$x \equiv 8 \pmod{11}$。
+\end{example}
+
+如果要完全求解这一类同余方程，则需要更多的分析。由$a x \equiv b \pmod{m}$，得到$ax - b = ym$，$y\in \Z$，等价地有： 
+\begin{equation}
+\label{eq:linear_congr}
+ax -my = b
+\end{equation}
+希望以上等式能让你想到B\'{e}zout定理(定理~\ref{thm:bezout})。此时，存在$x_0, y_0\in \Z$使得：
+	\[gcd(a, m) = ax_0 + my_0.\] 
+接着，需要考虑两种情形：
+\begin{thinking}
+%\label{thk:cong_eq}
+\begin{itemize}
+\item 什么情况下同余方程无解？
+
+\item 如果同余方程有解，会有多少个模$m$不同余的解？
+\end{itemize}
+\end{thinking}
+建议读者自己完成以上提示的分析。
+
+\begin{proposition}{}{inv_mod_prime}
+%\label{prop:inv_mod_prime}
+设$p$为素数，且$a\in \N$。则$a^2 \equiv 1 \pmod{p}$ 当且仅当$a \equiv 1 \pmod{p}$ 或 $a \equiv -1 \pmod{p}$。
+\end{proposition}
+
+\begin{proof}
+     $\Leftarrow$的证明简单\footnote{本书不使用常见的“充分性”和“必要性”的表述，取而代之，用$\Rightarrow$表示从左到右的推导，而$\Leftarrow$表示从右到左的推导。这样看似不准确的表述就是为了避免表述上的不准确，并带来理解的方便。请注意，A当且仅当B，则它们互为充分、必要条件。所以，单纯表述为“充分性”或者“必要性”都不准确，而应该表述为“A是B的充分条件”或者“A是B的必要条件”等，这就显得有点繁琐。另外，也避免在中文语境下对“A当且仅当B”的理解分歧。某些教材把“A当且仅当B”分为“A当B”和“A仅当B”，前者为“必要性”，后者为“充分性”。作者对此表述不作评价，只是不推荐使用这种表述方法。}。
+	对于$\Rightarrow$，如果 $a^2 \equiv 1 \pmod{p}$则$p \vert (a^2  - 1)$，这意味$p \mid (a -1)$或 $p \mid (a + 1)$，
+等价于$a \equiv 1 \pmod{p}$或$a \equiv -1 \pmod{p}$。\qed
+\end{proof}
+命题~\ref{pro:inv_mod_prime}本质上是提醒我们，在模数为素数的情形下，什么数的乘法逆元是自己本身。或者，不准确地说，
+在模素数的情形下，对$1$开根号，得到一个$1$和一个$-1$。难道如果模数不是素数会有什么不同？以后再说。
+
+\begin{proposition}{}{congr_eq_rel}
+%\label{pro:congr_eq_rel}
+同余关系是一种等价关系。
+\end{proposition}
+\begin{proof}
+容易，请读者自行完成。\qed
+\end{proof}
+
+%To write something about congruence class.
+%20190815
+%20200512
+如果有一种等价关系定义在集合$\mathbb{S}$ 上，则该等价关系会把集合 $\mathbb{S}$ 划分为不相交的子集，
+这些子集我们称为\emph{等价类}\index{等价类}(\emph{equivalence classes})\index{equivalence classes}。集合中任意两个元素落在相同的等价类中
+当且仅当这两个元素等价。反之，集合的一个划分，即集合分割为不相交的子集，定义了该集合上的一个等价关系。
+
+考虑整数集合 $\mathbb{Z}$，设$m$为正整数，则模$m$的同余关系把$\mathbb{Z}$划分为$m$个等价类。任意整数$a$所落在的等价类称为
+$(a \bmod m)$的\emph{同余类}(\emph{congruence class})\index{congruence class} ，或者称为\emph{剩余类}(\emph{residue class})\index{residue class}，记为$[a]_m$，即所有模$m$同余的整数形成的集合，或者所有具有以下形式的整数的集合：
+$a + k m$，$k \in \mathbb{Z}$ 。也可以把同余类理解为在同一把尺子（模数）的度量下，将尺寸相同的元素放在同一个集合，图~\ref{fig:cong_motivation}已经表述了这种思想。%20260520
+
+模$m$同余类的集合记为$\mathbb{Z}/m\mathbb{Z}$~\footnote{一种将在第~\ref{chap:iso_hom}章才解释的表示法，目前只需要把其看为一个记号。}，该集合恰好有$m$个元素，即：
+\[\mathbb{Z}/m\mathbb{Z} = \{[0]_m, [1]_m, \cdots, [m-1]_m\}.\]
+
+\begin{example}
+\label{exam:residue-class}
+如果$m = 2$，$\mathbb{Z}/2\mathbb{Z} = \{[0]_2, [1]_2\}$。同余类$[1]_2$就是所有模$2$余$1$的整数，即奇数，而$[0]_2$则是所有偶数的集合。同理，如果$m = 3$，$\mathbb{Z}/3\mathbb{Z} = \{[0]_3, [1]_3, [2]_3\}$。
+\end{example}
+
+称同余类$[a]_m$中的任意一个元素$b$为\emph{代表元}(\emph{representative})\index{representative}。
+通常，使用一个同余类中最小非负元素作为代表元来表示一个同余类，但是在特定情况下选用某些特定的元素也许会更方便。
+$\mathbb{Z}/m\mathbb{Z}$ 的所有最小非负代表元的集合$\{0, 1, 2,\cdots, m - 1 \}$被称为模$m$的\emph{最小剩余系}(\emph{least residue system}) \index{least residue system}。任意$m$个整数的集合，如果其中任意两个元素都不模$m$同余，则称之为模$m$的\emph{完全剩余系}(\emph{complete residue system})\index{complete residue system}。
+
+\begin{example}
+设$m = 7$，模$m$的最小剩余系就是集合 \[\{0, 1, 2, 3, 4, 5, 6 \}\text{，}\]
+下面这个集合则是模$m$的一个完全剩余系： 
+\[\{14 , 8, 23, 46, 61, 13\}\text{。}\]
+\end{example}
+
+使用同余类的表达，命题~\ref{pro:congru}可简洁地重写为如下形式：
+\begin{proposition}{}{residue}
+%\label{prop_residue}
+如果$[a_1]_m = [a_2]_m$ 且 $[b_1]_m = [b_2]_m$，则
+\[[a_1 \pm b_1]_m = [a_2 \pm b_2]_m \qquad \text{且}\qquad
+[a_1 b_1]_m = [a_2 b_2]_m \text{。}\]
+\end{proposition}
+
+\begin{proof}
+把$[a]_m = [b]_m$变形为$a \equiv b \pmod{m}$，然后使用命题~\ref{pro:congru}，立得。 \qed
+\end{proof}
+
+\section{二进制补码}
+\label{sec:two_comp}
+本节重点考虑模算术运算中的减法。对于整数$a$, $b$和$m$，以下等式：
+\[ a - b \pmod{m}\]
+等价于
+\[a + (-b) \pmod{m}\]
+其中，$-b$为一个\emph{带符号数}(\emph{signed number})\index{带符号数}\index{signed number}. 
+
+计算机中表示带符号数的最常用方法就是\emph{二进制补码}(\emph{two's complement})\index{二进制补码}\index{two's complement}。
+使用模算术运算，可以清晰地解释二进制补码的设计原理。 
+
+先回顾一下二进制补码的常规表述。假定需要表达一个$n$比特的带符号数，最高位比特称为符号位，用于表示正或负，其余$n-1$个比特用于表达数值。
+$n$比特带符号数的范围是$[-2^{n-1}, 2^{n-1} - 1]$，其中非负整数的表达范围是$[0, 2^{n-1} -1]$，而负整数的范围则是$[-2^{n-1}, - 1]$。
+相关表达规则如下：
+
+\begin{itemize}
+	\item 非负整数按常规二进制数表达存储在$n-1$个低位比特中，其符号位置为$0$。
+	
+	\item 负整数的表达分为三个步骤。设$1 \leq x \leq 2^{n-1}$，要表达负整数$-x$：首先构造正整数$x$的二进制补码表达（规则如上），
+	然后对$x$的所有比特进行一次比特翻转（$0$比特翻转为$1$；$1$比特翻转为$0$），最后对所得的$n$比特加$1$（一次二进制加法）。
+\end{itemize}
+
+\begin{example}
+	设带符号数的比特长度$n = 8$，计算$-1$和$-128$的二进制补码。
+
+	\[
+	\begin{array}{r@{\;}c@{\;}l}
+	+1 & = & 00000001 \\
+	\text{比特翻转} & & 11111110\\
+	\text{加 }1 & & 00000001\\
+	-1 & = & 11111111
+	\end{array}
+	\]
+
+	\[
+	\begin{array}{r@{\;}c@{\;}l}
+	+128 & = & 10000000 \\
+	\text{比特翻转} & & 01111111\\
+	\text{加 }1 & & 00000001\\
+	-128 & = & 10000000
+	\end{array}
+	\]
+\end{example}
+
+大部分刚接触二进制的初学者都会懂得这种“比特翻转再加$1$”的二进制补码操作，然而很少人会理解，负数为何如此表达。
+常规的教科书会告诉读者，这是为了效率，为了避免出现$-0$等等。以下给出另一种解释二进制补码的方式。
+对$n$比特的正整数$x$（$1 \leq x \leq 2^{n-1}-1$）取反所得的
+负整数$-x$就是$ 2^n - x$。 
+ 
+从目标出发，所谓求正整数$x$的负值，就是求得某个整数$x'$使得$x + x' = 0$，即：
+\[x + x' \equiv 0 \pmod{2^n}\]
+根据模算术运算的规则，既然$x<2^n$，那么$x' = 2^n - x$。又因为$2^n - x = \underbrace{111\cdots 11}_{n}  + 1  - x$，
+且$\underbrace{111\cdots 11}_{n} - x$就等于对$x$的所有比特取反。所以，$x'$的值就等于对$x$的所有比特取反之后再加$1$。
+
+有了二进制补码，模算术加法和模算术减法的实现就完全地统一起来了。换而言之，使用模加法和某些逻辑操作可实例化出模减法。
+\begin{example}
+计算$ (5 - 27) \bmod 2^8$。
+\begin{itemize}
+\item 分别写出$5$和$27$的二进制表达为：$0b00000101$和 $0b00011011$；
+
+\item $-27$的二进制补码表达是$0b11100101$；检验可知$0b00011011 + 0b11100101 = 0b00000000$；
+
+\item 则计算$5 + (-27)$就是计算$0b00000101 + 0b11100101 = 0b11101010$；检验可知$0b11101010$就是十进制的$-22$.
+\end{itemize}  
+\end{example}
+考虑到，计算机内部的所有运算都是定长计算，$n$比特整数的运算必然是模$2^n$的运算，这是考虑表达负数时的前提条件。那么把负整数$-x$理解为$ 2^n - x$
+就不能算是对二进制补码的“翻转加$1$”的解释，而是正本清源罢了。
+
+\section{模指数运算}
+\label{sec:mod-pow}
+这一节关注模指数运算，一种非常重要的算术计算原语。所谓模指数运算，就是输入整数$x$、$y$ 和 $m$，计算：
+\[ x^y \bmod m \text{。}\]
+
+SageMath 给出命令 \lstinline{pow} 来计算模指数，或者可以直接用 \lstinline{^} 和 \lstinline{%} 运算符。
+以下是具体实例。
+\begin{lstlisting}
+sage: pow(2, 10, 1000)
+24
+sage: 2^10 % 1000
+24
+sage: pow(2, 1024, 3^100)
+426135005318503491421173769021520445807198574681
+\end{lstlisting}	
+ 
+完成模指数运算最简单的方法就是重复地乘$x \bmod m$。但是，如果利用计算过程的中间数值，计算效率可以大大提高。该过程
+重复对$x$进行平方，例子~\ref{exm:pow}展示了这种思路。
+
+\begin{example}
+\label{exm:pow}
+求$2^{16} \bmod 11$。计算过程：
+\[2^2 \bmod 11 = 4\] 
+\[2^4 \bmod 11 = 4*4 \bmod 11 = 5\]
+\[2^8 \bmod 11 = 5*5 \bmod 11 = 3 \]
+\[2^{16} \bmod 11 = 3*3 \bmod 11 = 9 \]
+\end{example}
+
+以上例子中的指数恰好是$2$的乘方，如果不是怎么办？比如，要求的是$2^{22} \bmod 11$。如下例所示。
+\begin{example}
+\label{exm:pow2}
+求$2^{22} \bmod 11$。不难发现：
+\[2^{22} = 2^2 * 2^4 * 2^{16} \]
+所以 
+\[2^{22} \bmod 11 = 4*5*9  \bmod 11 = 4 \]
+\end{example}
+
+以上例子说明，可以通过不断计算某个数的平方，然后利用中间结果来求出最终的值，从而提高计算效率。但是，该计算过程如何表示为算法呢？考虑以下递归过程，
+具体实现参见算法~\ref{alg:rec_pow}的描述。
+由此可知，模指数运算的复杂性不是$\mathcal{O}(y)$次乘法，而可以极大地提升为$\mathcal{O}(\log (y))$次乘法。
+\begin{equation}  
+\label{eq:rec_pow}
+x ^ y = 
+\left\{  
+\begin{array}{lr}  
+(x ^{ \lfloor y/2 \rfloor })^2 &  \text{如果$y$是偶数；}\\  
+
+x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \text{如果$y$是奇数。} \\  
+
+\end{array}  
+\right.  
+\end{equation}
+
+\begin{center}
+\label{alg:rec_pow}
+	\lstinputlisting[caption = 模指数运算--递归版本]{codes/chap2-3.py}
+\end{center}
+
+接下来展示如何把递归算法转换为迭代算法。
+首先，把整数$y$视为多项式（或者一个二进制数串）：
+\[ y = y_{n-1}2^{n-1} + y_{n-1}2^{n-1} \cdots + y_1 2 + y_0 ,\] 
+其中$y_i \in \{0, 1\}$。
+
+其次，将$x^y$变形为：
+\[x^y = \prod_{i=0}^{n-1}  x^{y_i2^{i}}\]
+
+最后，从$i=0$开始不断计算$x^{2^{i}} \bmod m$，判断如果$y_i = 1$，则把该值乘进最终结果。注意，如果$y_i = 0$，$x^{y_i2^{i}}$等于$1$。
+以下例子展示了其具体计算过程。
+
+\begin{example}
+	设$x=7$，$y= 10$，$m = 11$，
+	计算$x^y \bmod m$。$y$的二进制表达为$1010$，因此计算如下：
+	\begin{align*}
+		y_0 &= 0, \quad x^{2^0} \equiv 7 \bmod m\\
+		y_1 &= 1, \quad x^{2^1} \equiv 5 \bmod m\\
+		y_2 &= 0, \quad x^{2^2} \equiv 3 \bmod m\\
+        y_3 &= 1, \quad x^{2^3} \equiv 9 \bmod m
+	\end{align*}
+然后，将$y_i = 1$的项乘起来，得到$x^y = (5 * 9) \bmod 11 = 1$.
+\end{example}
+
+该过程可描述为以下算法。
+\begin{center}
+\label{alg:ite_pow}
+	\lstinputlisting[caption = 模指数运算--迭代版本]{codes/chap2-4.py}
+\end{center}
+
+该算法的正确性与效率都是显然的。值得一提的是，如果读者已经写出了简单乘法的迭代版本，这两种算法的相似之处就非常显然了。
+模指数运算的优化改进算法则不在本书讨论范围。
+
+%%% 20230424下午
+\section*{章注}
+\addcontentsline{toc}{section}{章注}
+对计算机专业的大学生而言，模运算的重要性如何强调都不过份。过份的是，在课堂上初学者们对本章的热身练习体现出的陌生感令人震惊。本章花了较多的篇幅重复强调模运算与同余关系的直观，希望在未来读者可以自觉地把这种“模”的思想运用到更抽象的代数结构中。
+使用模运算去解释二进制补码显得非常自然，然而，奇怪的是，作者并没有发现有什么教科书这么去做，也许太简单了吧。也可能，这样的知识点只值得
+出现在~\href{https://www.jianshu.com/p/502d236116ca}{休闲娱乐类的博客}之中。模指数运算的重要性则通过许多教科书得到了体现，它与简单乘法算法
+结构的相似就显得非常有趣。《算法导论》给出一种与本书描述有微妙差异的算法，为什么那种算法的效率更好，Cohen 的教材~\cite{cohen2013course}(第1章)给出了答案。
+
+\begin{problemset}
+
+  \item 编写一个 C 语言程序，用于验证在 C 语言中，整数的加法、减法、乘法和除法都是模$2^n$的模运算，
+  $n$根据变量定义不同可能是$8$、$32$或者$64$等。
+  
+  \item 寻找规律，什么样的整数$n$会被$3$整除？请给出证明。
+  
+  \item 请证明命题~\ref{pro:congru}。
+  
+  \item 给定整数$p$和$N$，且$p \mid N$。证明：对任意整数$x$，
+  \[ (x \bmod N) \bmod p = (x \bmod p)\]
+  给出反例说明$(x \bmod p) \bmod N$ 并不一定等于 $(x \bmod N)$。
+  %%% x % N = x - q N, (x % N) % p = (x- qN) % p = x % p
+  
+  %%% From Andre Weil, NT4B
+  \item 设$m$是任意正奇数，请证明$(1^m + 2^m + \cdots + (m-1)^m) \equiv 0 \pmod{m} $ ~\cite{Wei79}。
+  
+  \item 对整数集合$\{1, 2, 3\}$可以定义多少种不同的等价关系？%源自AC0第1.1章 
+  推而广之，对$n$个元素的集合可以定义多少种不同的等价关系？%Bell数 20250430
+  
+  \item 请证明同余关系是等价关系，即证明命题~\ref{pro:congr_eq_rel}。
+  
+  %2024年3月，该题出现在X，发现以下证明。
+  %设 n = ab，一个合数，记m =2^a - 1，那么 2^a \equiv 1 \pmod{m}，所以(2^a)^b  \equiv 1 \pmod{m}，即m整除2^n - 1 。 
+  \item 请证明，如果$n$是合数，则$2^n - 1$不会是素数。
+  
+  \item 手动计算以下模$m$下$a$的乘法逆元。(a) $m = 11$，$a = 5$；(b) $m = 121$，$a = 13$；(c) $m = 1021$，$a = 131$。 
+  %ans：9, 28, 265
+ 
+   \item 编写 C 语言程序完成模指数运算，即给定整数$x$，$y$和$m$为输入，计算并返回值$x^y \bmod m$。
+ 
+   \item 定义 Fibonacci 数列如下：$F(0)=0$，$F(1)=1$，且对于$n \geq 2$，$F(n)=F(n-1)+F(n-2)$。所以，该数列是：$0, 1, 1, 2, 3, 5, 8, 13, 21, \dots$。如何能快速地求出$F(n)$呢？
+   很幸运，我们有以下等式：
+   $$\begin{bmatrix} 1 & 1\\ 1 & 0 \end{bmatrix}^n = \begin{bmatrix} F(n+1) & F(n)\\ F(n) & F(n-1) \end{bmatrix}$$
+   虽然，看上去该算法需要一次矩阵的指数运算，但是借助快速指数运算的方法，这里可以产生一个快速求解$F(n)$的算法。请给出算法，并编程实现，C 语言或者 Python 都可以。
+   %%% https://www.nayuki.io/page/fast-fibonacci-algorithms
+   %%% https://www.geeksforgeeks.org/fast-doubling-method-to-find-the-nth-fibonacci-number/
+ 
+ \item 给定互素的正整数$c$和$m$，请证明在$\bmod \; m$的意义上存在唯一确定的整数值$c^{-1}$，它使得$c c^{-1} \equiv \pmod{m}$。
+ 
+ \item 假设$x \equiv a \pmod{n}$，且$n = p * q$，$p, q$是两个不相同的素数。请证明，因此必然有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$。反之，如果有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$，是否必然有$x \equiv a \pmod{n}$？请证明或证伪。
+ %%% 简单题，为CRT准备。
+ 
+ \item 思考另一个版本的消去律。设$a, b, c \in \Z$，$m$是一个正整数。如果$\gcd(c, m) = g$，$g$是大于一的整数，且$ac \equiv bc \pmod{m}$。
+ 请问此时能消去$c$得到某个同余式$a \equiv b \pmod{m'}$吗？这个$m'$会是什么？给出证明。% m' = m/g, where g=gcd(c,m)
+ 
+ \item 请求解以下同余方程：
+  \begin{itemize}
+  \item $3x \equiv 7 \pmod{17}$  %ans: x = 8 mod 17
+  
+  \item $6x \equiv 9 \pmod{23}$  %ans: x = 13 mod 23
+  
+  \item $6x \equiv 15 \pmod{21}$  %ans: x = 6, 13, 20 mod 21
+  % 2024年10月布置作业并讲解.
+  \end{itemize}
+ 
+ \item 完成同余方程求解的一般性分析。设$a, b, m\in \Z$，求解$a x \equiv b \pmod{m}$，其中$g = \gcd(a,m)$。
+
+ \begin{itemize}
+ \item 同余方程在什么情况下无解？
+ 
+ \item 如果同余方程有解，会有多少个模$m$不同余的解？
+ \end{itemize}
+  
+ \item 编写一个 Python 程序计算乘法逆元，即输入互素的正整数$c$和$m$，返回$c^{-1}$，它使得$c c^{-1} \equiv \pmod{m}$。
+ 要求：只返回为正整数的$c^{-1}$。
+  
+  \item 编写一个 Python 程序求解以下同余方程：
+     \[ a x \equiv b \pmod{m}. \]
+    即，给定整数$a$，$b$和$m$作为输入，返回所有满足方程的解$x$，或者给出无解告警。
+   
+  %%% 添加于2024年12月16日。  
+  \item 二次探测(Quadratic Probing)法是 Hash 表解决冲突的常用策略之一。一种常见的Hash函数的定义如下：$H(k,i) \equiv H(k) + i^2 \pmod{p}$，其中$p$是一个素数，
+  而$i\in \Z_{(p-1)/2}$。请分析证明为什么需要取一个素数$p$为模数。%%% 确保the first ⌊m/2⌋ probe sequences are distinct. https://www.cs.umd.edu/class/fall2020/cmsc420-0201/Lects/lect14-hashing.pdf
+    
+  \item 第一章的习题~\ref{prob:gf}定义了集合$\mathrm{GF}$及其元素的加法与乘法。一个已知结论：集合$\mathrm{GF}$的非零元素都有乘法逆元，即任取$a \in \mathrm{GF}$，且$a \ne 0$，必然存在$b \in \mathrm{GF}$使得$a\cdot b = 1$。请写一个程序\texttt{GF\_inverse}完成求逆元的任务，即对任意的$a \in \mathrm{GF}$，
+    且 $a \ne = 0$，求$b \in\mathrm{GF}$使得$a \cdot b = 1$。[提示，从$\egcd$算法出发。关键点在于要思考，什么是除法？]
+    
+ %%% 20250509, from a first course in CT.
+  \item 设$\mathbf{C}$是一种向量空间，其向量长度为$10$（即每个向量有$10$个元素），且每个元素都是从$0$到$9$之间的整数。设矩阵$H$为
+  \[
+  H =
+  \begin{bmatrix}
+  	1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+  	1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 
+  \end{bmatrix}.
+  \]
+  设计$\mathbf{C}$的性质使得，任意$\mathbf{v} \in \mathbf{C}$当且仅当$H v \equiv \mathbf{0} \pmod{11}$。这样可保证，如果$\mathbf{C}$中向量在网络传输中发生了一个数位的差错，有一种巧妙的方法可以发现这种差错并纠正。请找到这种方法，并纠正$0617960587$这个向量发生的错误。
+\end{problemset}
