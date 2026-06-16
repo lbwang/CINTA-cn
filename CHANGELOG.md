@@ -128,7 +128,7 @@
 
 ### 分离本项目对 `elegantbook.cls` 的本地修改
 
-- 将当前使用的 `elegantbook.cls` 替换为新下载的上游版本 `elegantbook-origin.cls`，并确认两个文件内容一致，便于以后继续跟进 ElegantBook 的更新版本。
+- 将当前使用的 `elegantbook.cls` 替换为新下载的上游版本；确认可直接使用上游 class 后，不再在仓库中保留额外的 `elegantbook-origin.cls` 对照文件。
 - 新增 `cinta.sty`，用于保存本项目自己的扩展，不再把这些内容直接写入上游 class 文件。
 - `CINTA-cn.tex` 只做最小改动：
   - `\documentclass` 增加 `nofont` 选项；
