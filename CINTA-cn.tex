@@ -1,14 +1,5 @@
-\documentclass[cn,11pt,chinese]{elegantbook}
-
-% tikz 
-\usepackage{tikz-cd}
-\usetikzlibrary{decorations.pathreplacing}
-
-%Making Table Heads with Diagonal Lines
-\usepackage{diagbox}
-
-%%%Make index 20200708
-\usepackage{makeidx}
+\documentclass[cn,11pt,chinese,nofont]{elegantbook}
+\usepackage{cinta}
 
 \title{具体数论与代数}
 \subtitle{数论与代数的计算性导论}
@@ -24,23 +15,6 @@
 \logo{scnu-logo.jpg}
 \cover{cinta-cover-spring-with-formulas.png}
 %20260523使用代数与数论封面
-
-% 本文档命令
-\usepackage{array}
-\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
-% 修改目录深度
-\setcounter{tocdepth}{2}
-
-\usepackage{cleveref}
-\crefformat{chapter}{#2第\zhnumber{#1}章#3}
-
-\makeindex             % used for the subject index
-                       % please use the style svind.ist with
-                       % your makeindex program
-% Some operatornames
-\DeclareMathOperator{\lcm}{lcm}                      
-\DeclareMathOperator{\egcd}{egcd}
-\DeclareMathOperator{\Ker}{Ker}
 
 \begin{document}
 \maketitle

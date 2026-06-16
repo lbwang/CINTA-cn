@@ -1,14 +1,13 @@
-%%%%%%%%%%%%%%%%%%%%%%
-%% start of file `elegantbook.cls'.
-%% Copyright 2013-2022 ElegantLaTeX (elegantlatex2e@gmail.com)
-%%
-%% This work may be distributed and/or modified freely
-%% available at https://github.com/ElegantLaTeX/ElegantBook
-% 
-%%%%%%%%%%%%%%%%%%%%%
-% % !Mode:: "TeX:UTF-8"
+% -----------------------------------------------------------------------------
+% Start of file `elegantbook.cls'.
+% Copyright 2013-2022 ElegantLaTeX (elegantlatex2e@gmail.com)
+% Copyright 2026-     ElegantLaTeX (maintained by ranwang.osbert@outlook.com)
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public License,
+% either version 1.3c of this license or (at your option) any later version.
+% It is available at https://github.com/ElegantLaTeX/ElegantBook
+% -----------------------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{elegantbook}[2022/12/31 v4.5 ElegantBook document class]
+\ProvidesClass{elegantbook}[2026/05/01 v4.7 ElegantBook document class]
 
 %%%
 \RequirePackage{kvoptions}
@@ -43,6 +42,14 @@
 
 \DeclareVoidOption{en}{\ekv{lang=en}}
 \DeclareVoidOption{cn}{\ekv{lang=cn}}
+\DeclareVoidOption{it}{\ekv{lang=it}}
+\DeclareVoidOption{fr}{\ekv{lang=fr}}
+\DeclareVoidOption{nl}{\ekv{lang=nl}}
+\DeclareVoidOption{hu}{\ekv{lang=hu}}
+\DeclareVoidOption{de}{\ekv{lang=de}}
+\DeclareVoidOption{mn}{\ekv{lang=mn}}
+\DeclareVoidOption{pt}{\ekv{lang=pt}}
+\DeclareVoidOption{jp}{\ekv{lang=jp}}
 
 \DeclareVoidOption{fancy}{\ekv{mode=fancy}}
 \DeclareVoidOption{simple}{\ekv{mode=simple}}
@@ -54,10 +61,8 @@
 \DeclareVoidOption{normal}{\ekv{device=normal}}
 \DeclareVoidOption{pad}{\ekv{device=pad}}
 
-\DeclareStringOption[numbers]{cite}
-\DeclareVoidOption{numbers}{\ekv{cite=numbers}}
-\DeclareVoidOption{authoryear}{\ekv{cite=authoryear}}
-\DeclareVoidOption{super}{\ekv{cite=super}}
+\DeclareStringOption[numeric-comp]{citestyle}
+\DeclareStringOption[numeric]{bibstyle}
 
 \DeclareVoidOption{newtx}{\ekv{math=newtx}}
 \DeclareVoidOption{mtpro2}{\ekv{math=mtpro2}}
@@ -97,6 +102,7 @@
 \RequirePackage{setspace}
 
 \RequirePackage{csquotes}
+
 
 \RequirePackage{hyperref}
 \hypersetup{
@@ -204,7 +210,7 @@
     }{\relax}
 
   \ifdefstring{\ELEGANT@chinesefont}{ctexfont}{
-    \RequirePackage[UTF8,scheme=plain,fontset=fandol]{ctex}
+    \RequirePackage[UTF8,scheme=plain]{ctex}
     \xeCJKsetup{AutoFakeBold=true}
     }{\relax}
   
@@ -271,7 +277,7 @@
 
 % ----- Handle Colors -----
 %% 章节以及页脚图形
-\RequirePackage{colortbl}  % lbwang 增加，根据网络问答，解决table中的color问题。
+
 \RequirePackage[table]{xcolor}
 \ifdefstring{\ELEGANT@color}{green}{
   \definecolor{structurecolor}{RGB}{0,120,2}%
@@ -353,10 +359,6 @@
 \newcommand{\version}[1]{\gdef\@version{#1}}
 \newcommand{\extrainfo}[1]{\gdef\@extrainfo{#1}}
 
-\RequirePackage[\ELEGANT@cite,sort&compress]{natbib}
-\setlength{\bibsep}{0.0pt}
-\def\bibfont{\footnotesize}
-
 \RequirePackage{mwe}
 \newcommand{\logo}[1]{\gdef\@logo{#1}}
 \newcommand{\cover}[1]{\gdef\@cover{#1}}
@@ -379,6 +381,8 @@
   \setlength{\footnotesep}{12pt}
 }
 
+
+
 \RequirePackage{graphicx}
 %\RequirePackage{enumerate}
 \RequirePackage{amsmath,mathrsfs,amsfonts,amssymb}
@@ -393,8 +397,14 @@
 
 
 %%   章节设置
-\RequirePackage[center,pagestyles]{titlesec}
+\RequirePackage[center]{titlesec}
 \RequirePackage[title,titletoc,header]{appendix}
+
+
+\RequirePackage[
+  backend=\ELEGANT@bibend,
+  citestyle=\ELEGANT@citestyle,
+  bibstyle=\ELEGANT@bibstyle]{biblatex}
 
 \ifdefstring{\ELEGANT@lang}{cn}{
   \renewcommand{\baselinestretch}{1.3}
@@ -406,44 +416,36 @@
   \renewcommand{\listfigurename}{插图目录}
   \renewcommand{\listtablename}{表格目录}
   \renewcommand{\bibname}{参考文献}
-  \renewcommand{\appendixname}{附录~\thechapter}
+  \newcommand{\ebibname}{参考文献}
+  \renewcommand{\appendixname}{附录}
+  \renewcommand{\appendixtocname}{附录}
   \renewcommand{\indexname}{索\hspace{2em}引}
   \newcommand\figref[1]{\textbf{图}~\ref{#1}}
   \newcommand\tabref[1]{\textbf{表}~\ref{#1}}
-  \ifdefstring{\ELEGANT@scheme}{chinese}{
-    \renewcommand{\chaptername}{第~\zhnumber{\arabic{chapter}}~章}}{
-    \renewcommand{\chaptername}{第~\thechapter{}~章}}
-  \newcommand{\authorname}{\textit{作者：}}
-  \newcommand{\institutename}{\textit{组织：}}
-  \newcommand{\datename}{\textit{时间：}}
-  \newcommand{\versionname}{\textit{版本：}}
-  \ifdefstring{\ELEGANT@cite}{numbers}{
-    \RequirePackage[numerical]{gbt7714}
-  }{
-    \RequirePackage[\ELEGANT@cite]{gbt7714}
-  }
+  \newcommand{\authorname}{\citshape 作者：}
+  \newcommand{\institutename}{\citshape 组织：}
+  \newcommand{\datename}{\citshape 时间：}
+  \newcommand{\versionname}{\citshape 版本：}
   \newcommand{\notename}{笔记}
-  \newcommand{\thinkingname}{思考}
   \renewcommand*{\proofname}{证明}
-  \newcommand{\problemname}{例题}
   \newcommand{\definitionname}{定义}
   \newcommand{\theoremname}{定理}
   \newcommand{\axiomname}{公理}
   \newcommand{\postulatename}{公设}
   \newcommand{\lemmaname}{引理}
-  \newcommand{\conjecturename}{猜想}  % add by libin 20200723
   \newcommand{\propositionname}{命题}
   \newcommand{\corollaryname}{推论}
-  \newcommand{\examplename}{例}
-  \newcommand{\exercisename}{练习}
+  \newcommand{\examplename}{例题} %
+  \newcommand{\instancename}{示例} %
+  \newcommand{\problemname}{问题} % 问题
+  \newcommand{\exercisename}{练习} % 练习=习题
   \newcommand{\remarkname}{注}
   \newcommand{\assumptionname}{假设}
   \newcommand{\conclusionname}{结论}
   \newcommand{\solutionname}{解}
   \newcommand{\propertyname}{性质}
   \newcommand{\introductionname}{内容提要}
-  \newcommand{\problemsetname}{习题}
-  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textit{#1}：#2}}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{{\citshape #1}：#2}}
   \newcommand{\updatename}{更新：}
   \newcommand{\historyname}{版本更新历史}
   \newcommand{\beforechap}{第}
@@ -487,7 +489,342 @@
   \newcommand{\historyname}{Version History}
 }{\relax}
 
-\graphicspath{{./figures/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}
+\ifdefstring{\ELEGANT@lang}{it}{
+  % \RequirePackage[utf8]{inputenc}
+  \RequirePackage[italian]{babel}
+  % \RequirePackage[T1]{fontenc}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\textbf{Figura}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Tabella}~\ref{#1}}
+  \renewcommand{\chaptername}{Chapter}
+  \newcommand{\authorname}{\textbf{Autore: }}
+  \newcommand{\institutename}{\textbf{Istituto: }}
+  \newcommand{\datename}{\textbf{Data: }}
+  \newcommand{\versionname}{\textbf{Versione: }}
+  \newcommand{\notename}{Nota}
+  \newcommand{\proofname}{Dimostrazione}
+  \newcommand{\problemname}{Problema}
+  \newcommand{\definitionname}{Definizione}
+  \newcommand{\theoremname}{Teorema}
+  \newcommand{\axiomname}{Assioma}
+  \newcommand{\postulatename}{Postulato}
+  \newcommand{\lemmaname}{Lemma}
+  \newcommand{\propositionname}{Proposizione}
+  \newcommand{\corollaryname}{Corollario}
+  \newcommand{\examplename}{Esempio}
+  \newcommand{\exercisename}{Esercizio}
+  \newcommand{\remarkname}{Commento}
+  \newcommand{\assumptionname}{Assunto}
+  \newcommand{\conclusionname}{Conclusione}
+  \newcommand{\solutionname}{Soluzione}
+  \newcommand{\propertyname}{Proprietà}
+  \newcommand{\introductionname}{Introduzione}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Aggiornamenti:}
+  \newcommand{\ebibname}{Bibliografia}
+  \newcommand{\historyname}{Cronologia delle versioni}
+}{\relax}
+
+\ifdefstring{\ELEGANT@lang}{fr}{
+  \RequirePackage[utf8]{inputenc}
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage[french]{babel}
+  \setlength\parindent{2em}
+  \renewcommand\figref[1]{\textbf{Figure}\ref{#1}}
+  \renewcommand\tabref[1]{\textbf{Tableau}\ref{#1}}
+  \renewcommand{\chaptername}{Chapitre}
+  \renewcommand{\authorname}{\textbf{Auteur: }}
+  \renewcommand{\institutename}{\textbf{Institut: }}
+  \renewcommand{\datename}{\textbf{Date: }}
+  \renewcommand{\versionname}{\textbf{Version: }}
+  \renewcommand{\notename}{Note}
+  \renewcommand{\proofname}{Démonstration}
+  \renewcommand{\problemname}{Problème}
+  \renewcommand{\definitionname}{Définition}
+  \renewcommand{\theoremname}{Théorème}
+  \renewcommand{\axiomname}{Axiôme}
+  \renewcommand{\postulatename}{Postulat}
+  \renewcommand{\lemmaname}{Lemme}
+  \renewcommand{\propositionname}{Proposition}
+  \renewcommand{\corollaryname}{Corollaire}
+  \renewcommand{\examplename}{Exemple}
+  \renewcommand{\exercisename}{Exercice}
+  \renewcommand{\remarkname}{Remarque}
+  \renewcommand{\assumptionname}{Supposition}
+  \renewcommand{\conclusionname}{Conclusion}
+  \renewcommand{\solutionname}{Solution}
+  \renewcommand{\propertyname}{Propriété}
+  \renewcommand{\introductionname}{Introduction}
+  \renewcommand{\problemsetname}{Exercice}
+  \renewcommand{\updatename}{Mises à jour:}
+  \newcommand{\ebibname}{Bibliographie}
+  \renewcommand{\historyname}{Historique des versions}
+}{\relax}
+
+
+\ifdefstring{\ELEGANT@lang}{nl}{
+  \RequirePackage[dutch]{babel}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\textbf{Figuur}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Tabel}~\ref{#1}}
+  \renewcommand{\chaptername}{Hoofdstuk}
+  \newcommand{\authorname}{\textbf{Auteur: }}
+  \newcommand{\institutename}{\textbf{Instituut: }}
+  \newcommand{\datename}{\textbf{Datum: }}
+  \newcommand{\versionname}{\textbf{Versie: }}
+  \newcommand{\notename}{Opmerking}
+  \newcommand{\proofname}{Bewijs}
+  \newcommand{\problemname}{Probleem}
+  \newcommand{\definitionname}{Definitie}
+  \newcommand{\theoremname}{Stelling}
+  \newcommand{\axiomname}{Uitgangspunt}
+  \newcommand{\postulatename}{Hypothese}
+  \newcommand{\lemmaname}{Lemma}
+  \newcommand{\propositionname}{Voorstel}
+  \newcommand{\corollaryname}{Gevolgtrekking}
+  \newcommand{\examplename}{Voorbeeld}
+  \newcommand{\exercisename}{Oefening}
+  \newcommand{\remarkname}{Commentaar}
+  \newcommand{\assumptionname}{Veronderstelling}
+  \newcommand{\conclusionname}{Besluit}
+  \newcommand{\solutionname}{Oplossing}
+  \newcommand{\propertyname}{Eigenschap}
+  \newcommand{\introductionname}{Introductie}
+  \newcommand{\problemsetname}{Probleemcomplex}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Update:}
+  \newcommand{\ebibname}{Bibliographie}
+  \newcommand{\historyname}{Versie Geschiedenis}
+}{\relax}
+
+
+\ifdefstring{\ELEGANT@lang}{hu}{
+  \RequirePackage[magyar]{babel}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\ref{#1}~\textbf{Ábra}}
+  \newcommand\tabref[1]{\ref{#1}~\textbf{Táblázat}}
+  \renewcommand{\chaptername}{Fejezet}
+  \newcommand{\authorname}{\textbf{Szerző: }}
+  \newcommand{\institutename}{\textbf{Intézmény: }}
+  \newcommand{\datename}{\textbf{Dátum: }}
+  \newcommand{\versionname}{\textbf{Verziószám: }}
+  \newcommand{\notename}{Jegyzet}
+  \newcommand{\proofname}{Bizonyítás}
+  \newcommand{\problemname}{Probléma}
+  \newcommand{\definitionname}{Definíció}
+  \newcommand{\theoremname}{Tétel}
+  \newcommand{\axiomname}{Axióma}
+  \newcommand{\postulatename}{Követelmény}
+  \newcommand{\lemmaname}{Lemma}
+  \newcommand{\propositionname}{Előzmény}
+  \newcommand{\corollaryname}{Következmény}
+  \newcommand{\examplename}{Példa}
+  \newcommand{\exercisename}{Feladat}
+  \newcommand{\remarkname}{Megjegyzés}
+  \newcommand{\assumptionname}{Sejtés}
+  \newcommand{\conclusionname}{Összefoglalás}
+  \newcommand{\solutionname}{Megoldás}
+  \newcommand{\propertyname}{Tulajdonság}
+  \newcommand{\introductionname}{Bevezetés}
+  \newcommand{\problemsetname}{Feladatok}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Frissítve:}
+  \newcommand{\ebibname}{Bibliográfia}
+  \newcommand{\historyname}{Korábbi verziók}
+}{\relax}
+
+\ifdefstring{\ELEGANT@lang}{de}{
+  \setlength\parindent{2em}
+  \renewcommand{\contentsname}{Inhaltsverzeichnis}
+  \newcommand\figref[1]{\textbf{Figur}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Tabelle}~\ref{#1}}
+  \renewcommand{\partname}{\color{structurecolor} Teil}
+  \renewcommand{\listfigurename}{Abbildungsverzeichnis}
+  \renewcommand{\listtablename}{Tabellenverzeichnis}
+  \renewcommand{\bibname}{Bibliographie}
+  \renewcommand{\appendixname}{Anhang}
+  \renewcommand{\chaptername}{Kapitel}
+  \newcommand{\authorname}{\textbf{Autor: }}
+  \newcommand{\institutename}{\textbf{Institut: }}
+  \newcommand{\datename}{\textbf{Datum: }}
+  \newcommand{\versionname}{\textbf{Version: }}
+  \newcommand{\notename}{Notiz}
+  \newcommand{\proofname}{Beweis}
+  \newcommand{\problemname}{Problem}
+  \newcommand{\definitionname}{Definition}
+  \newcommand{\theoremname}{Theorem}
+  \newcommand{\axiomname}{Axiom}
+  \newcommand{\postulatename}{Postulat}
+  \newcommand{\lemmaname}{Lemma}
+  \newcommand{\propositionname}{Behauptung}
+  \newcommand{\corollaryname}{Corollary}
+  \newcommand{\examplename}{Beispiel}
+  \newcommand{\instancename}{Beispiel} %
+  \newcommand{\exercisename}{\"{U}bung}
+  \newcommand{\remarkname}{Anmerkung}
+  \newcommand{\assumptionname}{Annahme}
+  \newcommand{\conclusionname}{Abschluss}
+  \newcommand{\solutionname}{Aufl\"{o}sung}
+  \newcommand{\propertyname}{Property}
+  \newcommand{\introductionname}{Einleitung}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Updates:}
+  \renewcommand{\ebibname}{Bibliographie}
+  \newcommand{\historyname}{Version der Geschichte}
+}{\relax}
+
+\ifdefstring{\ELEGANT@lang}{es}{
+  \RequirePackage[spanish]{babel}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\textbf{Figura}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Tabla}~\ref{#1}}
+  \renewcommand{\spanishchaptername}{Capítulo}
+  \newcommand{\authorname}{\textbf{Autor: }}
+  \newcommand{\institutename}{\textbf{Instituto: }}
+  \newcommand{\datename}{\textbf{Fecha: }}
+  \newcommand{\versionname}{\textbf{Versión: }}
+  \newcommand{\notename}{Nota}
+  \newcommand{\proofname}{Demostración}
+  \newcommand{\problemname}{Problema}
+  \newcommand{\definitionname}{Definición}
+  \newcommand{\theoremname}{Teorema}
+  \newcommand{\axiomname}{Axioma}
+  \newcommand{\postulatename}{Postulado}
+  \newcommand{\lemmaname}{Lema}
+  \newcommand{\propositionname}{Proposición}
+  \newcommand{\corollaryname}{Corolario}
+  \newcommand{\examplename}{Ejemplo}
+  \newcommand{\exercisename}{Ejercicio}
+  \newcommand{\remarkname}{Comentario}
+  \newcommand{\assumptionname}{Asunto}
+  \newcommand{\conclusionname}{Conclusión}
+  \newcommand{\solutionname}{Solución}
+  \newcommand{\propertyname}{Propiedad}
+  \newcommand{\introductionname}{Introducción}
+  \newcommand{\problemsetname}{Ejercicio}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Actualización:}
+  \newcommand{\ebibname}{Bibliografía}
+  \newcommand{\historyname}{Historial de versiones}
+}{\relax}
+
+\ifdefstring{\ELEGANT@lang}{mn}{
+  \RequirePackage[mongolian]{babel}
+  \RequirePackage[utf8]{inputenc}
+  \RequirePackage[T2A]{fontenc}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\textbf{Зураг}\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Хүснэгт}\ref{#1}}
+  \renewcommand{\chaptername}{Бүлэг}
+  \newcommand{\authorname}{\textbf{Зохиогч: }}
+  \newcommand{\institutename}{\textbf{Сургууль: }}
+  \newcommand{\datename}{\textbf{Огноо: }}
+  \newcommand{\versionname}{\textbf{Хувилбар: }}
+  \newcommand{\notename}{Тэмдэглэл}
+  \newcommand{\proofname}{Баталгаа}
+  \newcommand{\problemname}{Бодлого}
+  \newcommand{\definitionname}{Тодорхойлолт}
+  \newcommand{\theoremname}{Томьёо}
+  \newcommand{\axiomname}{Аксиом}
+  \newcommand{\postulatename}{Постулат}
+  \newcommand{\lemmaname}{Лемма}
+  \newcommand{\propositionname}{Таамаглал}
+  \newcommand{\corollaryname}{Үр дүн}
+  \newcommand{\examplename}{Жишээ}
+  \newcommand{\exercisename}{Дасгал}
+  \newcommand{\remarkname}{Тайлбар}
+  \newcommand{\assumptionname}{Урьдчилсан нөхцөл}
+  \newcommand{\conclusionname}{Дүгнэлт}
+  \newcommand{\solutionname}{Хариулт}
+  \newcommand{\propertyname}{Шинж чанар}
+  \newcommand{\introductionname}{Удиртгал}
+  \newcommand{\problemsetname}{Бодлогууд}
+  \newcommand\bioinfo[2]{\gdef@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Шинэчлэлтүүд:}
+  \newcommand{\ebibname}{Ном зүй}
+  \newcommand{\historyname}{Хувилбарын түүх}
+}{\relax}
+
+
+\ifdefstring{\ELEGANT@lang}{pt}{
+  \RequirePackage[portuguese]{babel}
+  \setlength\parindent{2em}
+  \newcommand\figref[1]{\textbf{Figura}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{Tabela}~\ref{#1}}
+  \renewcommand{\chaptername}{Capítulo}
+  \newcommand{\authorname}{\textbf{Autor: }}
+  \newcommand{\institutename}{\textbf{Instituição: }}
+  \newcommand{\datename}{\textbf{Data: }}
+  \newcommand{\versionname}{\textbf{Versão: }}
+  \newcommand{\notename}{Observação}
+  \newcommand{\proofname}{Demostração}
+  \newcommand{\problemname}{Problema}
+  \newcommand{\definitionname}{Definição}
+  \newcommand{\theoremname}{Teorema}
+  \newcommand{\axiomname}{Axioma}
+  \newcommand{\postulatename}{Postulado}
+  \newcommand{\lemmaname}{Lema}
+  \newcommand{\propositionname}{Proposição}
+  \newcommand{\corollaryname}{Corolário}
+  \newcommand{\examplename}{Exemplo}
+  \newcommand{\exercisename}{Exercício}
+  \newcommand{\remarkname}{Comentário}
+  \newcommand{\assumptionname}{Assunto}
+  \newcommand{\conclusionname}{Conclusão}
+  \newcommand{\solutionname}{Soluções}
+  \newcommand{\propertyname}{Propiedade}
+  \newcommand{\introductionname}{Introdução}
+  \newcommand{\problemsetname}{Questão}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{Atualização: }
+  \newcommand{\ebibname}{Bibliografia}
+  \newcommand{\historyname}{Histórico de versões}
+}{\relax}
+
+
+\ifdefstring{\ELEGANT@lang}{jp}{
+ \RequirePackage{luatexja}
+  \setlength\parindent{2em}
+  \renewcommand{\contentsname}{目次}
+  \newcommand\figref[1]{\textbf{図}~\ref{#1}}
+  \newcommand\tabref[1]{\textbf{表}~\ref{#1}}
+  \renewcommand{\partname}{\color{structurecolor}}
+  \renewcommand{\listfigurename}{イラストカタログ}
+  \renewcommand{\listtablename}{表カタログ}
+  \renewcommand{\bibname}{参考文献}
+  \renewcommand{\appendixname}{付録}
+  \renewcommand{\chaptername}{第 \thechapter 章}
+  \newcommand{\authorname}{\textbf{著者：}}
+  \newcommand{\institutename}{\textbf{組織団体：}}
+  \newcommand{\datename}{\textbf{日付：}}
+  \newcommand{\versionname}{\textbf{\citshape バージョン：}}
+  \newcommand{\notename}{ノート}
+  \newcommand{\proofname}{証明}
+  \newcommand{\problemname}{問題}
+  \newcommand{\definitionname}{定義}
+  \newcommand{\theoremname}{定理}
+  \newcommand{\axiomname}{公理}
+  \newcommand{\postulatename}{公準}
+  \newcommand{\lemmaname}{補題}
+  \newcommand{\propositionname}{命題}
+  \newcommand{\corollaryname}{系}
+  \newcommand{\examplename}{例題}
+  \newcommand{\instancename}{例}
+  \newcommand{\exercisename}{練習}
+  \newcommand{\remarkname}{注}
+  \newcommand{\assumptionname}{仮設}
+  \newcommand{\conclusionname}{結論}
+  \newcommand{\solutionname}{解答}
+  \newcommand{\propertyname}{性質}
+  \newcommand{\introductionname}{内容概要}
+  \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
+  \newcommand{\updatename}{更新：}
+  \newcommand{\ebibname}{参考文献}
+  \newcommand{\historyname}{バージョン更新履歴}
+}{\relax}
+
+
+\graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}
 
 \RequirePackage{tikz} %% load tikz without tikz
 \usetikzlibrary{backgrounds,calc,shadows,positioning,fit}
@@ -532,7 +869,7 @@
 
 \setcounter{secnumdepth}{5}
 \titleformat{\chapter}[\style]{\bfseries}{
-  \filcenter\LARGE\enspace\bfseries{\color{structurecolor} \IfAppendix{\appendixname\;}{\xchaptertitle\;}}}{1pt}{
+  \filcenter\LARGE\enspace\bfseries{\color{structurecolor} \IfAppendix{\appendixname\;\thechapter\;}{\xchaptertitle\;}}}{1pt}{
   \LARGE\bfseries\color{structurecolor}\filcenter}[]
 \titleformat{\section}[hang]{\bfseries}{
   \Large\bfseries{\color{structurecolor}\thesection}\enspace}{1pt}{%
@@ -692,11 +1029,11 @@
   \ELEGANT@newtheorem{definition}{def}{defstyle}
   \ELEGANT@newtheorem{postulate}{pos}{thmstyle}
   \ELEGANT@newtheorem{axiom}{axi}{thmstyle}
-  \ELEGANT@newtheorem{conjecture}{con}{prostyle}
   \ELEGANT@newtheorem{corollary}{cor}{thmstyle}
   \ELEGANT@newtheorem{lemma}{lem}{thmstyle}
   \ELEGANT@newtheorem{proposition}{pro}{prostyle}
 }{\relax}
+
 
 \ifdefstring{\ELEGANT@mode}{simple}{
   \let\openbox\relax
@@ -743,7 +1080,6 @@
   \ELEGANT@newtheorem{corollary}{thmstyle}
   \ELEGANT@newtheorem{lemma}{thmstyle}
   \ELEGANT@newtheorem{proposition}{prostyle}
-  \ELEGANT@newtheorem{conjecture}{prostyle}
 }{\relax}
 
 % define an user control sequence \elegantnewtheorem
@@ -798,7 +1134,7 @@
     \ifdefstring{\ELEGANT@mode}{fancy}{%
         \IfValueTF{#4}
           {
-          \def\ELEGANT@temp@prefix{#4}
+            \def\ELEGANT@temp@prefix{#4}
             \ifdefempty{\ELEGANT@temp@prefix}
               {
                 \ELEGANT@newtheorem{#1}{#1}{#3}[\ELEGANT@tmp@tl]
@@ -846,29 +1182,10 @@
   \par\noindent\textbf{\color{main}{\problemname} \theprob #1 }\rmfamily}{
   \par\ignorespacesafterend}
 
-\newcounter{thinking}[chapter]
-\setcounter{thinking}{0}
-\renewcommand{\thethinking}{\thechapter.\arabic{thinking}}
-
-\newcounter{property}[chapter]
-\setcounter{property}{0}
-\renewcommand{\theproperty}{\thechapter.\arabic{property}}
-
-\newcounter{remark}[chapter]
-\setcounter{remark}{0}
-\renewcommand{\theremark}{\thechapter.\arabic{remark}}
-
 \newenvironment{note}{
   \par\noindent\makebox[-3pt][r]{
     \scriptsize\color{red!90}\textdbend\quad}
     \textbf{\color{second}\notename} \citshape}{\par}
-
-% add by lbwang 20200326  
-\NewDocumentEnvironment{thinking}{g}{
-  \refstepcounter{thinking}
-  \par\noindent\makebox[-3pt][r]{
-    \scriptsize\color{red!90}\textdbend\quad}
-    \textbf{\color{second}\thinkingname~\thethinking\IfValueT{#1}{~#1}} \citshape}{\par}
 
 \newenvironment{proof}{
   \par\noindent\textbf{\color{second}\proofname\;}
@@ -877,26 +1194,11 @@
   \par}
 
 \newenvironment{solution}{\par\noindent\textbf{\color{main}\solutionname} \citshape}{\par}
-\NewDocumentEnvironment{remark}{g}{
-  \refstepcounter{remark}
-  \par\noindent\textbf{\color{second}\remarkname~\theremark\IfValueT{#1}{~#1}}}{\par}
+\newenvironment{remark}{\noindent\textbf{\color{second}\remarkname}}{\par}
 \newenvironment{assumption}{\par\noindent\textbf{\color{third}\assumptionname} \citshape}{\par}
 \newenvironment{conclusion}{\par\noindent\textbf{\color{third}\conclusionname} \citshape}{\par}
-\NewDocumentEnvironment{property}{g}{
-  \refstepcounter{property}
-  \par\noindent\textbf{\color{third}\propertyname~\theproperty\IfValueT{#1}{~#1}} \citshape}{\par}
+\newenvironment{property}{\par\noindent\textbf{\color{third}\propertyname} \citshape}{\par}
 \newenvironment{custom}[1]{\par\noindent\textbf{\color{third} #1} \citshape}{\par}
-
-\AtBeginDocument{
-  \@ifpackageloaded{cleveref}{
-    \crefname{thinking}{\thinkingname}{\thinkingname}
-    \Crefname{thinking}{\thinkingname}{\thinkingname}
-    \crefname{property}{\propertyname}{\propertyname}
-    \Crefname{property}{\propertyname}{\propertyname}
-    \crefname{remark}{\remarkname}{\remarkname}
-    \Crefname{remark}{\remarkname}{\remarkname}
-  }{}
-}
 
 \RequirePackage{multicol}
 \tcbset{
@@ -956,6 +1258,7 @@
 \RequirePackage{fancyhdr}
 \fancyhf{}
 
+
 \fancyfoot[c]{\color{structurecolor}\small\thepage}
 \if@twoside
   \fancyhead[EL]{\color{structurecolor}\cnormal\leftmark}
@@ -970,7 +1273,7 @@
 % \renewcommand{\headrule}{}
 \fancypagestyle{plain}{\renewcommand{\headrulewidth}{0pt}\fancyhf{}\renewcommand{\headrule}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\, #1}{}}
-\renewcommand{\chaptermark}[1]{\markboth{\xchaptertitle\, #1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\IfAppendix{\appendixname\;\thechapter\, #1}{\xchaptertitle\, #1}}{}}
 
 
 \renewcommand*{\maketitle}{%
@@ -993,8 +1296,8 @@
       \includegraphics[trim=0 26bp 0 26bp,clip=true, width=\linewidth]{example-image}
     \fi
   }{\relax}
-  \setlength{\fboxsep}{0pt}
-  \colorbox{coverlinecolor}{\makebox[\linewidth][c]{\shortstack[c]{\vspace{0.5in}}}}
+  \vskip-\baselineskip
+  {\color{coverlinecolor}\hrule \@width \linewidth \@height .5in}
   \vfill
   \vskip-2ex
   \hspace{2em}
@@ -1048,65 +1351,33 @@
 
 \RequirePackage{listings}
 \renewcommand{\ttdefault}{cmtt}
-%% Setup for Code, updated on 20200426 by lbwang
-%% Just add the following two rows.
-\renewcommand{\lstlistingname}{算法}% Listing -> Algorithm
-\renewcommand{\lstlistlistingname}{\lstlistingname 列表}% List of Listings -> List of Algorithms
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
 \lstdefinestyle{mystyle}{
-	backgroundcolor=\color{backcolour},   
-	commentstyle=\color{codegreen},
-	keywordstyle=\color{blue},
-	numberstyle=\tiny\color{codegray},
-	stringstyle=\color{codepurple},
-	basicstyle=\footnotesize,
-	breakatwhitespace=false,         
-	breaklines=true,                 
-	captionpos=b,                    
-	keepspaces=true,                 
-	numbers=left,                    
-	numbersep=5pt,                  
-	showspaces=false,                
-	showstringspaces=false,
-	showtabs=false,                  
-	tabsize=2
+  basicstyle=%
+    \ttfamily
+    \lst@ifdisplaystyle\small\fi
 }
-	
-\lstset{style=mystyle,
-    basicstyle=\ttfamily,
-    language = Python,
-	showstringspaces = false,
-	columns = fullflexible,
-	numbers = left,
-	numberstyle = \tiny,
-	frame = single}
-	
-% 更改了原来的listing配置，以上是我增加的代码，以下是我注释掉的代码。20204026
 
-% \definecolor{lightgrey}{rgb}{0.9,0.9,0.9}
-% \definecolor{frenchplum}{RGB}{190,20,83}
-% \lstset{language=[LaTeX]TeX,
-%   texcsstyle=*\color{winered},
-%   numbers=none,
-%   mathescape=false,
-%   breaklines=true,
-%   keywordstyle=\color{winered},
-%   commentstyle=\color{gray},
-%   emph={elegantpaper,fontenc,fontspec,xeCJK,citestyle,FiraMono,xunicode,figure,fig,image,img,table,itemize,enumerate,ctex,microtype,description,times,booktabs,tabular,PDFLaTeX,XeLaTeX,type1cm,BibTeX,device,color,mode,lang,amsthm,tcolorbox,titlestyle,cite,ctex,listings,base,math,scheme,toc,esint,chinesefont,amsmath,bibstyle,natbib,pgfornament,addbibresource,printbibliography},
-%   emphstyle={\color{frenchplum}},
-%   morekeywords={DeclareSymbolFont,SetSymbolFont,toprule,midrule,bottomrule,institute,version,includegraphics,setmainfont,setsansfont,setmonofont ,setCJKmainfont,setCJKsansfont,setCJKmonofont,RequirePackage,figref,tabref,email,maketitle,keywords,definecolor,extrainfo,logo,cover,subtitle,appendix,chapter,section,hypersetup,mainmatter,frontmatter,tableofcontents,elegantpar,heiti,kaishu,lstset,pagecolor,zhnumber,marginpar,part,equote,marginnote,bioinfo,datechange,listofchange,lvert,lastpage,songti,heiti,fangsong,setCJKfamilyfont,textbf,elegantnewtheorem,thmcnt,colorlet,usesamecnt},
-%   frame=single,
-%   tabsize=2,
-%   rulecolor=\color{structurecolor},
-%   framerule=0.2pt,
-%   columns=flexible,
-%   % backgroundcolor=\color{lightgrey}
-% }
+\lstset{basicstyle=\ttfamily,style=mystyle,breaklines=true}
+
+\definecolor{lightgrey}{rgb}{0.9,0.9,0.9}
+\definecolor{frenchplum}{RGB}{190,20,83}
+\lstset{language=[LaTeX]TeX,
+  texcsstyle=*\color{winered},
+  numbers=none,
+  mathescape=false,
+  breaklines=true,
+  keywordstyle=\color{winered},
+  commentstyle=\color{gray},
+  emph={elegantpaper,fontenc,fontspec,xeCJK,citestyle,FiraMono,xunicode,figure,fig,image,img,table,itemize,enumerate,ctex,microtype,description,times,booktabs,tabular,PDFLaTeX,XeLaTeX,type1cm,BibTeX,device,color,mode,lang,amsthm,tcolorbox,titlestyle,cite,ctex,listings,base,math,scheme,toc,esint,chinesefont,amsmath,bibstyle,natbib,pgfornament,addbibresource,printbibliography},
+  emphstyle={\color{frenchplum}},
+  morekeywords={DeclareSymbolFont,SetSymbolFont,toprule,midrule,bottomrule,institute,version,includegraphics,setmainfont,setsansfont,setmonofont ,setCJKmainfont,setCJKsansfont,setCJKmonofont,RequirePackage,figref,tabref,email,maketitle,keywords,definecolor,extrainfo,logo,cover,subtitle,appendix,chapter,section,hypersetup,mainmatter,frontmatter,tableofcontents,elegantpar,heiti,kaishu,lstset,pagecolor,zhnumber,marginpar,part,equote,marginnote,bioinfo,datechange,listofchange,lvert,lastpage,songti,heiti,fangsong,setCJKfamilyfont,textbf,elegantnewtheorem,thmcnt,colorlet,usesamecnt},
+  frame=single,
+  tabsize=2,
+  rulecolor=\color{structurecolor},
+  framerule=0.2pt,
+  columns=flexible,
+  % backgroundcolor=\color{lightgrey}
+}
 
 \newcommand\bmmax{0}
 \RequirePackage{bm}
@@ -1137,6 +1408,7 @@
 \newenvironment{change}{
   \begin{enumerate}[label=\small\protect\circled{\arabic*}]}{
   \end{enumerate}}
+
 
 
 \renewcommand\tableofcontents{%
@@ -1207,57 +1479,3 @@
 
 % restore the tt default family to lmodern tt family
 \renewcommand\ttdefault{lmtt}
-
-
-%%多项式长除法的Latex支持  
-\RequirePackage{polynom}
-  \makeatletter
-  \def\pld@CF@loop#1+{%
-      \ifx\relax#1\else
-          \begingroup
-            \pld@AccuSetX11%
-            \def\pld@frac{{}{}}\let\pld@symbols\@empty\let\pld@vars\@empty
-            \pld@false
-            #1%
-            \let\pld@temp\@empty
-            \pld@AccuIfOne{}{\pld@AccuGet\pld@temp
-                              \edef\pld@temp{\noexpand\pld@R\pld@temp}}%
-             \pld@if \pld@Extend\pld@temp{\expandafter\pld@F\pld@frac}\fi
-             \expandafter\pld@CF@loop@\pld@symbols\relax\@empty
-             \expandafter\pld@CF@loop@\pld@vars\relax\@empty
-             \ifx\@empty\pld@temp
-                 \def\pld@temp{\pld@R11}%
-             \fi
-            \global\let\@gtempa\pld@temp
-          \endgroup
-          \ifx\@empty\@gtempa\else
-              \pld@ExtendPoly\pld@tempoly\@gtempa
-          \fi
-          \expandafter\pld@CF@loop
-      \fi}
-  \def\pld@CMAddToTempoly{%
-      \pld@AccuGet\pld@temp\edef\pld@temp{\noexpand\pld@R\pld@temp}%
-      \pld@CondenseMonomials\pld@false\pld@symbols
-      \ifx\pld@symbols\@empty \else
-          \pld@ExtendPoly\pld@temp\pld@symbols
-      \fi
-      \ifx\pld@temp\@empty \else
-          \pld@if
-              \expandafter\pld@IfSum\expandafter{\pld@temp}%
-                  {\expandafter\def\expandafter\pld@temp\expandafter
-                      {\expandafter\pld@F\expandafter{\pld@temp}{}}}%
-                  {}%
-          \fi
-          \pld@ExtendPoly\pld@tempoly\pld@temp
-          \pld@Extend\pld@tempoly{\pld@monom}%
-      \fi}
-  \makeatother
-  
-  %For set or group
-  \newcommand{\Q}{{\mathbb Q}}
-  \newcommand{\Z}{{\mathbb Z}}
-  \newcommand{\F}{{\mathbb F}}
-  \newcommand{\N}{{\mathbb N}}
-  \newcommand{\R}{{\mathbb R}}
-  
-  \newcommand{\qed}{\hfill \ensuremath{\Box}}

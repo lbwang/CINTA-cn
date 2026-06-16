@@ -96,9 +96,9 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 
 模加法、模乘法可以最直接的方式定义如下，并写成以下命题的形式：
 \begin{proposition}{}{congru}
-%\label{prop:congru}
+%\label{pro:congru}
 如果$a_1 \equiv b_1 \pmod{m}$而且$a_2 \equiv b_2  \pmod{m}$，则
-\[a_1 \pm a_2 \equiv b_1 \pm b_2  \pmod{m} \qquad \text{且} \qquad 
+\[a_1 \pm a_2 \equiv b_1 \pm b_2 \pmod{m} \qquad \text{且} \qquad 
      a_1  a_2 \equiv b_1 b_2  \pmod{m}\text{。}\]
 \end{proposition}
 
@@ -107,7 +107,7 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 \end{proof}
 
 命题~\ref{pro:congru}是说，如果对两个整数$a$和$b$进行模$m$加法或者乘法，可以首先算出$a' = (a \bmod m)$ 和 $b' = (b \bmod m)$，然后
-对 $a'$ 和 $b'$ 做模 $m$ 的加法或者乘法，得到最终答案。 通过使用这种方法可以赢得效率，因为我们总是在尽可能小的数值上进行计算。或者，在某种意义上，同余的值将被视为同一个值。
+对 $a'$ 和 $b'$ 做模 $m$ 的加法或者乘法，得到最终答案。通过使用这种方法可以赢得效率，因为我们总是在尽可能小的数值上进行计算。或者，在某种意义上，同余的值将被视为同一个值。
 % Should remark on Divide and Conquer. To do list.
 
 \begin{example}
@@ -439,8 +439,7 @@ x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \text{如果$y$是奇数。} \\
 	\lstinputlisting[caption = 模指数运算--迭代版本]{codes/chap2-4.py}
 \end{center}
 
-该算法的正确性与效率都是显然的。值得一提的是，如果读者已经写出了简单乘法的迭代版本，这两种算法的相似之处就非常显然了。
-模指数运算的优化改进算法则不在本书讨论范围。
+该算法的正确性与效率显然可知。值得一提的是，如果读者已经写出了简单乘法的迭代版本，就会发现这两种算法的相似之处。有趣！模指数运算的优化改进算法则不在本书讨论范围。
 
 %%% 20230424下午
 \section*{章注}

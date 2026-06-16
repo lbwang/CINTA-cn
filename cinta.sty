@@ -1,0 +1,197 @@
+% CINTA-specific extensions kept outside elegantbook.cls.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cinta}[2026/06/16 CINTA extensions for ElegantBook]
+
+\RequirePackage{xparse}
+\RequirePackage{tikz-cd}
+\usetikzlibrary{decorations.pathreplacing}
+\RequirePackage{diagbox}
+\RequirePackage{makeidx}
+\RequirePackage{array}
+\RequirePackage{cleveref}
+
+\crefformat{chapter}{#2第\zhnumber{#1}章#3}
+\makeindex
+\setcounter{tocdepth}{2}
+\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
+\providecommand{\lcm}{\operatorname{lcm}}
+\providecommand{\egcd}{\operatorname{egcd}}
+\providecommand{\Ker}{\operatorname{Ker}}
+
+\setCJKmainfont[
+  Extension=.otf,
+  BoldFont=FandolSong-Bold,
+  ItalicFont=FandolKai-Regular
+]{FandolSong-Regular}
+\setCJKsansfont[
+  Extension=.otf,
+  BoldFont=FandolHei-Regular
+]{FandolHei-Regular}
+\setCJKmonofont[
+  Extension=.otf
+]{FandolFang-Regular}
+\setCJKfamilyfont{zhsong}[
+  Extension=.otf,
+  BoldFont=FandolSong-Bold
+]{FandolSong-Regular}
+\setCJKfamilyfont{zhhei}[
+  Extension=.otf,
+  BoldFont=FandolHei-Regular
+]{FandolHei-Regular}
+\setCJKfamilyfont{zhkai}[
+  Extension=.otf,
+  BoldFont=FandolHei-Regular
+]{FandolKai-Regular}
+\setCJKfamilyfont{zhfs}[
+  Extension=.otf
+]{FandolFang-Regular}
+\providecommand*{\songti}{\CJKfamily{zhsong}}
+\providecommand*{\heiti}{\CJKfamily{zhhei}}
+\providecommand*{\kaishu}{\CJKfamily{zhkai}}
+\providecommand*{\fangsong}{\CJKfamily{zhfs}}
+
+\providecommand{\thinkingname}{思考}
+\providecommand{\conjecturename}{猜想}
+\let\CINTAConjectureName\conjecturename
+
+\newcounter{thinking}[chapter]
+\renewcommand{\thethinking}{\thechapter.\arabic{thinking}}
+
+\newcounter{property}[chapter]
+\renewcommand{\theproperty}{\thechapter.\arabic{property}}
+
+\newcounter{remark}[chapter]
+\renewcommand{\theremark}{\thechapter.\arabic{remark}}
+
+\makeatletter
+\newcommand{\CINTA@thinking@begin}[1]{%
+  \refstepcounter{thinking}%
+  \par\noindent\makebox[-3pt][r]{%
+    \scriptsize\color{red!90}\textdbend\quad}%
+  \textbf{\color{second}\thinkingname~\thethinking\IfValueT{#1}{~#1}} \citshape}
+
+\newcommand{\CINTA@property@begin}[1]{%
+  \refstepcounter{property}%
+  \par\noindent\textbf{\color{third}\propertyname~\theproperty\IfValueT{#1}{~#1}} \citshape}
+
+\newcommand{\CINTA@remark@begin}[1]{%
+  \refstepcounter{remark}%
+  \par\noindent\textbf{\color{second}\remarkname~\theremark\IfValueT{#1}{~#1}}}
+
+\@ifundefined{thinking}
+  {\NewDocumentEnvironment{thinking}{g}{\CINTA@thinking@begin{#1}}{\par}}
+  {\RenewDocumentEnvironment{thinking}{g}{\CINTA@thinking@begin{#1}}{\par}}
+
+\@ifundefined{property}
+  {\NewDocumentEnvironment{property}{g}{\CINTA@property@begin{#1}}{\par}}
+  {\RenewDocumentEnvironment{property}{g}{\CINTA@property@begin{#1}}{\par}}
+
+\@ifundefined{remark}
+  {\NewDocumentEnvironment{remark}{g}{\CINTA@remark@begin{#1}}{\par}}
+  {\RenewDocumentEnvironment{remark}{g}{\CINTA@remark@begin{#1}}{\par}}
+
+\@ifundefined{conjecture}
+  {\elegantnewtheorem{conjecture}{\CINTAConjectureName}{prostyle}{con}}
+  {}
+
+\AtBeginDocument{%
+  \@ifpackageloaded{cleveref}{%
+    \crefname{thinking}{\thinkingname}{\thinkingname}%
+    \Crefname{thinking}{\thinkingname}{\thinkingname}%
+    \crefname{property}{\propertyname}{\propertyname}%
+    \Crefname{property}{\propertyname}{\propertyname}%
+    \crefname{remark}{\remarkname}{\remarkname}%
+    \Crefname{remark}{\remarkname}{\remarkname}%
+  }{}%
+}
+\makeatother
+
+\renewcommand{\lstlistingname}{算法}
+\renewcommand{\lstlistlistingname}{\lstlistingname 列表}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{cintacode}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{blue},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  language=Python,
+  columns=fullflexible,
+  frame=single
+}
+\lstset{style=cintacode}
+
+% Keep the old CINTA shorthand commands out of the upstream class.
+\providecommand{\Q}{{\mathbb Q}}
+\providecommand{\Z}{{\mathbb Z}}
+\providecommand{\F}{{\mathbb F}}
+\providecommand{\N}{{\mathbb N}}
+\providecommand{\R}{{\mathbb R}}
+\providecommand{\qed}{\hfill \ensuremath{\Box}}
+
+% Polynomial long division support used by the polynomial chapter.
+\RequirePackage{polynom}
+\makeatletter
+\def\pld@CF@loop#1+{%
+  \ifx\relax#1\else
+    \begingroup
+      \pld@AccuSetX11%
+      \def\pld@frac{{}{}}\let\pld@symbols\@empty\let\pld@vars\@empty
+      \pld@false
+      #1%
+      \let\pld@temp\@empty
+      \pld@AccuIfOne{}{\pld@AccuGet\pld@temp
+                        \edef\pld@temp{\noexpand\pld@R\pld@temp}}%
+      \pld@if \pld@Extend\pld@temp{\expandafter\pld@F\pld@frac}\fi
+      \expandafter\pld@CF@loop@\pld@symbols\relax\@empty
+      \expandafter\pld@CF@loop@\pld@vars\relax\@empty
+      \ifx\@empty\pld@temp
+        \def\pld@temp{\pld@R11}%
+      \fi
+      \global\let\@gtempa\pld@temp
+    \endgroup
+    \ifx\@empty\@gtempa\else
+      \pld@ExtendPoly\pld@tempoly\@gtempa
+    \fi
+    \expandafter\pld@CF@loop
+  \fi}
+\def\pld@CMAddToTempoly{%
+  \pld@AccuGet\pld@temp\edef\pld@temp{\noexpand\pld@R\pld@temp}%
+  \pld@CondenseMonomials\pld@false\pld@symbols
+  \ifx\pld@symbols\@empty \else
+    \pld@ExtendPoly\pld@temp\pld@symbols
+  \fi
+  \ifx\pld@temp\@empty \else
+    \pld@if
+      \expandafter\pld@IfSum\expandafter{\pld@temp}%
+        {\expandafter\def\expandafter\pld@temp\expandafter
+          {\expandafter\pld@F\expandafter{\pld@temp}{}}}%
+        {}%
+    \fi
+    \pld@ExtendPoly\pld@tempoly\pld@temp
+    \pld@Extend\pld@tempoly{\pld@monom}%
+  \fi}
+\makeatother
+
+% The upstream class now uses biblatex. Keep this project compatible with the
+% existing \bibliography{reference} call at the end of CINTA-cn.tex.
+\addbibresource{reference.bib}
+\AddToHook{begindocument/end}{%
+  \RenewDocumentCommand{\bibliography}{m}{\printbibliography}%
+}
