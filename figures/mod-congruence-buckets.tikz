@@ -1,0 +1,194 @@
+\begin{tikzpicture}[
+  x=1cm,
+  y=1cm,
+  >=Latex,
+  font=\small,
+  classify/.style={->, very thick, draw=black!60, line cap=round},
+  card/.style={
+    draw=black!55,
+    fill=white,
+    rounded corners=2pt,
+    inner xsep=4pt,
+    inner ysep=2pt,
+    font=\scriptsize
+  },
+  every node/.style={outer sep=2pt}
+]
+
+\definecolor{skin}{RGB}{248,205,164}
+\definecolor{shirt}{RGB}{98,178,190}
+\definecolor{bucketgray}{RGB}{235,238,241}
+
+% Cartoon measuring scene.
+\node[align=center, text=black!78, font=\small] at (0,3.18)
+  {模 $m$ 的测量：$r=a\bmod m\in\{0,1,\ldots,m-1\}$};
+
+\path[draw=black!45, fill=brown!18, rounded corners=2pt]
+  (-2.15,1.25) rectangle (2.25,1.42);
+\draw[black!35, line width=1.2pt] (-1.85,1.25) -- (-1.95,0.86);
+\draw[black!35, line width=1.2pt] (1.95,1.25) -- (2.05,0.86);
+
+% Person.
+\path[draw=black!45, fill=skin] (-1.25,2.58) circle (0.28);
+\path[draw=black!35, fill=black!55]
+  (-1.50,2.68) .. controls (-1.42,2.95) and (-1.07,2.94) .. (-0.98,2.66)
+  .. controls (-1.12,2.75) and (-1.34,2.76) .. (-1.50,2.68);
+\fill[black!65] (-1.34,2.60) circle (0.015);
+\fill[black!65] (-1.16,2.60) circle (0.015);
+\draw[black!55, line width=0.35pt] (-1.34,2.48) .. controls (-1.25,2.42) and (-1.14,2.44) .. (-1.07,2.50);
+\path[draw=black!45, fill=shirt, rounded corners=7pt]
+  (-1.62,2.21) -- (-0.88,2.21) -- (-0.78,1.40) -- (-1.72,1.40) -- cycle;
+\draw[line width=4pt, draw=shirt!80!black, line cap=round]
+  (-1.02,2.10) -- (-0.16,2.23);
+\draw[line width=4pt, draw=shirt!80!black, line cap=round]
+  (-1.48,2.08) -- (-1.80,1.70);
+\draw[line width=3pt, draw=skin, line cap=round]
+  (-0.16,2.23) -- (0.07,2.25);
+\draw[line width=3pt, draw=skin, line cap=round]
+  (-1.80,1.70) -- (-1.70,1.50);
+\draw[line width=2.1pt, draw=black!45, line cap=round]
+  (-1.35,1.40) -- (-1.45,0.93);
+\draw[line width=2.1pt, draw=black!45, line cap=round]
+  (-1.05,1.40) -- (-0.88,0.93);
+
+% Ruler and the number being measured.
+\begin{scope}[rotate around={-8:(0.58,2.25)}]
+  \path[draw=black!55, fill=yellow!38, rounded corners=1pt]
+    (-0.35,2.17) rectangle (1.70,2.34);
+  \foreach \x in {-0.20,0.05,0.30,0.55,0.80,1.05,1.30,1.55} {
+    \draw[black!55, line width=0.35pt] (\x,2.17) -- (\x,2.27);
+  }
+\end{scope}
+\node[card, minimum width=0.74cm, minimum height=0.55cm, fill=white!92!yellow,
+      font=\Large] (numa) at (1.25,1.88) {$a$};
+\draw[black!45, dashed] (numa.west) -- ++(-0.35,0.34);
+\draw[black!45, dashed] (numa.east) -- ++(0.32,0.46);
+
+\coordinate (sort) at (0,0.62);
+\draw[classify] (0,1.22) -- node[right, font=\scriptsize, text=black!58] {测出余数 $r$} (sort);
+\draw[very thick, black!45, rounded corners=5pt]
+  (-5.35,0.18) -- (-5.35,0.44) -- (6.35,0.44) -- (6.35,0.18);
+
+% Bucket 0.
+\coordinate (B0top) at (-5.35,-0.42);
+\begin{scope}[shift={(-5.35,-1.58)}]
+  \path[draw=black!55, fill=green!15, line width=0.8pt]
+    (-0.92,0.62)
+    .. controls (-0.84,-0.18) and (-0.66,-0.98) .. (-0.54,-1.16)
+    -- (0.54,-1.16)
+    .. controls (0.66,-0.98) and (0.84,-0.18) .. (0.92,0.62)
+    .. controls (0.50,0.39) and (-0.50,0.39) .. (-0.92,0.62)
+    -- cycle;
+  \path[draw=black!55, fill=green!8, line width=0.8pt] (0,0.62) ellipse (0.92 and 0.22);
+  \draw[black!45, line width=0.75pt]
+    (-0.73,0.57) .. controls (-0.48,1.07) and (0.48,1.07) .. (0.73,0.57);
+  \path[fill=white, opacity=0.38]
+    (-0.58,0.20) .. controls (-0.44,-0.34) and (-0.39,-0.75) .. (-0.31,-0.98)
+    -- (-0.15,-0.98)
+    .. controls (-0.25,-0.64) and (-0.31,-0.20) .. (-0.36,0.24)
+    -- cycle;
+  \node[font=\bfseries\small] at (0,-0.46) {0号桶};
+  \node[font=\scriptsize] at (0,-0.80) {$[0]_m$};
+  \node[card, rotate=8] at (-0.42,0.28) {$0$};
+  \node[card, rotate=-6] at (0.06,0.18) {$m$};
+  \node[card, rotate=4] at (0.43,0.02) {$2m$};
+\end{scope}
+
+% Bucket 1.
+\coordinate (B1top) at (-2.50,-0.42);
+\begin{scope}[shift={(-2.50,-1.58)}]
+  \path[draw=black!55, fill=cyan!14, line width=0.8pt]
+    (-0.92,0.62)
+    .. controls (-0.84,-0.18) and (-0.66,-0.98) .. (-0.54,-1.16)
+    -- (0.54,-1.16)
+    .. controls (0.66,-0.98) and (0.84,-0.18) .. (0.92,0.62)
+    .. controls (0.50,0.39) and (-0.50,0.39) .. (-0.92,0.62)
+    -- cycle;
+  \path[draw=black!55, fill=cyan!7, line width=0.8pt] (0,0.62) ellipse (0.92 and 0.22);
+  \draw[black!45, line width=0.75pt]
+    (-0.73,0.57) .. controls (-0.48,1.07) and (0.48,1.07) .. (0.73,0.57);
+  \path[fill=white, opacity=0.38]
+    (-0.58,0.20) .. controls (-0.44,-0.34) and (-0.39,-0.75) .. (-0.31,-0.98)
+    -- (-0.15,-0.98)
+    .. controls (-0.25,-0.64) and (-0.31,-0.20) .. (-0.36,0.24)
+    -- cycle;
+  \node[font=\bfseries\small] at (0,-0.46) {1号桶};
+  \node[font=\scriptsize] at (0,-0.80) {$[1]_m$};
+  \node[card, rotate=-7] at (-0.42,0.28) {$1$};
+  \node[card, rotate=6] at (0.07,0.18) {$m+1$};
+  \node[card, rotate=-3] at (0.43,0.02) {$2m+1$};
+\end{scope}
+
+\node[font=\Large, text=black!45] at (-0.30,-1.42) {$\cdots$};
+
+% Bucket i.
+\coordinate (Bitop) at (2.02,-0.42);
+\begin{scope}[shift={(2.02,-1.58)}]
+  \path[draw=black!55, fill=orange!17, line width=0.8pt]
+    (-0.92,0.62)
+    .. controls (-0.84,-0.18) and (-0.66,-0.98) .. (-0.54,-1.16)
+    -- (0.54,-1.16)
+    .. controls (0.66,-0.98) and (0.84,-0.18) .. (0.92,0.62)
+    .. controls (0.50,0.39) and (-0.50,0.39) .. (-0.92,0.62)
+    -- cycle;
+  \path[draw=black!55, fill=orange!8, line width=0.8pt] (0,0.62) ellipse (0.92 and 0.22);
+  \draw[black!45, line width=0.75pt]
+    (-0.73,0.57) .. controls (-0.48,1.07) and (0.48,1.07) .. (0.73,0.57);
+  \path[fill=white, opacity=0.38]
+    (-0.58,0.20) .. controls (-0.44,-0.34) and (-0.39,-0.75) .. (-0.31,-0.98)
+    -- (-0.15,-0.98)
+    .. controls (-0.25,-0.64) and (-0.31,-0.20) .. (-0.36,0.24)
+    -- cycle;
+  \node[font=\bfseries\small] at (0,-0.46) {$i$号桶};
+  \node[font=\scriptsize] at (0,-0.80) {$[i]_m$};
+  \node[card, rotate=7] at (-0.42,0.28) {$i$};
+  \node[card, rotate=-5] at (0.07,0.18) {$m+i$};
+  \node[card, rotate=3] at (0.43,0.02) {$2m+i$};
+\end{scope}
+
+\node[font=\Large, text=black!45] at (4.15,-1.42) {$\cdots$};
+
+% Bucket m - 1.
+\coordinate (Bmtop) at (6.35,-0.42);
+\begin{scope}[shift={(6.35,-1.58)}]
+  \path[draw=black!55, fill=violet!13, line width=0.8pt]
+    (-0.92,0.62)
+    .. controls (-0.84,-0.18) and (-0.66,-0.98) .. (-0.54,-1.16)
+    -- (0.54,-1.16)
+    .. controls (0.66,-0.98) and (0.84,-0.18) .. (0.92,0.62)
+    .. controls (0.50,0.39) and (-0.50,0.39) .. (-0.92,0.62)
+    -- cycle;
+  \path[draw=black!55, fill=violet!6, line width=0.8pt] (0,0.62) ellipse (0.92 and 0.22);
+  \draw[black!45, line width=0.75pt]
+    (-0.73,0.57) .. controls (-0.48,1.07) and (0.48,1.07) .. (0.73,0.57);
+  \path[fill=white, opacity=0.38]
+    (-0.58,0.20) .. controls (-0.44,-0.34) and (-0.39,-0.75) .. (-0.31,-0.98)
+    -- (-0.15,-0.98)
+    .. controls (-0.25,-0.64) and (-0.31,-0.20) .. (-0.36,0.24)
+    -- cycle;
+  \node[font=\bfseries\small] at (0,-0.46) {$m-1$号桶};
+  \node[font=\scriptsize] at (0,-0.80) {$[m-1]_m$};
+  \node[card, rotate=-8] at (-0.43,0.28) {$m-1$};
+  \node[card, rotate=5] at (0.11,0.17) {$2m-1$};
+  \node[card, rotate=-2] at (0.46,0.00) {$3m-1$};
+\end{scope}
+
+% Sorting paths and labels.
+\coordinate (rail) at (0,0.44);
+\draw[classify] (B0top |- rail) --
+  node[pos=0.57, right, font=\scriptsize, text=black!62] {$r=0$}
+  (B0top);
+\draw[classify] (B1top |- rail) --
+  node[pos=0.54, right, font=\scriptsize, text=black!62] {$r=1$}
+  (B1top);
+\draw[classify] (Bitop |- rail) --
+  node[pos=0.54, left, font=\scriptsize, text=black!62] {$r=i$}
+  (Bitop);
+\draw[classify] (Bmtop |- rail) --
+  node[pos=0.55, left, font=\scriptsize, text=black!62] {$r=m-1$}
+  (Bmtop);
+
+\node[align=center, text=black!75] at (0,-3.18)
+  {$a\equiv b\pmod m \Longleftrightarrow (a\bmod m)=(b\bmod m)$};
+
+\end{tikzpicture}
