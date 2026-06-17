@@ -1,0 +1,545 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%% chapter02.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 4. FLT and Euler's theorem
+% This document was released as open source on 2026-06-18.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{费尔马小定理和欧拉定理}
+\label{chap:flt-et} % Always give a unique label
+
+\begin{introduction}
+  \item 费尔马小定理
+  \item 欧拉定理
+  \item 欧拉 Phi 函数
+\end{introduction}
+
+\section{费尔马小定理}
+\label{sec:flt}
+
+这一章将讲解这样一段优美的“故事”：通过计算发现模式，总结规律，并证明定理。或者，这只是描述数学家们枯燥无味的日常工作？不，相信这是一个有趣的故事。
+
+首先，我们试图从模乘法和模指数运算中发现一些规律。先看这样一种情况，给定素数$p$和一个正整数$a$，
+然后观察$a \bmod p$, $a^2 \bmod p$, $a^3 \bmod p$, $\ldots$。你能找出其中的一些规律吗？
+也许你可以尝试使用以下代码。
+
+\begin{lstlisting}
+# 输入: 整数n;
+# 输出: i^j mod n, 其中1 <= i, j <= n - 1
+def prt_pow_list(n):
+    for i in range(1, n):
+        for j in range(1, n):
+            print(pow(i, j, n), ' ', end='')  #输出 i^j mod n
+        print()
+    return
+\end{lstlisting}
+
+\begin{example}
+	分别设$p$等于素数$3$、$5$、$7$等，运行以上代码，得到：
+
+\begin{minipage}{\textwidth}
+	\begin{minipage}[h]{0.3\textwidth}
+		\centering
+		\begin{tabular}{ | c | c |}
+			\hline
+			$a$  & $a^2$  \\ \hline
+			1 & 1  \\ \hline
+			2 & 1  \\ \hline
+		\end{tabular}
+			\captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 3$}
+		\label{pow_a_mod_3}
+	\end{minipage}
+	\begin{minipage}[h]{0.3\textwidth}
+		\centering
+	\begin{tabular}{ | c | c | c | c |}
+		\hline
+		$a$  & $a^2$ & $a^3$ & $a^4$  \\ \hline
+		1 & 1 & 1 & 1 \\ \hline
+		2 & 4 & 3 & 1 \\ \hline
+		3 & 4 & 2 & 1 \\ \hline
+		4 & 1 & 4 & 1 \\
+		\hline
+	\end{tabular}
+	\captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 5$}
+\label{pow_a_mod_5}
+	\end{minipage}
+	\begin{minipage}[h]{0.3\textwidth}
+		\centering
+	\begin{tabular}{ | c | c | c | c | c | c | }
+		\hline
+		$a$  & $a^2$ & $a^3$ & $a^4$ & $a^5$ & $a^6$ \\ \hline
+		1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+		2 & 4 & 1 & 2 & 4 & 1 \\ \hline
+		3 & 2 & 6 & 4 & 5 & 1 \\ \hline
+		4 & 2 & 1 & 4 & 2 & 1 \\ \hline
+		5 & 4 & 6 & 2 & 3 & 1 \\ \hline
+		6 & 1 & 6 & 1 & 6 & 1 \\
+		\hline
+	\end{tabular}
+  \captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 7$}
+  \label{pow_a_mod_7}
+	\end{minipage}
+\end{minipage}
+\end{example}
+
+你能找到其中的一些规律吗？可通过设$p = 11$或者其他数值，运行代码来验证你自己的猜想。在$p = 11$的情形下，我们得到表~\ref{pow_a_mod_11}。
+
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | c | >{\color {red}}c |}
+			\hline
+			$a$  & $a^2$ & $a^3$ & $a^4$ & $a^5$ & $a^6$ & $a^7$ & $a^8$ & $a^9$ & $a^{10}$ \\ \hline
+			1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\ \hline
+			2 & 4 & 8 & 5 & 10 & 9 & 7 & 3 & 6 & 1 \\ \hline
+			3 & 9 & 5 & 4 & 1 & 3 & 9 & 5 & 4 & 1 \\ \hline
+			4 & 5 & 9 & 3 & 1 & 4 & 5 & 9 & 3 & 1 \\ \hline
+			5 & 3 & 4 & 9 & 1 & 5 & 3 & 4 & 9 & 1 \\ \hline
+			6 & 3 & 7 & 9 & 10 & 5 & 8 & 4 & 2 & 1 \\ \hline
+			7 & 5 & 2 & 3 & 10 & 4 & 6 & 9 & 8 & 1 \\ \hline
+			8 & 9 & 6 & 4 & 10 & 3 & 2 & 5 & 7 & 1 \\ \hline
+			9 & 4 & 3 & 5 & 1 & 9 & 4 & 3 & 5 & 1 \\ \hline
+			10 & 1 & 10 & 1 & 10 & 1 & 10 & 1 & 10 & 1  \\
+			\hline
+		\end{tabular}
+		\caption{$a^i \bmod 11$}
+	\centering
+	\label{pow_a_mod_11}
+\end{table}
+
+请注意这些表格的最后一列，容易得到这样一种猜想：
+\begin{equation}
+\label{eq:flt}
+	a^{p-1} \equiv 1 \pmod{p}
+\end{equation}
+
+\begin{thinking}
+\label{thk:finding_pattern}
+请观察以上表格的最后一行，你能发现什么规律呢？请读者尽可能找出这些表格中存在的规律。相信我，有许多规律等着你发掘。
+\end{thinking}
+
+在进一步分析之前，还可以尝试其他一些运算，比如，使用以下代码进行运算。
+
+\begin{lstlisting}
+#输入：整数n;
+# 输出:  i*j mod n, 其中 1 <= i, j <= n - 1
+def prt_mul_list(n):
+    for i in range(1, n):
+        for j in range(1, n):
+            print( i*j % n, ' ', end='')  # i*j modulo n
+        print()
+    return
+\end{lstlisting}
+
+这个程序做的是模乘法而不是模指数，对所有的$1 \leq i < p$，计算 $a\cdot i \pmod{p}$。
+比如，设$a = 2$，$p = 7$，得到表~\ref{ai_mod_7}。
+
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | }
+			\hline
+			\diagbox{$a$}{$a\cdot i \;$}{$i \;$}  & $\; 1 \;$ & $\; 2 \;$ & $\; 3 \;$ & $\; 4 \;$ & $\; 5 \;$ & $\; 6 \;$ \\ \hline
+			1 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+			2 & 2 & 4 & 6 & 1 & 3 & 5 \\ \hline
+			3 & 3 & 6 & 2 & 5 & 1 & 4 \\ \hline
+			4 & 4 & 1 & 5 & 2 & 6 & 3 \\ \hline
+			5 & 5 & 3 & 1 & 6 & 4 & 2 \\ \hline
+			6 & 6 & 5 & 4 & 3 & 2 & 1 \\
+			\hline
+		\end{tabular}
+	\centering\caption{$a\cdot i \bmod 7$}
+\label{ai_mod_7}
+\end{table}
+
+观察表~\ref{ai_mod_7}，一种非常容易发现的规律就是：
+所有行的数值恰好是$1$到$6$之间的整数，即只是对$1$到$6$之间的整数进行一次位置置换。把这种初始的猜想写成以下引理。
+
+\begin{lemma}{}{mul_perm}
+如果$p$是一个素数，任取整数$1 \leq a < p$，对所有的$1 \leq i < p$，计算$a \cdot i \bmod p$所得的数值是$1$到$p-1$之间所有整数的一次置换。
+\end{lemma}
+
+引理~\ref{lem:mul_perm}本质上是说，以下集合
+	\[\mathbb{S} = \{1, 2, 3, \ldots, p-1\}\]
+与集合
+    \[\mathbb{S}'  = \{ a \cdot i \bmod p, 1 \leq i < p \}\]
+是同一个集合。
+
+值得一提的是，集合$\mathbb{S}'$中的元素刚好形成一个模$p$的完全剩余系，也是最小剩余系。
+如果把乘$a$模$p$看成一种从集合$\mathbb{S}$到集合$\mathbb{S}'$的映射，实际上，我们知道这个映射是一种双射，从而说明集合$\mathbb{S}'$等于集合$\mathbb{S}$。这是一种值得记住的证明方法。
+
+\begin{proof}
+对任意整数$1\leq a < p$，记$f_a : \mathbb{S} \rightarrow \mathbb{S}'$为一种从$\mathbb{S}$到$\mathbb{S}'$的映射，对任意的$i \in \mathbb{S}$，
+$f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
+若存在两个$\mathbb{S}$中的元素$i$和$j$，使得，
+	\[a \cdot i \equiv a\cdot j  \pmod{p}\]
+因为$1 \leq a < p$，且$p$是素数，所以$\gcd(a, p) =1$。所以，根据消去律（命题~\ref{pro:cancel}），等式两边可以消去$a$，得到：
+\[i \equiv j \pmod{p}\]
+由此可知，$f_a$是单射。又因为显然$f_a$是满射，所以$f_a$是双射。因此，$\mathbb{S}' = \mathbb{S}$。\qed
+\end{proof}
+
+\begin{thinking}
+	提醒读者思考以上证明中\emph{置换}与\emph{消去律}之间的关系。
+\end{thinking}
+
+再接着分析之前的猜想（等式~\ref{eq:flt}）。此时需要计算 $a^{p-1} \bmod p$，即$p-1$个$a$的模乘。
+注意到，计算得到的表格中的每一个元素都隐藏了一个$a$。这提示我们
+做以下简单的计算工作，将每一行中的$a \cdot i \bmod p$乘起来。
+引理~\ref{lem:mul_perm}告诉我们，这本质上就是把所有的$1 \leq i < p$乘起来。所以：
+\[\prod_{i=1}^{p-1} i = \prod_{i=1}^{p-1} (a \cdot i \bmod p)\]
+显然有：
+	\[\prod_{i=1}^{p-1} i \equiv \prod_{i=1}^{p-1} (a \cdot i) \equiv a^{p-1}\prod_{i=1}^{p-1} i \pmod{p}\]
+把这个大数字$\prod_{i=1}^{p-1} i$，即$(p-1)!$，从等式两边消去，得到：
+	\[a^{p-1} \equiv 1 \pmod{p}\]
+当然，在这么做之前，请确保说服自己$(p-1)!$这个大数字确实与$p$互素（比如，回忆起定理~\ref{thm:euclid24}）。最后，结果可以表达为以下定理，这就是著名的\emph{费尔马小定理}（\emph{Fermat's little theorem}）\index{费尔马小定理}\index{Fermat's little theorem}。
+
+\begin{theorem}{费尔马小定理}{FLT}
+%\label{thm:FLT}
+    设$p$是素数，设$a$为任意整数，且$a \not \equiv 0 \pmod{p}$，则
+	\[a^{p-1} \equiv 1 \pmod{p}\]
+\end{theorem}
+
+\begin{thinking}
+以上分析、证明与最终的定理的表述有一点微小的差别，希望大家能察觉到。
+在引理~\ref{lem:mul_perm}中，要求$1 \leq a < p$；在定理~\ref{thm:FLT}中，$a$则是任意整数，只是要求$a \not \equiv 0 \pmod{p}$。
+这两种要求是等价的吗？为什么是，或为什么不呢？
+\end{thinking}
+
+\begin{example}
+\label{exm:comp_flt}
+	设$p = 17$，$a = 3$，计算$a^{2018} \pmod{p}$。
+	\[3^{2018} \equiv 3^{126 \cdot 16 + 2 } \pmod{17}\text{，}\]
+	因为$126 \cdot 16  = 126 \cdot (17 - 1)$，所以
+	\[3^{126 \cdot 16 + 2 } \equiv 3^2 \equiv 9 \pmod{17}\text{。}\]
+\end{example}
+
+\begin{figure}[htbp]
+	\centering
+	\input{figures/fermat-little-theorem-cycle.tikz}
+	\caption{费尔马小定理的直观}
+	\label{fig:flt-cycle}
+\end{figure}
+
+如图~\ref{fig:flt-cycle}~所示，费尔马小定理的直观是说，对任意素数$p$，从一个与$p$互素的整数$a$出发，每一步就是在模$p$的意义上乘$a$，然后最多走$p - 1$次就必然回到原点$1$。以上例子展示了如何利用这种规则提高计算效率。
+
+\begin{thinking}
+\label{thk:flt_steps}
+对以上直观值得思考的是，回到原点需要最少的步数是多少？如果不需要走$p - 1$，那么可能是走多少步呢？是否存在某个数字必须走满$p - 1$步才能回到原点？接下来的章节会慢慢回答这些问题。
+\end{thinking}
+
+\section{欧拉定理}
+\label{sec:euler_thm}
+在上一节的分析中，模数是一个素数，借助消去律，得到了费尔马小定理。如果模数是合数，则消去律就可能失效了。比如，设 $n = 6$，
+借助之前的代码，可以得到以下数据。
+\begin{table}[htbp]
+	\centering
+		\begin{tabular}{ | c | c | c | c | c | c | }
+			\hline
+			\diagbox{$a$}{$a \cdot i \;$}{$i \;$}  & $\; 1 \;$ & $\; 2 \;$ & $\; 3 \;$ & $\; 4 \;$ & $\; 5 \;$ \\ \hline
+			1 & 1 & 2 & 3 & 4 & 5 \\ \hline
+			2 & 2 & 4 & 0 & 2 & 4 \\ \hline
+			3 & 3 & 0 & 3 & 0 & 3 \\ \hline
+			4 & 4 & 2 & 0 & 4 & 2 \\ \hline
+			5 & 5 & 4 & 3 & 2 & 1 \\
+			\hline
+		\end{tabular}
+	\centering\caption{$a \cdot i \bmod 6$}
+\label{ai_mod_6}
+\end{table}
+
+再看另一个实例，设$n = 9$，得到：
+	\begin{table}[htbp]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
+			\hline
+			\diagbox{$a$}{$a \cdot i \;$}{$i \;$}  & $\; 1 \;$ & $\; 2 \;$ & $\; 3 \;$ & $\; 4 \;$ & $\; 5 \;$ & $\; 6 \;$ & $\; 7 \;$ & $\; 8 \;$  \\ \hline
+			1 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+			2 & 2 & 4 & 6 & 8 & 1  & 3 & 5 & 7 \\ \hline
+			\rowcolor{green}  3 & 3 & 6 & 0 & 3 & 6 & 0 & 3 & 6 \\ \hline
+			4 & 4 & 8 & 3 & 7 & 2 & 6 & 1 & 5 \\ \hline
+			5 & 5 & 1 & 6  & 2  & 7 & 3 & 8 & 4 \\ \hline
+			\rowcolor{green}  6 & 6 & 3 & 0 & 6 & 3 & 0 & 6 & 3 \\ \hline
+			7 & 7 & 5 & 3 & 1 & 8 & 6 & 4 & 2 \\ \hline
+			8 & 8 & 7  & 6  & 5  & 4 & 3 & 2 & 1 \\
+			\hline
+		\end{tabular}
+		\caption{$a \cdot i \bmod 9$}
+		\label{ai_mod_9}
+	\end{table}
+
+%Observation.
+观察可知，如果$n$是一个合数，则集合
+\[\{ a \cdot i \bmod n, 1 \leq i < n \}\]
+并\textbf{不}等于集合：
+\[\{1, 2, 3, \ldots, n-1\}\]
+除非$a$与$n$互素，即$\gcd(a,n)=1$。也就是说，前一个集合是后一个集合的置换这一属性在$a$与$n$不互素时被破坏了，
+表~\ref{ai_mod_9}中标记为绿色的两行展示了这个事实。请读者自己认真检验这一观察结果，或者做更多的计算并观察。
+
+然而，从乐观的角度看，置换属性还是有可能得到保持的。将\textbf{不}互素于$n$的“坏家伙”从表格中剔除，将得到表~\ref{ai_mod_9_2}。
+
+	\begin{table}[htbp]
+		\centering
+		\begin{tabular}{ | c | c | c | c | c | c | c | c | }
+			\hline
+			\diagbox{$a$}{$a \cdot i \;$}{$i \;$}  & $\; 1 \;$ & $\; 2 \;$  & $\; 4 \;$ & $\; 5 \;$ & $\; 7 \;$ & $\; 8 \;$  \\ \hline
+			1 & 1 & 2 & 4 & 5 & 7 & 8 \\ \hline
+			2 & 2 & 4 & 8 & 1 & 5 & 7 \\ \hline
+			4 & 4 & 8 & 7 & 2 & 1 & 5 \\ \hline
+			5 & 5 & 1 & 2 & 7 & 8 & 4 \\ \hline
+			7 & 7 & 5 & 1 & 8 & 4 & 2 \\ \hline
+			8 & 8 & 7 & 5  & 4 & 2 & 1 \\
+			\hline
+		\end{tabular}
+		\caption{$a \cdot i \bmod 9$（要求$a$和$i$都与$9$互素）}
+		\label{ai_mod_9_2}
+  \end{table}
+
+%%Conjecture.
+设$n$为正整数，记
+	$$\mathbb{S} = \{ b: 1\leq b < n \; \text{且}\; \gcd(b,n)=1 \}$$
+任取与$n$互素的整数$a$，记：
+	$$\mathbb{S}' = a \cdot \mathbb{S} \bmod n$$
+我们猜想：
+	$$\mathbb{S}  = \mathbb{S}'$$
+
+%Notation.
+为方便讨论，给出\emph{欧拉Phi函数}~\footnote{Phi 发音为 fai。}（\emph{Euler's phi function}）\index{Euler's phi function} 的定义。
+\begin{definition}{欧拉Phi函数}{euler}
+欧拉Phi函数$\varphi$
+对任意正整数$n$，返回$1$ 到$n$之间且与$n$互素的整数个数，即：
+	$$\varphi(n) = | \{ b: 1\leq b < n \; \text{且}\; \gcd(b,n)=1 \}|\text{。}$$
+\end{definition}
+例如，容易看出：
+\begin{align*}
+& \varphi(1)  =  |\{1\}| =  1,\\
+& \varphi(2)  =  |\{1\}|  =  1,\\
+& \varphi(7)  =  |\{1,2,3,4,5,6\}|  =  6,\\
+& \varphi(9)  =  |\{1, 2, 4, 5, 7, 8 \}| =  6.
+\end{align*}
+
+集合$\mathbb{S}$中的元素即为$1$ 到$n$之间且与$n$互素的整数，$\varphi(n)$即为集合$\mathbb{S}$的阶（order）。
+于是，集合$\mathbb{S}$和$\mathbb{S}'$可分别表示为：
+	\begin{align*}
+		\mathbb{S} &=  \{ b_1, b_2, \ldots,  b_{\varphi(n)}: \; 1\leq b_i < n \; \text{且}\; \gcd(b_i,n)=1 \} \\
+		\mathbb{S}' &=  \{a \cdot b_i \bmod n: \; b_i \in \mathbb{S} \; \text{and}\; \gcd(a,n)=1 \}
+	\end{align*}
+
+我们的目标是要证明：
+	\[\mathbb{S} = \mathbb{S}'\]
+
+\begin{thinking}
+	首先，我们注意到，$\mathbb{S}' \subseteq \mathbb{S}$。为什么呢？如何证明？
+\end{thinking}
+
+使用与证明费尔马小定理类似的思路，如果存在$b_i$和$b_j$使得：
+	\[a \cdot b_i \equiv a \cdot b_j \pmod{n}\]
+则根据消去律得：
+	\[b_i \equiv b_j \pmod{n} \]
+因此，存在从$\mathbb{S}$到$\mathbb{S}'$的双射，所以$\mathbb{S} = \mathbb{S}'$。
+
+再次类似地，将集合$\mathbb{S}$和$\mathbb{S}'$中的元素分别累积，得到：
+
+	\[\prod_{i = 1}^{\varphi(n)} b_i = \prod_{i=1}^{\varphi(n)} (a \cdot b_i \bmod n)\]
+等式两边模$n$，得到：
+	\[\prod_{i = 1}^{\varphi(n)} b_i \equiv \prod_{i=1}^{\varphi(n)} a \cdot b_i  \pmod{n}\]
+利用乘法的结合律，简单整理变形得：
+	\[\prod_{i = 1}^{\varphi(n)} b_i \equiv a^{\varphi(n)} \prod_{i=1}^{\varphi(n)} b_i  \pmod{n}\]
+再次使用消去律，消去$\prod_{i = 1}^{\varphi(n)} b_i$（请给出理由！），得到：
+	\[a^{\varphi(n)} \equiv 1 \pmod{n}\]
+最后，将该结论写成以下定理，详细严谨的证明过程留给读者自行完成。
+
+\begin{theorem}{欧拉定理}{euler}
+%\label{thm:euler}
+设$n$和$a$为正整数，且$\gcd(a, n) = 1$，则：
+	$$a^{\varphi(n)} \equiv 1 \pmod{n}\text{。}$$
+\end{theorem}
+
+\begin{figure}[htbp]
+	\centering
+	\input{figures/euler-theorem-cycle.tikz}
+	\caption{欧拉定理的直观}
+	\label{fig:euler-cycle}
+\end{figure}
+
+与费尔马小定理类似，欧拉定理的直观如图~\ref{fig:euler-cycle}所示，也是一个在若干步后回到原点$1$的循环操作。稍有不同的是，欧拉定理是说，对任意正整数$n$，从一个与$n$互素的整数$a$出发，每一步就是在模$n$的意义上乘$a$，然后最多走$\varphi(n)$步就必然回到原点$1$。可惜的是，暂时还不知道如何计算这个神秘的 Phi 函数。所以，我们也暂时不清楚费尔马小定理与欧拉定理之间的关系。
+
+% 20190814
+\section{欧拉 Phi 函数}
+\label{sec:phi}
+上一节，我们定义了欧拉 Phi 函数，并用它来表述欧拉定理。因为该函数在基础数论中的重要性，本节进一步讨论其相关性质。
+
+SageMath 命令 \lstinline{euler_phi} 可用来计算欧拉 Phi 函数，也许通过一些简单计算，读者也可看出某些规律。
+\begin{lstlisting}
+sage: euler_phi(11)
+10
+sage: euler_phi(29)
+28
+sage: euler_phi(29*11)
+280
+\end{lstlisting}
+比如，容易看出以下命题。
+
+\begin{proposition}{欧拉 Phi 函数性质}{phi}
+    如果$p$是素数，则$\varphi(p) = p - 1$，
+    $\varphi(p^k) = p^k - p^{k-1}$。
+\end{proposition}
+
+\begin{proof}
+	容易，通过简单计数可得，因为大于$1$，小于等于$p^k$且与$p$不互素的数就是所有$p$的倍数：
+	$p$，$2p$，$\ldots$，$(p^{k-1}-1)p$，$p^{k-1}p$。 \qed
+\end{proof}
+
+本节的主要任务是计算 $\varphi(mn)$，其中，$m$和$n$是互素的正整数。 分析分为两大步骤。
+第一步，使用以下方式枚举并排列出所有不超过$mn$的正整数。
+\begin{center}
+		\begin{tabular}{c c c c c}
+		$1$ & $m+1$  & $2m+1$ & $\ldots$ & $(n-1)m+1$ \\
+		$2$ & $m+2$ & $2m+2$ & $\ldots$ & $(n-1)m+2$ \\
+		$3$ & $m+3$ & $2m+3$ & $\ldots$& $(n-1)m+3$ \\
+		$\ldots$ & $\ldots$ & $\ldots$ & $\ldots$ & $\ldots$ \\
+		$r$ & $m+r$ & $2m+r$ & $\ldots$  &$(n-1)m+r$  \\
+		$\ldots$&  $\ldots$ & $\ldots$ & $\ldots$ & $\ldots$ \\
+		$m$ & $2m$ & $3m$  & $\ldots$ & $mn$ \\
+		\end{tabular}
+\end{center}
+
+第二步，找出所有同时与$n$和$m$互素的元素，则它们与$mn$互素，理由是欧几里得互素定理（定理~\ref{thm:euclid24}）。
+
+为了完成第二步的分析，继续使用计数法，分两步进行：
+\begin{enumerate}
+	\item 对任意$r \in [1.. m]$，有多少数字满足$\gcd(r, m) =1$？答案是$\varphi(m)$。注意，如果$\gcd(r,m) =1$，
+	则对任意$k \in [0..n-1]$，有$\gcd(km + r, m) =1$。因此有$\varphi(m)$行数字与$m$互素。
+
+	\item 观察任意第 $r$ 行的元素，它们分别是$\{r, m + r, \ldots, (n-1)m + r\}$。对任意$k \in [0..n-1]$，有多少整数满足$\gcd(km + r, n)=1$？答案是：$\varphi(n)$。 因为，$\gcd(m, n) = 1$，
+	若$k_i \neq k_j$, 则$k_i m + r \not \equiv k_j m + r \pmod n$。否则根据消去律，有$k_i = k_j$，矛盾。这意味着第$r$
+	行的$n$个元素恰好形成一个模$n$的完全剩余系，即$\{ r, m + r, \ldots, (n-1)m + r\} \pmod n = \{0, 1, 2, \ldots, n-1\}$。
+	因此，恰有$\varphi(n)$ 个元素与$n$互素。
+\end{enumerate}
+综上分析，有$\varphi(m)$行元素与$m$互素，其中每一行有$\varphi(n)$个元素与$n$互素，共有$\varphi(m) \varphi(n)$个元素与$mn$互素。
+该结论可表述为以下定理。
+
+\begin{theorem}{欧拉 Phi 函数公式}{mul_fun}
+%\label{thm:mul_fun}
+	设$m$和$n$是互素的正整数，则$\varphi(mn) = \varphi(m) \varphi(n)$。
+\end{theorem}
+因为这个属性，欧拉 Phi 函数也被称为\emph{积性函数}（\emph{multiplicative function}）\index{multiplicative function}。
+
+如果$p$和$q$都是素数，则对所有正整数$i$和$j$，有$\gcd(p^i, q^j) = 1$。根据定理~\ref{thm:mul_fun}，
+有$\varphi( p^i q^j) = \varphi(p^i) \varphi(q^j) $。所以，有以下推论。
+
+\begin{corollary}{}{phi}
+设$m$为正整数，且将其表达为素数指数的乘积，即$m = p_1^{a_1} p_2^{a_2}\cdots p_k^{a_k}$，所有的$p_i$都是素数。
+则：
+	\[\varphi(m) = \varphi(p_1^{a_1})\cdots \varphi(p_k^{a_k})\text{。}\]
+\end{corollary}
+
+\begin{proof}
+留作课后习题。\qed
+\end{proof}
+
+\begin{theorem}{}{phi}
+%\label{thm:phi}
+设$m$为正整数，且将其表达为素数指数的乘积，即$m = p_1^{a_1} p_2^{a_2}\cdots p_k^{a_k}$，所有的$p_i$都是素数。
+则：
+	\[\varphi(m) = m (1 - \frac{1}{p_1}) (1 - \frac{1}{p_2}) \cdots (1 - \frac{1}{p_k})\text{。}\]
+\end{theorem}
+
+\begin{proof}
+留作课后习题。\qed
+\end{proof}
+
+有了以上对 Phi 函数的认识，我们可以开始运用欧拉定理了。
+\begin{example}
+\label{exm:comp_euler_theorem}
+	使用欧拉定理计算$2^{1000} \bmod 55$。设$n=55$，则$\varphi(n)=40$。于是有：
+	\[2^{1000} = (2^{40})^{25} = (2^{\varphi(n)})^{25} \equiv 1 \pmod{55}\]
+	所以 $(2^{1000} \bmod 55) = 1$。
+\end{example}
+
+\begin{thinking}
+	已知对于任意素数$p$，$\varphi(p) = p - 1$。那么费尔马小定理与欧拉定理的关系是什么？
+\end{thinking}
+%%% 20230424
+\section*{章注}
+\addcontentsline{toc}{section}{章注}
+本章讲解费尔马小定理、欧拉定理的思路源自于 Silverman 的 FINT~\cite{silverman2014friendly}，本书作者从中学到了许多知识与方法，也收获了许多的乐趣。想进一步了解欧拉 Phi 函数，或者积性函数相关知识点的读者，建议从 Bur11~\cite{Bur11} 入手。
+
+\begin{problemset}
+
+  \item 设$p = 23$和$a = 3$，使用费尔马小定理计算$a^{2019} \bmod p$？ %ans: 16, 因为 3^7 = 2
+
+  \item 找规律：请尽可能多地归纳总结表~\ref{pow_a_mod_5}到表~\ref{pow_a_mod_11}中数字的规律。
+
+  \item 这一题鼓励大家找规律。现在
+  设$a = 2$，对任意的素数$3 \leq p \leq 30$，请编程计算$a^{(p-1)/2} \bmod p$，分析所得的结果，找规律并形成自己的猜想。
+
+  \item 给定素数$p$，根据费尔马小定理，任取与$p$互素的正整数$a$，则$a^{p-1} \equiv 1 \pmod{p}$，请问$a^{(p-1)/2} \bmod p$等于什么？为什么？
+
+  \item 请证明$13$整除$2^{70} + 3^{70}$。[提示：这是一道名为证明题的计算题。]%250NT第一章第5题。
+
+  \item 使用欧拉定理计算$2^{100000} \bmod 55$。%ans: 1
+
+  \item 心算回答：$\varphi(3^3)$等于？$\varphi(2^{10})$等于几？%ans: 18, 512
+
+  \item 手动计算$7^{1000}$的最后两个数位等于什么？%ans: 01, Euler 's Theorem , compute 7^1000 mod 100
+
+  \item 编写 Python 语言程序完成欧拉Phi函数的计算，即输入正整数$n$，计算并返回$\varphi(n)$。
+
+  \item 设$p$是素数，计算$(p-1)! \bmod p$，并找出规律，写成定理，并给出证明。
+
+  \item 设$p$为素数，$a$为整数，且$p$不整除$a$。请证明$a$模$p$的乘法逆元是$a^{p-2}$。
+
+  \item 分别给出推论~\ref{cor:phi}和定理~\ref{thm:phi}的完整证明。
+
+  \item 使用费尔马小定理求解同余方程$x^{51} \equiv 2 \pmod{17}$和$x^{50} \equiv 2 \pmod{17}$。%ans: 8、6和11
+
+  %%% 113 * 17 = 1 mod 192, 所以2^17 mod 221 =  19即为所求.
+  \item 求解$x^{113} \equiv 2 \pmod{221}$。[提示：$113$与$\varphi(221)$互素。]
+
+  \item 以上两道习题都需要求解这样的方程：$x^a \equiv b \pmod{n}$，$a$、$b$和$n$都是已知的正整数。读者在做题的时候发现它们有什么区别吗？
+  为什么有时候方程有多个解，而有时候有唯一解？此时你不一定能找到答案，但是，建议通过编程寻找规律。
+
+  \item 已知，$x^e \equiv c \pmod{n}$，其中$e = 65537$，$c = 787448046610690384536113698384269$，$n = 4608698932612205094380746525651403$。请编程求解$x$，
+  并把这个整数转换为字符串，你会发现一个新的世界！[提示：$e$是素数，$n$不是素数。把整数转换为字符串可以调用 \lstinline{long_to_bytes} 命令。]
+
+  %高斯引理
+  %20250218改。(a)问找规律改成目前的样子，避免误导。感谢黄明沐的意见。
+  \item 给定奇素数$p$，记$p' = (p-1)/2$。任取一个与$p$互素的正整数$a$，然后计算得到以下集合$S$：
+  \[S = \{  a \cdot i \bmod p, 1 \leq i \leq p' \}\]
+  请分别完成以下任务：
+   \begin{enumerate}
+   \item 尝试不同的素数$p$和整数$a$，计算不同的$S$，观察$S$并统计其中大于$p'$的数有多少。是否存在集合$S$，其中元素都大于（或者都小于）$p'$？如果有，请给出具体实例。
+
+   \item 构造另一个集合$S'$，使得$S'= \{ i:  i \in S, \text{如果}\; i > p/2 \text{，则令}\; i = p - i \}$。请观察$S'$，发现关于它的规律。
+   [提示：当$i > p/2$则令$i = p - i$的这一操作使得集合$S'$中包含的是什么元素？ ]
+
+   \item 请证明你在(b)问中发现的规律。
+
+   \item 累乘$S'$中的元素会得到一个什么样的等式？[提示：你发现的规律应该使得你对集合$S'$有两种不同的表达，因此累乘$S'$中的元素也有两种等价的表达。并且，
+   乘法当然是模$p$意义上的乘法。]
+
+    \end{enumerate}
+
+  \item 给定任意正整数$n$，记函数：
+  \[F(n) = \sum_{d \mid n} \varphi(d) \]
+  现在需要证明$F(n) = n$。为完成这个任务，请依次完成以下小任务：
+  \begin{enumerate}
+  \item 证明，对任意素数$p$，$F(p) = p$。
+
+  \item 证明，对任意素数$p$，$F(p^2) = p^2$。
+
+  \item 证明，对任意素数$p$，$F(p^k) = p^k$，$k$是任意正整数。
+
+  \item 证明，对任意素数$p$和$q$，$F(pq) = pq$。
+
+  \item 证明函数$F$是积性函数，即对任意的正整数$m$和$n$，如果$\gcd(m,n) = 1$，则$F(mn) = F(m)F(n)$。[提示：既然$m$与$n$互素，
+  则它们之间就不存在大于 $1$ 的公因子，那么它们的因子相乘之后作用于欧拉函数会满足什么特性？]
+
+  \item 最后，完成证明$F(n) = n$的任务。[提示：任意正整数 $n$ 都可以写成素数幂的乘积，即$n = p_0^{k_0} p_1^{k_1} \cdots p_t^{k_t}$。]
+
+  \item 扩展问题：请找出多种不同的证明方法来证明$F(n) = n$。
+  \end{enumerate}
+
+  \item 证明，对任意的正整数$a$和$b$，等式$\gcd(a,b) = \sum_{d \mid a, d \mid b}\varphi(d)$成立。[提示：利用以上结论。]
+
+\end{problemset}

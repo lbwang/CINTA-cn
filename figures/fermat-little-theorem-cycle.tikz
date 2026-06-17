@@ -1,0 +1,45 @@
+\begin{tikzpicture}[
+  x=1cm,
+  y=1cm,
+  >=latex,
+  line cap=round,
+  line join=round,
+  every node/.style={font=\small},
+  orbit/.style={draw=black!45, line width=1.1pt},
+  move/.style={->, draw=blue!65!black, line width=1.2pt},
+  skipmove/.style={->, dashed, draw=blue!65!black, line width=1.15pt},
+  state/.style={
+    circle,
+    draw=black!70,
+    fill=white,
+    line width=0.8pt,
+    minimum size=0.78cm,
+    inner sep=1pt
+  },
+  note/.style={align=center, text=black!72}
+]
+  \def\R{2.15}
+
+  \draw[orbit, draw=black!18, line width=8pt] (0,0) circle (\R);
+  \draw[orbit] (0,0) circle (\R);
+
+  \node[state, fill=green!10, font=\large] (None) at (90:\R) {$1$};
+  \node[state, font=\large] (Naone) at (18:\R) {$a$};
+  \node[state, font=\large] (Natwo) at (-54:\R) {$a^2$};
+  \node[state, font=\large] (Nai) at (-126:\R) {$a^i$};
+  \node[state, font=\large] (Napm) at (162:\R) {$a^{p-2}$};
+
+  \draw[move] (76:\R) arc[start angle=76, end angle=32, radius=\R]
+    node[pos=.43, above right] {第 $1$ 步};
+  \draw[move] (4:\R) arc[start angle=4, end angle=-40, radius=\R]
+    node[pos=.52, right] {$\times a$};
+  \draw[skipmove] (-68:\R) arc[start angle=-68, end angle=-112, radius=\R]
+    node[pos=.50, below] {$\cdots$};
+  \draw[skipmove] (-140:\R) arc[start angle=-140, end angle=-184, radius=\R]
+    node[pos=.52, below left] {$\cdots$};
+  \draw[move] (148:\R) arc[start angle=148, end angle=104, radius=\R]
+    node[pos=.50, above left] {第 $p-1$ 步};
+
+  \node[note] at (0,-2.92)
+    {$1,\;a,\;a^2,\;\ldots,\;a^i,\;\ldots,\;a^{p-2},\;a^{p-1}\equiv 1 \pmod p$};
+\end{tikzpicture}
