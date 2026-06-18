@@ -3,6 +3,7 @@
 .vscode/
 CHANGELOG.md
 Reviews.md
+sessions/Backup/
 
 *.aux
 *.lof

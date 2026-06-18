@@ -1,0 +1,364 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 10  Chinese Remainder Theorem
+% This document was released as open source on 2026-06-18.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{中国剩余定理}
+\label{chap:crt} 
+\begin{introduction}
+  \item 中国剩余定理
+  \item  中国剩余定理的代数版本
+\end{introduction}
+
+\section{数论视角下的中国剩余定理}
+\label{sec:NT_crt}
+% Motivation.
+\emph{中国剩余定理}（\emph{Chinese remainder theorem}，简记为 CRT），又称\emph{中国余数定理}
+\index{中国剩余定理} \index{Chinese remainder theorem, CRT}
+\footnote{尴尬的是，在意识到称之为“中国余数定理”更为准确之前，“中国剩余定理”这种表述已经非常流行。}，是基础数论中的一个重要的知识点。
+本节的小标题有点怪，为什么要强调\emph{数论的视角下}呢？
+这里只是预示我们将用另外的视角（代数视角）去讨论中国剩余定理，数论的视角则是常规的视角。
+
+讨论中国剩余定理，我们先从一元同余方程组的高效解法说起。请看以下例子。
+\begin{example}
+\label{exm:crt_moti}
+	假定需要解以下方程求$x$：
+	\begin{align*}
+	x &\equiv 2  \pmod{5} \\
+	x &\equiv 3  \pmod{7}
+    \end{align*}
+有一种平凡的解决方法如下：
+   \begin{enumerate}
+	\item 从一个同余式中得到$x = 5t + 2$，$t \in \mathbb{N}$；
+	
+	\item 把$x$代入第二个同余式得到：$ 5t + 2 \equiv 3  \pmod{7}$；
+	
+	\item 整理可得：$5t \equiv 1 \pmod{7}$；
+	
+	\item 上式两边同乘$5^{-1}$得到$t = 7s + 3$，$s \in \mathbb{N}$；
+	
+	\item 最后，$x = 35s + 17$，即$x \equiv 17  \pmod{35}$。
+	\end{enumerate} 
+\end{example} 
+
+% The Chinese Remainder Theorem--CRT.
+对任意的一元同余方程组，中国剩余定理
+告诉我们，对特定的模数总是有唯一解，并给出了一种高效的求解方法。先看以下定理的描述。
+
+\begin{theorem}{中国剩余定理}{crt}
+设$p$和$q$是互素的两个正整数，$n = pq$。对任意的$a \in \mathbb{Z}_p$和$b \in \mathbb{Z}_q$，存在
+唯一解$x$，$0 \leq x < n$使得：
+\begin{align*}
+x &\equiv a \pmod{p}\\
+x &\equiv b \pmod{q}
+\end{align*}
+\end{theorem}
+
+然而，在给出整个定理证明之前，让我们试图重新
+“发明”这个定理的证明。希望在这一节当中，读者可以享受到发明定理的乐趣，这比读懂一个证明要快乐得多。所以，在我提示
+大家要停下来思考的时候，请尽量跟我的节奏走。
+
+我们的任务是解以上两个同余方程，让我们先考察其中一个同余式。比如，设$p$为一个整数，对任意的$a \in \mathbb{Z}_p$，
+所要求解的$x$要满足方程
+\[x \equiv a \pmod{p}\]
+那么，$x$应该“长”什么模样？
+答案之一，当然是存在$k\in \Z$，使得$x = a +kp$。这是例子~\ref{exm:crt_moti}的方法。还有没有其他答案？
+
+%%% 20221121改写
+目前的这个问题，其实是要问给定$a$和$p$，能构造什么样的数可与$a$模$p$同余？或者说，试图找一个值$a'$，使得
+\[ a a' \equiv a \pmod{p}\]
+第一印象应该是选一个模$p$等于$1$的数$a'$。
+对于整数$a$，能立即联想到模$p$下互为乘法逆元的整数$c$和$c^{-1}$吗？也就是说，
+对任意的$c\in \mathbb{N}$，如果$\gcd(c,p)=1$，则存在唯一乘法逆元$c^{-1}\in \mathbb{N}$，使得$c c^{-1} \equiv 1 \pmod{p}$。
+如果$x = c c^{-1} a$，借用线性代数的概念，称整数$x$和$a$“相似”。为什么相似，因为$x$与$a$模$p$同余且不等。注意，给定$a$，可以构造
+多个不同的$x$与之相似。另外，如果从抽象代数的角度出发，可称整数$x$与$a$“共轭”。无论相似或者共轭，都只是一种联想法，
+以下并不会使用到与之相关的理论与内涵，它们只是在
+提醒我们应该想到利用一个“1”，在此是乘法逆元。而且，我们需要“相似”这个概念是因为构造与$a$同余的$x$可能有多种方法。
+
+以上所谓的“相似数”是借助了线性代数中\emph{相似矩阵}的定义。实际上，在准备这份教案的时候，作者首先想到的是“相似矩阵”的概念，而不是找互为乘法逆元的两个整数。
+对两个$n\times n$矩阵$A$和$B$，
+如果存在一个可逆的$n\times n$矩阵$C$使得：
+\[A = C^{-1}BC\]
+则称$A$和$B$为相似矩阵。
+回到同余式$x \equiv a \pmod{p}$，我们称$x$与$a$是“相似数”，如果存在某个“可逆数”$c$使得$c^{-1}x c = a$。
+
+相似矩阵的内涵很丰富，本章基本用不上，只是一种横向联想。而与中国剩余定理更相关的是正规子群的知识点。
+回顾第~\ref{chap:iso_hom}章关于正规子群的定义（定义~\ref{def:normal_subg}），
+群$\mathbb{H}$是群$\mathbb{G}$ 的正规子群意味着，如果对任意$g \in \mathbb{G}$，有$g\mathbb{H} = \mathbb{H}g$。
+等价地，即对任意的$g \in \mathbb{G}$和$a \in \mathbb{H}$，存在$a' \in \mathbb{H}$使得$g^{-1} a g = a'$。
+此时也称$a$与$a'$\emph{共轭}（conjugate）\index{conjugate}。如果群$\mathbb{G}$
+是阿贝尔群，因为交换律，很显然有$g^{-1} a g = g^{-1} g a = a$。提示到这里，读者能自行进行下一步的分析吗？
+
+对于满足两个同余式$x \equiv a \pmod{p}$和$x \equiv b \pmod{q}$的解$x$，大致形式应该是既与$a$相似又与$b$相似。
+分别相似并不难构造，难点是同时满足“相似性”。比如考虑两个相似数的线性组合，令$x = c_1 c_1^{-1}a + c_2c_2^{-1}b$，
+其中$c_1 c_1^{-1} \equiv 1 \pmod{p}$，
+$c_2 c_2^{-1} \equiv 1 \pmod{q}$。现在$x$模$p$会得到$a$，但是$ c_2c_2^{-1}b$多出来的部分不知道是什么。$x$模$q$会得到$b$，
+但是又多出了$c_1 c_1^{-1}a $。怎么解决？也就是说，怎么能做到在模$p$（或者模$q$）的同时要使那些讨厌的部分“消失”？
+建议读者在此处暂停阅读，自己思考一段时间。
+
+其实，刚才的问题不难，如果把$c_2c_2^{-1}b$这一项中的$c_2$人为设置为$p$，在模$p$的时候，$c_2c_2^{-1}$就被“消去”了。
+同理，把$c_1c_1^{-1}a$这一项中的$c_1$人为设置为$q$即可。这也大致解释了，为什么定理的条件需要$p$与$q$互素。
+如果针对以上的问题，读者在提示之下能准确找到答案，那么恭喜你，你已经重新“发明”了中国剩余定理。请看以下证明。
+\begin{proof}
+	使用构造法。因为$p$与$q$互素，则存在$p^{-1}$和$q^{-1}$分别使得$p p^{-1} \equiv 1  \pmod{q}$和$qq^{-1} \equiv 1 \pmod{p}$。
+	令整数$x$为：
+	\[ x = a q q^{-1} + b p p^{-1} \]  
+	容易验证，$x$同时满足两个同余式。
+	最后需要证明在模$n = pq$情况下，$x$是唯一解。即需要证明如果存另一个解，它也必然与$x$模$n$同余。
+	假设存在$ y \neq x$是另一个解，
+	则存在$t \in \mathbb{N}$使得$(y - x ) = tp$，此时把$x$和$y$理解为$a + kp$的形式。
+	类似，如果把$x$和$y$理解为$b + kq$的形式，则存在$s \in \mathbb{N}$使得$(y - x ) = sq$。
+	因为$p$与$q$互素，则存在某个$k \in \mathbb{N}$，使得$(y - x) = kpq$。
+	因此，$y \equiv x \pmod{n}$。
+\end{proof}
+
+\begin{example}
+\label{exm:crt1}
+		求解以下同余方程组：
+		\begin{align*}
+		x &\equiv  2 \pmod{5}\\
+		x &\equiv 3  \pmod{7}
+		\end{align*}
+利用中国剩余定理，解法如下：
+\begin{enumerate}
+\item 记$a=2$，$b = 3$，$p = 5$，$q = 7$和$n = pq = 35$；
+
+\item 使用$\text{egcd}$算法求解$p^{-1}$和$q^{-1}$，它们分别使得$p p^{-1} \equiv 1 \pmod{q}$和$q q^{-1} \equiv 1 \pmod{p}$。
+得到$p^{-1} = 3 $，$q^{-1} = 3$；
+
+\item 令$ y \equiv a q q^{-1} + b p p^{-1} \pmod{n}$，$y = 17$；
+
+\item 验证可知，$y$是正确解。
+\end{enumerate}
+\end{example}
+
+\begin{example}
+\label{exm:crt2}
+利用 SageMath 的\lstinline|crt|命令，可以方便利用 CRT 求解同余方程组。比如求解例~\ref{exm:crt1}：
+\begin{lstlisting}
+sage: a = 2; b = 3; p = 5; q = 7;
+sage: crt([a,b],[p,q])
+17
+\end{lstlisting}
+\end{example}
+%Generization.
+对于多于两个同余式的同余方程组，有一个更一般化的 CRT 版本，描述如下：
+\begin{theorem}{中国剩余定理--推广版}{gen-crt}
+设$m_0, m_1, \ldots, m_{n-1}$是两两互素的整数，对以下$n$个同余式的同余方程组
+	\begin{align*}
+	  x &\equiv  a_0 \pmod{m_0}\\
+	  &\ldots \\
+	  x &\equiv a_{n-1} \pmod{m_{n-1}}
+	\end{align*}
+存在模$M$的唯一解，其中$M = m_0 m_1 \cdots m_{n-1}$。
+\end{theorem}	
+
+\begin{proof}
+		构造法。令$M= \prod_{i = 0}^{n-1} m_i$，记$b_i = M/m_i$。
+		存在$b_i ^{-1}$使得$b_i b_i ^{-1}  \equiv 1 \pmod{m_i}$。则
+		\[x = \sum_{i=0}^{n-1} a_i b_i b_i^{-1}\pmod{M}\]
+是方程组的唯一解。
+\end{proof}
+
+稍微把中国剩余定理的要求增强一点点，要求同余方程组的模数分别是不同的素数，然后可以继续大开脑洞，请跟上思路。
+在证明中国剩余定理的时候我们问：给定$a$和$p$，找一个值$a'$，使得
+\[ a a' \equiv a \pmod{p}\]
+乘法逆元并不是唯一选择。费尔马小定理告诉我们，如果$p$是素数，会有很多的数$c\in \Z$且$\gcd(c,p)=1$使得：
+\[ c^{p-1} \equiv 1 \pmod{p}\]
+所以，某个数$b$的$p-1$次方也能构造出一个$a$的相似数。因此，我们构造出来的$x$大致可以是这个形式：
+\[ a c_1^{p-1} + bc_2^{q-1}\]
+请问，$c_1$和$c_2$分别选择什么可以使得同余方程组得到满足呢？答案不难想，分别取$q$和$p$即可。
+于是我们很可能会得到一个\emph{斌头剩余定理}。
+
+\begin{theorem}{斌头剩余定理}{bintou_crt}
+设$p$和$q$是不等的两个素数，$n = pq$。对任意的$a \in \mathbb{Z}_p$和$b \in \mathbb{Z}_q$，存在
+唯一解$x$，$0 \leq x < n$使得：
+\begin{align*}
+x &\equiv a \pmod{p}\\
+x &\equiv b \pmod{q}
+\end{align*}
+且$x = (a q^{p-1} + b p^{q-1}) \bmod n$。
+\end{theorem}
+请验证该定理是否成立？
+
+%20260521
+比以上脑洞大开更正经一点的是，我们问，
+如果同余方程组的模数$m_0, m_2, \ldots, m_{n-1}$不两两互质，那么该方程组是否还有解？如果有解，怎么求？请思考下面这两题。
+\begin{thinking}
+		判定下列两个同余方程组是否有解。若有，求出模适当模数下的所有解。
+		\[
+		\text{(a)}\;
+		\begin{cases}
+			x \equiv 7 \pmod{12} \\
+			x \equiv 3 \pmod{8}
+		\end{cases}
+		\qquad\qquad
+		\text{(b)}\;
+		\begin{cases}
+			x \equiv 5 \pmod{12} \\
+			x \equiv 2 \pmod{8}
+		\end{cases}
+		\]
+	思路提示：首先，既然不互素，就存在大于$1$的公因子$d$。其次思考本章课后练习的第~\ref{exe:four}题，逆向思考。然后可能还需要理解模运算中，素因子的增多其实是约束条件的增多，这是第~\ref{chap:cong}章开头讲同余时给出的思路。
+\end{thinking}
+
+
+\section{代数视角下的中国剩余定理} 
+\label{sec:AA-crt}
+%Motivation.20200625 Dragon Boat Festival.
+中国剩余定理是一种高效的工具，在特定的时候，它也是一种抽象的表达，是一种从代数的角度认识某些数字系统的方法。
+在很多情况下，当我们说“哦，这是中国剩余定理！”的时候我们并不一定在说“这里有一种高效的计算方法”，而往往是说
+“这类数值可看为具有这样的形式”。
+比如，设$n = pq$，$p$和$q$是两个互素的正整数。给定一个任意正整数$x$，它可以表达为一个唯一的序对：
+$( [x \bmod p], [x \bmod q ])$。这种思想可表达为以下定理。
+
+% A perspective from Abstract Algebra.
+\begin{theorem}{中国剩余定理的代数版本}{AA-crt}
+设$n = pq$，$p>1$和$q>1$是两个互素的正整数。则
+	\[\mathbb{Z}_n \cong \mathbb{Z}_p \times \mathbb{Z}_q \quad \text{且} \quad \mathbb{Z}_n^* \cong \mathbb{Z}_p^* \times \mathbb{Z}_q^* \text{。}\]
+\end{theorem}
+
+\begin{proof}
+\begin{enumerate}
+\item 定义从$\mathbb{Z}_n$到$\mathbb{Z}_p \times \mathbb{Z}_q$的映射$\phi$为：
+\[\phi(x) = ([x \bmod p], [x \bmod q])\]
+
+\item 证明映射$\phi$是一种双射，即证明$\phi$是满射且单射。满射显然，因为根据
+中国剩余定理（定理~\ref{thm:crt}），任意序对中的两个同余式在模$n$下有唯一解。证明单射即证明，
+如果对任意正整数$a, b < n$，有
+$([a \bmod p], [a \bmod q]) = ([b \bmod p], [b \bmod q])$，则$a = b$。再次根据
+中国剩余定理（定理~\ref{thm:crt}），可得。
+
+\item 证明映射$\phi$保持群操作，即需要证明：
+\begin{align*}
+\phi(a+b) &= ([(a+b) \bmod p], [(a+b)\bmod q]) \\
+                     &=  ([a \bmod p], [a \bmod q]) + ([b \bmod p], [b\bmod q])\\
+                     &=  \phi(a) + \phi(b)
+\end{align*}
+\end{enumerate}
+这就证明了$\mathbb{Z}_n \cong \mathbb{Z}_p \times \mathbb{Z}_q $，
+证明$\mathbb{Z}_n^*$与$\mathbb{Z}_p^* \times \mathbb{Z}_q^*$ 同构类似，留作课后作业。
+\end{proof}
+
+\begin{thinking}
+请思考这个问题：如何使用第一同构定理来证明映射$\phi$的单射性？留为课后作业。
+\end{thinking}
+%Example.
+\begin{example}
+		设$n = 15 = 5 \cdot 3$。
+		$\mathbb{Z}_n^* = \{ 1, 2, 4, 7, 8, 11, 13, 14\}$ 同构于$\mathbb{Z}_5^* \times \mathbb{Z}_3^*$ ，因为有以下
+		一一对应关系：
+		\[ 1 \leftrightarrow (1, 1) \quad 2 \leftrightarrow(2,2) \quad 4 \leftrightarrow (4,1) \quad 7 \leftrightarrow (2,1)\]
+		\[8 \leftrightarrow (3,2) \quad 11\leftrightarrow(1,2) \quad 13 \leftrightarrow (3,1) \quad 14 \leftrightarrow (4,2)\]
+\end{example}
+%Example.
+\begin{example}
+		求解$14\cdot 13 \bmod 15$。因为$14 \leftrightarrow (4,2)$且$13 \leftrightarrow (3,1)$，有：
+		\[(4, 2) \cdot (3, 1) = ([4\cdot 3 \bmod 5], [2\cdot 1 \bmod 3]) = (2, 2)\]
+		注意到，$(2, 2) \leftrightarrow 2$，所以$2$是最终答案。
+\end{example}
+
+\begin{example}
+	求解$11^{53} \bmod 15$。因为$11 \leftrightarrow (1,2)$且$2 \equiv -1  \pmod{3}$，所以：
+		\[(1, 2)^{53} = ([1^{53} \bmod 5 ], [-1^{53} \bmod 3]) = (1, -1 \bmod 3) = (1, 2)\]
+	 最后，$11^{53} \bmod 15 = 11$。
+\end{example}
+
+\begin{example}
+\label{exm:eq_sqr_cong}
+	设$n = p q$为合数，$p$和$q$是两个不同的素数。以下等式在模$n$的意义上有多少个解？
+	\[ x^2 \equiv 1 \pmod{n}\]
+为此，需要解以下两个同余方程
+	\begin{align*}
+	x^2 &\equiv 1 \pmod{p} \\
+	x^2 &\equiv 1 \pmod{q}
+	\end{align*}
+根据命题~\ref{pro:inv_mod_prime}，以上两式分别有两个不同的解。因此在模$n$的意义上总共有$4$个解。
+同时，这也就解决了第~\ref{chap:iso_hom}章例~\ref{exm:homo_zn}的一个遗留问题。
+\end{example}
+
+% Little thought.
+在需要大量使用$\mathbb{Z}_n^*$群元素的操作时，比如 RSA 算法的加密解密和签名，可以把群元$x \in \mathbb{Z}_n^*$
+转换为$(a, b) \in \mathbb{Z}_p^* \times \mathbb{Z}_q^*$上的元素。然后群$\mathbb{Z}_n^*$中元素的操作就变为对
+群$\mathbb{Z}_p^*$和群$\mathbb{Z}_q^*$元素的操作。这样通常比较高效，因为
+输入数据长度减半导致运行时间不仅仅只是减半。
+
+%%2023年6月11日
+\section*{章注}
+%\section*{Chapter Note}
+\addcontentsline{toc}{section}{章注}
+中国剩余定理有着满满的中国传统文化元素，与之相关的名人包括：春秋时期的孙子、秦汉时期的韩信、宋朝的沈括和秦久韶等。
+南北朝时期（公元5世纪）的数学著作《孙子算经》卷下第二十六题所谓“物不知数”问题则为国人所熟知：
+有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二。问物几何？明朝数学家程大位在《算法统宗》中将解法编成易于上口的《孙子歌诀》：
+三人同行七十稀，五树梅花廿一支，七子团圆正半月，除百零五便得知。到目前，这些歌诀依然被广为传颂，虽然这并非系统的表示法，也非系统的求解方法。
+到了近现代，中国剩余定理
+又往往以轻松愉快的谜题形式出现在人们的生活当中，使得中国剩余定理不但是学术殿堂的珍宝，也成为一种深入民心的文化符号。
+作为一种通用思想方法的中国剩余定理在披上一层代数外衣后，则足以让人有眼前一亮的感觉。我们将在第~\ref{chap:ring_field}章（定理~\ref{thm:crt_ring}）继续这个话题。
+
+\begin{problemset}
+
+\item 运用 CRT 求解：
+\begin{align*}
+x &\equiv 8 \pmod{11}\\
+x &\equiv 3 \pmod{19}
+\end{align*}
+
+%41
+\item 运用 CRT 求解：
+				\begin{align*}
+				x &\equiv 1\pmod{5}\\
+				x &\equiv 2\pmod{7}\\
+				x &\equiv 3\pmod{9}\\
+				x &\equiv 4\pmod{11}
+			\end{align*}
+			% ans = 1731
+			
+\item 手动计算$2000^{2019} \pmod{221}$，不允许使用电脑或者其他电子设备。[提示：这是一道看上去与中国剩余定理无关的计算题。]
+%7^25 mod 143 也可以尝试。
+%Ans: 5
+
+\item 
+\label{exe:four} 
+设$m$和$n$为互素的正整数，$a>0$为一个正整数，如果
+\begin{align*}
+x &\equiv  a \pmod{m}\\
+x &\equiv a \pmod{n}
+\end{align*}
+$x$模$mn$等于什么？为什么？[提示：这是一道看上去与中国剩余定理相关的问题。]%与CRT无关！m |(x-a), n|(x-a)，那么显然mn |(x-a)
+
+\item 设$p$和$q$是不同的两个素数，请证明$p^{q-1} + q^{p-1} \equiv 1 \pmod{pq}$。
+%From Hutz18-AEINT 2.27
+%bintou剩余定理已经独立提出。:-D
+
+\item 设$m$和$n$为互素的正整数，且$m, n > 2$。证明$mn$无原根（等价于，$\Z_{mn}^*$不是循环群）。
+[提示：根据欧拉定理，对任意与$mn$互素的正整数$a$，
+$a^{\phi(mn) }\equiv 1 \pmod{mn}$，那么证明只需要说明必然存在比$\phi(mn) $小的值$s$使得$a^s \equiv 1 \pmod{mn}$。]
+%设$s = lcm(\phi(m), \phi(n)) = \phi(m) \phi(n)/ gcd(\phi(m), \phi(n)) < \phi(m) \phi(n)/2$
+
+\item 请不使用电子设备完成求解$x^{113} \equiv 15 \pmod{221}$。[提示：这是一道似曾相识的习题，然而中国剩余定理能确保你顺利完成目标。]
+
+\item 实现一个利用 CRT 求解同余方程的程序（Python 或者 C 语言都可以）。
+
+\item 使用 CRT 证明第~\ref{chap:prime}章的定理~\ref{thm:is_carm}。
+
+\item 请使用第一同构定理证明定理~\ref{thm:AA-crt}中定义的映射$\phi$的单射性。%%证明 x mod q（p）余 0 iff x mod pq 余0；使用第一同构的意思是不要使用CRT.
+
+\item 完成定理~\ref{thm:AA-crt}的证明，即证明$\mathbb{Z}_n^*$与$\mathbb{Z}_p^* \times \mathbb{Z}_q^*$同构。
+
+\item 利用中国剩余定理证明欧拉Phi函数$\varphi$是积性函数，即证明对任意互素的正整数$m,n > 1$，有$\varphi(mn) = \varphi(m) \varphi(n)$。
+%其实与上一题同一个思路。http://mathcenter.oxford.emory.edu/site/math125/chineseRemainderTheorem/ 。
+
+\item 请证明存在无穷多的正整数$n$使得$4n^2 + 1$可同时被$5$和$13$整除。[提示：分别考虑$n$满足何种条件可被$5$或$13$整除，于是得到了若干条同余式，
+剩下的任务就是用中国剩余定理把$n$构造出来。] %本题出自250NT第三题。
+% n mod 5 余 1 或 4 . n mod 13 余4 或9。
+
+\item 对任意两个不相同的素数$p$和$q$，令$n = pq$，记$\lambda(n) =  \operatorname{lcm} (p-1, q-1)$。请证明，对任意的$m \in \Z_n^*$有：$m^{\lambda(n)} \equiv 1 \pmod{n}$。
+
+%%% 20241125，let e to be large。
+\item 使用已知方法找两个长约为$1024$比特的素数$p$和$q$，并令$n = p \cdot q$，$m = 2024$，$e=2^{255} - 19$。
+然后，分别使用 CRT 或者不使用 CRT 计算$m^e \bmod n$，并比较两种计算的系统开销，看 CRT 是否确实可以大幅度地提升计算效率。
+
+\end{problemset}

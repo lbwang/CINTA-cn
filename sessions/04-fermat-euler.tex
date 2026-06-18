@@ -5,7 +5,7 @@
 % This document was released as open source on 2026-06-18.
 % Copyright 2023, Libin Wang. Creative Commons License
 % This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{费尔马小定理和欧拉定理}
 \label{chap:flt-et} % Always give a unique label
@@ -19,11 +19,10 @@
 \section{费尔马小定理}
 \label{sec:flt}
 
-这一章将讲解这样一段优美的“故事”：通过计算发现模式，总结规律，并证明定理。或者，这只是描述数学家们枯燥无味的日常工作？不，相信这是一个有趣的故事。
+这一章将讲解这样一段优美的“故事”：通过计算发现模式，总结规律，并证明定理。或者，这根本不是故事，而只是描述数学家们枯燥无味的日常工作？不，相信这是一个有趣的故事。
 
 首先，我们试图从模乘法和模指数运算中发现一些规律。先看这样一种情况，给定素数$p$和一个正整数$a$，
-然后观察$a \bmod p$, $a^2 \bmod p$, $a^3 \bmod p$, $\ldots$。你能找出其中的一些规律吗？
-也许你可以尝试使用以下代码。
+然后观察$a \bmod p$, $a^2 \bmod p$, $a^3 \bmod p$, $\ldots$。你能找出其中的一些规律吗？也许你可以尝试使用以下代码。
 
 \begin{lstlisting}
 # 输入: 整数n;
@@ -49,7 +48,7 @@ def prt_pow_list(n):
 			2 & 1  \\ \hline
 		\end{tabular}
 			\captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 3$}
-		\label{pow_a_mod_3}
+		\label{tab:pow_a_mod_3}
 	\end{minipage}
 	\begin{minipage}[h]{0.3\textwidth}
 		\centering
@@ -63,7 +62,7 @@ def prt_pow_list(n):
 		\hline
 	\end{tabular}
 	\captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 5$}
-\label{pow_a_mod_5}
+\label{tab:pow_a_mod_5}
 	\end{minipage}
 	\begin{minipage}[h]{0.3\textwidth}
 		\centering
@@ -79,12 +78,12 @@ def prt_pow_list(n):
 		\hline
 	\end{tabular}
   \captionsetup{type=table,hypcap=false}\caption{$a^i \bmod 7$}
-  \label{pow_a_mod_7}
+  \label{tab:pow_a_mod_7}
 	\end{minipage}
 \end{minipage}
 \end{example}
 
-你能找到其中的一些规律吗？可通过设$p = 11$或者其他数值，运行代码来验证你自己的猜想。在$p = 11$的情形下，我们得到表~\ref{pow_a_mod_11}。
+你能找到其中的一些规律吗？可通过设$p = 11$或者其他数值，运行代码来验证你自己的猜想。在$p = 11$的情形下，我们得到表~\ref{tab:pow_a_mod_11}。
 
 \begin{table}[htbp]
 	\centering
@@ -105,7 +104,7 @@ def prt_pow_list(n):
 		\end{tabular}
 		\caption{$a^i \bmod 11$}
 	\centering
-	\label{pow_a_mod_11}
+	\label{tab:pow_a_mod_11}
 \end{table}
 
 请注意这些表格的最后一列，容易得到这样一种猜想：
@@ -133,7 +132,7 @@ def prt_mul_list(n):
 \end{lstlisting}
 
 这个程序做的是模乘法而不是模指数，对所有的$1 \leq i < p$，计算 $a\cdot i \pmod{p}$。
-比如，设$a = 2$，$p = 7$，得到表~\ref{ai_mod_7}。
+比如，设$a = 2$，$p = 7$，得到表~\ref{tab:ai_mod_7}。
 
 \begin{table}[htbp]
 	\centering
@@ -149,10 +148,10 @@ def prt_mul_list(n):
 			\hline
 		\end{tabular}
 	\centering\caption{$a\cdot i \bmod 7$}
-\label{ai_mod_7}
+\label{tab:ai_mod_7}
 \end{table}
 
-观察表~\ref{ai_mod_7}，一种非常容易发现的规律就是：
+观察表~\ref{tab:ai_mod_7}，一种非常容易发现的规律就是：
 所有行的数值恰好是$1$到$6$之间的整数，即只是对$1$到$6$之间的整数进行一次位置置换。把这种初始的猜想写成以下引理。
 
 \begin{lemma}{}{mul_perm}
@@ -179,7 +178,7 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 \end{proof}
 
 \begin{thinking}
-	提醒读者思考以上证明中\emph{置换}与\emph{消去律}之间的关系。
+	请读者思考以上证明中\emph{置换}与\emph{消去律}之间的关系。
 \end{thinking}
 
 再接着分析之前的猜想（等式~\ref{eq:flt}）。此时需要计算 $a^{p-1} \bmod p$，即$p-1$个$a$的模乘。
@@ -227,9 +226,15 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 对以上直观值得思考的是，回到原点需要最少的步数是多少？如果不需要走$p - 1$，那么可能是走多少步呢？是否存在某个数字必须走满$p - 1$步才能回到原点？接下来的章节会慢慢回答这些问题。
 \end{thinking}
 
+\begin{thinking}
+\label{thk:flt_laststep}
+图~\ref{fig:flt-cycle}~所示的最后一步是从$a^{p-2}$走向$a^{p-1}$，也就是原点$1$。$1$当然是我们最容易关注到的点，但是这个$a^{p-2}$就没有值得关注的点吗？
+建议观察表表~\ref{tab:pow_a_mod_3}到表~\ref{tab:pow_a_mod_11}的倒数第二列，发现规律，形成自己的结论，并给出证明。
+\end{thinking}
+
 \section{欧拉定理}
 \label{sec:euler_thm}
-在上一节的分析中，模数是一个素数，借助消去律，得到了费尔马小定理。如果模数是合数，则消去律就可能失效了。比如，设 $n = 6$，
+在上一节的分析中，模数是一个素数，借助消去律，得到了费尔马小定理。如果模数是合数，则消去律就可能失效了。在进一步分析前，让我们还是从观察数据开始。设 $n = 6$，
 借助之前的代码，可以得到以下数据。
 \begin{table}[htbp]
 	\centering
@@ -244,10 +249,10 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 			\hline
 		\end{tabular}
 	\centering\caption{$a \cdot i \bmod 6$}
-\label{ai_mod_6}
+\label{tab:ai_mod_6}
 \end{table}
 
-再看另一个实例，设$n = 9$，得到：
+再看另一个实例，设$n = 9$，得到表~\ref{tab:ai_mod_9}。
 	\begin{table}[htbp]
 		\centering
 		\begin{tabular}{ | c | c | c | c | c | c | c | c | c | }
@@ -264,7 +269,7 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 			\hline
 		\end{tabular}
 		\caption{$a \cdot i \bmod 9$}
-		\label{ai_mod_9}
+		\label{tab:ai_mod_9}
 	\end{table}
 
 %Observation.
@@ -273,9 +278,9 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 并\textbf{不}等于集合：
 \[\{1, 2, 3, \ldots, n-1\}\]
 除非$a$与$n$互素，即$\gcd(a,n)=1$。也就是说，前一个集合是后一个集合的置换这一属性在$a$与$n$不互素时被破坏了，
-表~\ref{ai_mod_9}中标记为绿色的两行展示了这个事实。请读者自己认真检验这一观察结果，或者做更多的计算并观察。
+表~\ref{tab:ai_mod_9}中标记为绿色的两行展示了这个事实。请读者自己认真检验这一观察结果，或者做更多的计算并观察。
 
-然而，从乐观的角度看，置换属性还是有可能得到保持的。将\textbf{不}互素于$n$的“坏家伙”从表格中剔除，将得到表~\ref{ai_mod_9_2}。
+然而，用乐观的态度去看，置换属性还是有可能得到保持的。将\textbf{不}互素于$n$的“坏家伙”从表格中剔除，将得到表~\ref{tab:ai_mod_9_2}。
 
 	\begin{table}[htbp]
 		\centering
@@ -291,7 +296,7 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 			\hline
 		\end{tabular}
 		\caption{$a \cdot i \bmod 9$（要求$a$和$i$都与$9$互素）}
-		\label{ai_mod_9_2}
+		\label{tab:ai_mod_9_2}
   \end{table}
 
 %%Conjecture.
@@ -363,6 +368,10 @@ $f_a(i) = a\cdot i \bmod p$。先证明$f_a$是单射。
 
 与费尔马小定理类似，欧拉定理的直观如图~\ref{fig:euler-cycle}所示，也是一个在若干步后回到原点$1$的循环操作。稍有不同的是，欧拉定理是说，对任意正整数$n$，从一个与$n$互素的整数$a$出发，每一步就是在模$n$的意义上乘$a$，然后最多走$\varphi(n)$步就必然回到原点$1$。可惜的是，暂时还不知道如何计算这个神秘的 Phi 函数。所以，我们也暂时不清楚费尔马小定理与欧拉定理之间的关系。
 
+\begin{thinking}
+	因为图~\ref{fig:euler-cycle}与图图~\ref{fig:flt-cycle}实在是太类似，把它画出来不免有凑篇幅之嫌。其实，给出图~\ref{fig:euler-cycle}的目的是想提醒读者思考，这么类似的两个图描述的是相同的计算行为与代数结构吗？第~\ref{chap:cyc_grp}章将会回答这个问题。
+\end{thinking}
+
 % 20190814
 \section{欧拉 Phi 函数}
 \label{sec:phi}
@@ -389,7 +398,7 @@ sage: euler_phi(29*11)
 	$p$，$2p$，$\ldots$，$(p^{k-1}-1)p$，$p^{k-1}p$。 \qed
 \end{proof}
 
-本节的主要任务是计算 $\varphi(mn)$，其中，$m$和$n$是互素的正整数。 分析分为两大步骤。
+本节的主要任务是计算 $\varphi(mn)$，其中，$m$和$n$是互素的正整数。 分析分为两大步骤~\cite{Ros11ENTA}。
 第一步，使用以下方式枚举并排列出所有不超过$mn$的正整数。
 \begin{center}
 		\begin{tabular}{c c c c c}
@@ -460,15 +469,16 @@ sage: euler_phi(29*11)
 	已知对于任意素数$p$，$\varphi(p) = p - 1$。那么费尔马小定理与欧拉定理的关系是什么？
 \end{thinking}
 %%% 20230424
+%%% 20260618
 \section*{章注}
 \addcontentsline{toc}{section}{章注}
-本章讲解费尔马小定理、欧拉定理的思路源自于 Silverman 的 FINT~\cite{silverman2014friendly}，本书作者从中学到了许多知识与方法，也收获了许多的乐趣。想进一步了解欧拉 Phi 函数，或者积性函数相关知识点的读者，建议从 Bur11~\cite{Bur11} 入手。
+本章讲解费尔马小定理、欧拉定理的思路受 Silverman 的 FINT~\cite{silverman2014friendly}的启发，本书作者从中学到了许多知识与方法，也收获了许多的乐趣。证明费尔马小定理、欧拉定理的方法有许多，本书特别选择这一种稍显繁琐的方法，主要有两个目的：首先是强调这样一种思路与方法：寻找模式、形成猜想，证明定理。其次，在证明过程中使用的思路（置换、单射、消去律等）值得学习。想进一步了解欧拉 Phi 函数，或者积性函数相关知识点的读者，建议从 Bur11~\cite{Bur11} 入手。
 
 \begin{problemset}
 
   \item 设$p = 23$和$a = 3$，使用费尔马小定理计算$a^{2019} \bmod p$？ %ans: 16, 因为 3^7 = 2
 
-  \item 找规律：请尽可能多地归纳总结表~\ref{pow_a_mod_5}到表~\ref{pow_a_mod_11}中数字的规律。
+  \item 找规律：请尽可能多地归纳总结表~\ref{tab:pow_a_mod_5}到表~\ref{tab:pow_a_mod_11}中数字的规律。
 
   \item 这一题鼓励大家找规律。现在
   设$a = 2$，对任意的素数$3 \leq p \leq 30$，请编程计算$a^{(p-1)/2} \bmod p$，分析所得的结果，找规律并形成自己的猜想。

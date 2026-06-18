@@ -1,0 +1,398 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 13. Polynomial and Finite Field
+% This document was released as open source on 2026-06-18.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{多项式与有限域}
+\label{chap:poly_gf}
+\begin{introduction}
+  \item 多项式环
+  \item 多项式环的$\gcd$算法
+  \item 多项式环的\texttt{egcd}算法
+  \item $\mathrm{GF}$域的构造
+\end{introduction}
+
+\section{多项式}
+\label{sec:poly}
+在阅读本书之前，读者应该非常熟悉多项式，因为大多数中国学生从小就熟练掌握多项式的加减乘除。
+以下内容当然也不外乎是多项式的加减乘除，希望不会有什么难度。
+
+多项式通常表达为如下形式：
+\begin{equation}
+\label{eq:poly}
+f(x) =\sum_{i=0}^n a_i x^i =  a_{n} x^{n} + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0
+\end{equation}
+其中，所有的$a_i$称为多项式的\emph{系数}（\emph{coefficient}），$n$是使得$a_n \neq 0$的最大非负整数，
+称为多项式的\emph{次数}，记为$\deg f(x) =n$，而系数$a_n$就称为\emph{首项系数}。首项系数为$1$的多项式
+称为\emph{首一多项式}（\emph{monic}）。
+如果多项式所有的系数都是$0$，即多项式$f(x) = 0$，称为\emph{零多项式}，其次数定义为$- \infty$。
+如果多项式的所有系数除了$a_0$之外都是$0$，即$f(x) = a_0$，$a_0 \neq 0$，此多项式称为\emph{常数多项式}。
+多项式中的占位符$x$称为\emph{不定元}（\emph{indeterminate}），如果习惯于把$x$称为变量的，也许
+需要纠正。
+
+本节的精彩内容开始于给系数设定范围。
+设$R$为交换环，$x$为不定元，限定多项式的所有系数$a_i \in R$，$\forall i \in  \lbrack 0,n \rbrack$，
+形如等式~\ref{eq:poly}的多项式$f(x)$称为环$R$上的多项式，
+记所有多项式的集合为$R\lbrack x\rbrack$。为什么说$x$不是变量？其中一个理由就是，$x$的值域并没有任何限定，
+甚至可以说，对其还一无所知。
+%%%https://www.quora.com/What-is-an-indeterminate-in-a-polynomial-ring
+%%什么是不定元？
+
+接着，就可以定义$R\lbrack x\rbrack$中多项式的加法与乘法，尽管在普通意义上说，这两种操作都为读者所熟知。
+\begin{definition}{多项式的加法与乘法}{poly_add_mul}
+设$R$为交换环，$a(x), b(x) \in R\lbrack x\rbrack$，且
+\[ a(x) = \sum_{i=0}^n a_i x^i , \qquad  b(x) = \sum_{i=0}^m b_i x^i, \quad n \geq m.\]
+加法定义为：
+\[a(x) + b(x) = \sum_{i = 0}^n (a_i + b_i) x^i\]
+其中，当$i > m$时，$b_i$视为$0$。
+乘法定义为：
+\[a(x) \cdot b(x) = \sum_{i = 0}^{n+m} c_i x^i\]
+其中，对所有的$i$，$c_i = \sum_{k = 0}^i a_k b_{i-k}$。
+\end{definition}
+
+\begin{example}
+无论以上定义你看了感觉有多陌生，本质上就是中学常用的操作而已。以下实例展示在 Sage 当中如何定义多项式，
+并进行多项式运算。
+%多项式定义与运算
+\begin{lstlisting}
+sage: R.<x> = PolynomialRing(ZZ)  #定义R[x]，其中x是不定元，ZZ是整数环
+sage: f = R.random_element();g = R.random_element() # 初始化两个多项式
+sage: f = 7*x^3 - 4*x^2 + 4*x + 2; g = x^2 - 2*x + 1 # 定义两个多项式f和g
+sage: f + g
+7*x^3 - 3*x^2 + 2*x + 3
+sage: f * g
+7*x^5 - 18*x^4 + 19*x^3 - 10*x^2 + 2
+sage: f - f
+0
+sage: f / g
+......
+\end{lstlisting}
+\end{example}
+
+\begin{proposition}{多项式环}{poly_ring}
+设$R$为交换环，$x$为不定元，环$R$上的多项式$R\lbrack x\rbrack$在加法、乘法下形成交换环，并称之为\emph{多项式环}。
+\end{proposition}
+命题~\ref{pro:poly_ring}的证明留给读者。多项式在加法上成加法群是显然的，单位元是$0$，$f(x)$的逆元是$-f(x)$。
+乘法有封闭性也显然。重点需要验证的是结合律和分配律，这是两种我们一直都在用却一直没有证明的定律。
+
+\begin{example}
+\begin{enumerate}
+\item $\Z\lbrack x \rbrack$和$\Q \lbrack x \rbrack$分别是整数上的多项式环和有理数上的多项式环。
+
+\item 设$p$为素数，$\Z_p\lbrack x \rbrack$是域$\Z_p$上的多项式环。
+
+\item $\Z_2\lbrack x \rbrack$是域$\Z_2$上的多项式环。如果大家没有忘记二进制的位置计数法的话，应该知道$\Z_2\lbrack x \rbrack$
+中每一个多项式都代表了一个二进制数字。
+
+\end{enumerate}
+\end{example}
+以下，延续第一章讨论整数的加减乘除的思路，
+讨论多项式的各种操作属性。首先考虑的是除法。先看以下例子，动手计算找回
+对除法计算的回忆。
+
+\begin{example}
+\label{exm:poly_div1}
+\polylongdiv{3x^3+x^2+x-1}{x-1}
+\end{example}
+
+\begin{example}
+\label{exm:poly_div2}
+\polylongdiv{3x^3+x^2+x-1}{2x-1}
+\end{example}
+
+必须强调，多项式环$R\lbrack x \rbrack$上的加法与乘法严重依赖其基础环$R$上的加法与乘法。
+考虑到$R\lbrack x \rbrack$上的除法，问题来了，环$R$上元素的不一定能做“除法”，
+因为环没有要求每一个元素都有乘法逆元。比如，例~\ref{exm:poly_div2}中的所有“分数”在$\Z\lbrack x \rbrack$中
+是不一定存在的，但是$\Q \lbrack x \rbrack$中则没有问题。不难想到，域可以满足除法要求。
+所以要求能做除法的多项式环都建立在域的基础上。于是，有以下定理为多项式理论奠定基础。
+
+\begin{theorem}{多项式的除法算法}{Ring_DivAlgo}
+设$\F$为域，$a(x), b(x) \in \F\lbrack x \rbrack$，且$b(x)$不为零多项式。
+那么，存在唯一的多项式对$q(x), r(x) \in \F\lbrack x \rbrack$使得， 
+	\[a(x)  = q(x)b(x) + r(x)\]
+其中，$\deg r(x) < \deg b(x)$或者$r(x)$为零多项式。
+\end{theorem}
+
+\begin{proof}
+使用归纳法证明。
+\begin{enumerate}
+\item 归纳起始步，如果$a(x)$是零多项式，则
+\[ 0 = 0 b(x) + 0\]
+因此，$q(x)$和$r(x)$都是零多项式。
+
+\item 归纳假设，假设次数小于$n$的多项式$a(x)$都满足定理要求。
+
+\item 归纳步，假设$a(x)$为非零多项式，且$\deg a(x) = n$，$\deg b(x) = m$。
+如果$m > n$，则令$q(x) = 0$，$r(x) = a(x)$，证完。
+所以，可以假设$m \leq n$，对$a(x)$的次数$n$进行归纳。现在，
+\[ a(x) = \sum_{i=0}^n a_i x^i , \qquad  b(x) = \sum_{i=0}^m b_i x^i, \quad n \geq m.\]
+用$a(x)$除$b(x)$，除法第一步的结果是多项式
+\[a'(x) =  a(x) - \frac{a_n}{b_m}x^{n-m} b(x)\]
+并且，$a'(x)$的次数小于$n$或者为$0$。根据归纳假设，存在多项式$q'(x)$和$r(x)$使得
+\[a'(x) =  q'(x)b(x) + r(x)\]
+且$r(x)$的次数小于$b(x)$的次数或者为$0$。令
+\[ q(x) = q'(x) + \frac{a_n}{b_m}x^{n-m} \]
+则$a(x) = q(x)b(x) + r(x)$。唯一性的证明留给读者，提示：用反证法。
+\end{enumerate}
+\end{proof}
+
+多项式的除法算法对于多项式理论的重要性与基础性类似除法算法（定理~\ref{thm:DivAlgo})对整数理论的重要性与基础性。
+这两个除法算法的证明都非常具有代表性，值得大家学习。其中，定理~\ref{thm:Ring_DivAlgo}的证明使用了\emph{结构归纳法}。
+虽然与大家熟知的算术归纳法一样，结构归纳法也分为归纳起始、归纳假设和归纳三个步骤。
+不同的是，结构归纳针对的不是某个等式中的整数值$n$，而是针对代数结构进行归纳。
+就多项式除法算法的证明而言，归纳针对的是多项式的次数$n$。
+这种方法非常值得大家关注。
+
+至于实现多项式除法的算法则比较简单，请看以下伪代码，这也是本书中极少数不能运行的代码之一。整体结构上看，这个算法
+就是把中学的长除法代码化而已，没什么特殊的，也不需要更多的解释。只有两点需要提醒，代码中要用到域的“除法”和多项式的加法，
+所以，要把代码运行起来还需要一些细化工作，这项细化工作留给读者。
+\begin{center}
+	\lstinputlisting[label = alg:poly_div, caption  = 多项式除法]{codes/poly_division.py}
+\end{center}
+
+有了除法，则有以下类似整数下的定义。设$\F$为域，$a(x),b(x) \in \F\lbrack x \rbrack$，如果存在
+$q(x) \in \F\lbrack x \rbrack$使得$a(x) = q(x)b(x)$，则称$a(x)$可被 $b(x)$整除，记为$b(x) \mid a(x)$，
+此时也称$b(x)$是$a(x)$的一个\emph{因子}。
+如果多项式$d(x)\in \F\lbrack x \rbrack$满足$d(x) \mid a(x)$且$d(x) \mid b(x)$，则称$d(x)$为$a(x)$和$b(x)$的公因子。
+如果\emph{首一多项式}$d(x)$是$a(x)$和$b(x)$的公因子，且
+对$a(x)$和$b(x)$的其他公因子$d'(x)$都有$d'(x) \mid d(x)$，则称$d(x)$是$a(x)$和$b(x)$的\emph{最大公因子}，
+记为$d(x)=\gcd(a(x), b(x))$。如果$\gcd(a(x), b(x)) = 1$，则称$a(x)$和$b(x)$\emph{互素}。
+如果非常数多项式$a(x) \in \F\lbrack x \rbrack$不能表达为任意两个非常数多项式$b(x), c(x)  \in \F\lbrack x \rbrack$的乘积，
+且$b(x)$和$c(x)$的次数都比$a(x)$的次数要小，则称$a(x)$为
+\emph{不可约多项式}（\emph{irreducible polynomial}）\index{不可约多项式}\index{irreducible polynomial}。
+不可约多项式类似整数中的素数，它是多项式环中的\emph{素多项式}。
+
+类似整数的整除性（命题~\ref{pro:divisible}），多项式环中也有关于整除性的简单定理。
+\begin{proposition}{整除性--多项式环版本}{poly_divisible}
+设$F$为域，$a(x),b(x),c(x) \in F\lbrack x \rbrack$，则有以下结论：
+\begin{enumerate}
+\item 如果$a(x) \mid b(x)$，$b(x) \mid c(x)$，则$a(x) \mid c(x)$。
+
+\item 如果$c(x) \mid a(x)$，$c(x) \mid b(x)$，则对任意$m(x), n(x) \in  F\lbrack x \rbrack$，有$c(x) \mid (m(x)a(x) + n(x)b(x))$。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\begin{enumerate}
+\item 因为$a(x) \mid b(x)$，$b(x) \mid c(x)$，则存在$u(x), v(x ) \in F\lbrack x \rbrack$使得$b(x) = u(x) a(x)$
+和$c(x) = v(x)b(x)$，所以$c(x) = v(x)(u(x)a(x)) = (v(x)u(x)) a(x)$，即$a(x) \mid c(x)$。 
+
+\item 因为$c(x) \mid a(x)$，$c(x) \mid b(x)$，则存在$u(x), v(x ) \in F\lbrack x \rbrack$使得$a(x) = u(x) c(x)$，
+$b(x) = v(x) c(x)$。对任意$m(x), n(x) \in  F\lbrack x \rbrack$，有
+\[ (m(x)a(x) + n(x)b(x)) = m(x) u(x)c(x) + n(x)v(x)c(x) = (m(x) u(x) + n(x)v(x))c(x)\]
+所以，$c(x)\mid (m(x)a(x) + n(x)b(x))$。
+\end{enumerate}
+\end{proof}
+
+命题~\ref{pro:poly_divisible}虽然简单，但是它确保了多项式环中欧几里得算法（$\gcd$算法）的成立。
+此时就必须重新提及第二章中$\gcd$算法正确性的证明了。首先，第一种证明在此不再有效，因为简单验算可知：
+\[\gcd(a(x), b(x)) = \gcd(a(x), (a(x) - b(x)))\]
+不再必然成立了。其次，好消息是第二种证明只依赖命题~\ref{pro:divisible}，而现在多项式环中对应的命题~\ref{pro:poly_divisible}
+成立，多项式环中$\gcd$算法就应该成立。实际情况确实如此，以下给出定理。证明留给读者，请参考第二章的证明进行完成。
+
+\begin{theorem}{欧几里得算法--多项式环版本}{poly_gcd}
+设$\F$是域，给定两个多项式$a, b \in \F\lbrack x \rbrack$，设$\deg a(x) \geq \deg b(x)$，则$a(x)$和$b(x)$的最大公因子等于$b(x)$和$a(x) \bmod b(x)$的最大公因子。
+即
+\[\gcd(a(x), b(x)) = \gcd(b(x), a(x) \bmod b(x))\]
+其中，$a(x) \bmod b(x)$表示用$a(x)$除以$b(x)$所得到的余数$r(x)$。
+\end{theorem}
+
+\begin{example}
+\label{exm:gcd_poly_r}
+计算有理数域$\Q$上多项式$a(x) = x^5 + x^4 + x + 1$和$b(x) = x^4 + x^3 + x + 1$的最大公因子。
+
+\begin{align*}
+\gcd(a(x), b(x)) &= \gcd(b(x), -x^2 + 1)\\
+                              &= \gcd(-x^2 + 1, 2x+2)\\
+                              &= \gcd(2x + 2, x+1)\\
+                              &= \gcd(x + 1, 0) = x+1
+\end{align*}
+\end{example}
+
+颇令人欣喜的是，以下代码在 SageMath 下竟然可以求两个多项式的最大公因子，而代码与求整数的最大公因子一模一样。
+这当然归功于 SageMath 的\lstinline|%|操作对多项式同样有效。
+
+\begin{center}
+	\lstinputlisting[label = alg:poly_gcd, caption  = 欧几里得算法--多项式环版本]{codes/poly_gcd.py}
+\end{center}
+
+然而，算法\lstinline|poly_gcd|并没有正确完成任务！因为多项式的公因子要求是首一多项式。
+请读者自行完成这个简单任务。进而要问，多项式环中$gcd$成立，难道$egcd$算法会不成立吗？
+当然成立，以下给出结论，证明与算法实现留给读者完成。
+
+\begin{theorem}{扩展欧几里得算法--多项式环版本}{poly_egcd}
+设$F$是域，设$d(x)$是两个多项式$a, b \in \F\lbrack x \rbrack$的最大公因子，
+则存在$r(x), s(x) \in \F\lbrack x \rbrack$使得：
+\[d(x) = r(x) a(x) + s(x)b(x)\text{。}\]
+\end{theorem}
+
+\begin{proposition}{}{irred_poly}
+设$\F$为域，$p(x)\in \F\lbrack x \rbrack$是不可约多项式，则对任意$f(x) \in \F\lbrack x \rbrack$
+且$p(x)\nmid f(x)$，有：
+\[\gcd(p(x), f(x))=1\]
+\end{proposition}
+\begin{proof}
+设$d(x) = \gcd(p(x), f(x))$，则$d$或者是一个非零常量，或者是一个$\F\lbrack x \rbrack$中非零多项式。
+如果是前者，则$d(x)$只能是$1$，因为最大公因子必须是首一多项式。如果是后者，
+因为$p(x)$是不可约多项式，且$d(x) \mid p(x)$，则存在某个常量$a \in \F$，使得$d(x) = a p(x)$。
+但是，同时$d(x) \mid f(x)$，则存在某个$g(x) \in \F\lbrack x \rbrack$，使得
+$f(x) = d(x)g(x) = a p(x) g(x)$，说明$p(x) \mid f(x)$，与条件假设矛盾。\qed
+\end{proof}
+命题~\ref{pro:irred_poly}说明，不可约多项式确确实实与整数中的素数类似，
+环$F\lbrack x \rbrack$中的多项式在模某个不可约多项式的前提下存在乘法逆元，\texttt{egcd}算法实现了这种求解。
+%%%20200721
+
+\section{有限域}
+\label{sec:gf}
+准确来说，本节并不打算深入讨论有限域的理论。而是通过构造出一种特殊的有限域，
+让读者先建立起对有限域的认识。实在是入门之入门。
+
+域$\F$是一种特殊的环，它在加法上是阿贝尔群，$\F^*$在乘法上是阿贝尔群。有限域则是具有有限个元素的域。
+先归纳以上章节中关于有限域的几点结论：
+\begin{enumerate}
+\item 有限域的特征必为素数。
+
+\item 如果有限域$\F$的特征是素数$p$，则$\F$的阶是$p^n$，$n$是某个正整数。
+
+\item 对任意的素数$p$和正整数$n$，存在阶为$p^n$的有限域。
+
+\item $R$是交换环，$R/M$是域当且仅当$M$是$R$的极大理想。
+\end{enumerate}
+
+目前大家最熟悉的有限域是$\mathrm{GF}(p)$，又称为\emph{素域}（\emph{prime field}），也就是$\Z_p$，其中$p$是任意的素数。
+而关于$\Z_p$则暂时再没有太多值得探讨之处。对$\Z_p$不满意之处在于，
+$p$是素数， 它不可能等于$2^n$，$n$为某个正整数。计算机系统对$2^n$情有独钟，这也是
+大家熟知的事实。诱惑人之处在于，以上结论说，一定会存在阶为$2^n$的有限域，且特征为$2$。
+不要忘记$2$是素数。有意思的是，上面结论最后一点似乎已经提示了构造的方法。
+
+虽然目前我们基本上具备了足够的知识可以从一个环出发，构造其极大理想（或者素理想），从而构造商环得到一个域。
+然而以下的构造方法则比较“低级”：按有限域的定义去构造。其出发点当然还是一个环，但是暂时不提理想，
+而是构造环中元素的乘法逆元。其实，两种方法原理一样，说法不同而已，只是以下做法可以暂时摆脱定理的纠缠。
+
+构造的基本思路如下。
+首先，计算机系统关注$2^n$阶的域，其实是关注$n$比特的某个代数结构。
+$\Z_2\lbrack x \rbrack$是构造的出发点，它是一种交换环，它里面的元素是多项式，
+多项式的系数落在$\Z_2$，也就是说每一个多项式都唯一代表了一个二进制数值，
+这也就是所谓的二进制的位置计数法。
+因为要得到一个$n$比特代数结构，立即想到的是对$\Z_2\lbrack x \rbrack$取模，即用一个次数为$n$
+的多项式$p(x)$去除$\Z_2\lbrack x \rbrack$中所有的元素，取其余数，于是根据
+除法算法，得到一系列次数小于$n$的多项式，这个集合记为$S$。即
+定义映射$\phi\colon \Z_2\lbrack x \rbrack \to S$为：
+\[ \phi(f(x)) = (f(x) \bmod p(x)), \forall f(x) \in \Z_2\lbrack x \rbrack \]
+其中$\deg p(x) = n$。
+
+第一个问题是，映射$\phi$是否满射到所有次数小于等于$n-1$的多项式？即
+任取$g(x) \in \Z_2\lbrack x \rbrack $且$g(x)$的次数小于$n$，是否存在$f(x) \in \Z_2\lbrack x \rbrack $ 使得
+$\phi(f(x)) = g(x)$？
+ 
+ 假如作为模数的多项式$p(x)$为次数$n$的不可约多项式，则所有问题迎刃而解，这就是构造的关键点。
+ 因为，如果$p(x)$是不可约多项式，$g(x)$的次数小于$n$，则$p(x) \nmid g(x)$。
+ 根据命题~\ref{pro:irred_poly}，存在$r(x), s(x) \in \Z_2\lbrack x \rbrack$使得：
+ \[  r(x) g(x) + s(x)p(x) =1\]
+ 令$f(x) = r(x) g(x) g(x)$，则$\phi(f(x)) =(r(x) g(x) g(x) \bmod p(x)) = g(x)$。
+ 
+ 集合$S$包括了所有的次数小于等于$n-1$的多项式，即有$2^n$个元素，每一个元素唯一代表
+ 一个二进制数值。现在定义集合$S$上的加法和乘法如下。
+ 
+将加法定义为$\Z_2\lbrack x \rbrack$上的多项式加法。需要指出的是，因为系数落在$\Z_2$上，所有
+ 项对位相加，其实等价于所有系数按比特异或。此加法显然封闭，单位元为$0$，所有元素有逆元。即$S$在加法上成群。
+ 
+ 将乘法定义为$\Z_2\lbrack x \rbrack$上多项式的模$p(x)$的乘法，即对任意多项式$a(x), b(x) \in S$，
+ 令$a(x) b(x) = ( a(x) b(x) \bmod p(x))$。容易验证此乘法封闭，单位元为$1$。当然，每一个非零多项式
+ 都有逆元，而且满足分配律，这留给读者证明。即$S$在乘法上成群。
+ 
+ 因此，$S$在所定义的加法、乘法上是一个域。这个域有一个特殊的名字，就是$\mathrm{GF}(2^n)$。因为它与二进制密切相关，
+ 也称之为\emph{二进制域}，该域的特征为$2$。\index{二进制于}
+ \begin{example}
+ 有限域$\mathrm{GF}(2^4)$由$16$个次数小于$4$的多项式组成，或者想象为所有$4$比特的二进制数。令不可约
+ 多项式$p(x) = x^4 + x + 1$。以下列举$\mathrm{GF}(2^4)$上若干域运算实例。
+ \begin{enumerate}
+ \item 加法：$(x^3 + x^2 + 1) + (x^2 + x + 1) = x^3 + x$，等同于$1101 \oplus 0111 = 1010 $。
+ 
+ \item 减法：$(x^3 + x^2 + 1) - (x^2 + x + 1) = x^3 + x$，等同于加法！
+ 
+ \item 乘法：$(x^3 + x^2 + 1) \cdot (x^2 + x + 1) = x^2 + 1$，因为：
+ \[(x^3 + x^2 + 1) \cdot (x^2 + x + 1) = x^5 + x + 1\]
+ 并且
+ \[(x^5 + x + 1) \bmod (x^4 + x + 1) = x^2 + 1 \]
+ 
+ \item 求乘法逆元：$(x^3 + x^2 + 1) ^{-1} = x^2$，因为$(x^3 + x^2 + 1) \cdot x^2 \bmod (x^4 + x + 1) = 1$
+ \end{enumerate}
+ \end{example}
+ 
+ \begin{example}
+	 Sage 提供$\mathrm{GF}(p^n)$域的定义与操作，比如：
+ \begin{lstlisting}
+ sage: p = 137
+ sage: F1 = GF(p)   # 定义有限域
+ sage: a = F1.random_element(); a #取一个随机元素
+ 51
+ sage: F2 = GF(2^4) #定义二进制域
+ sage: b = F2.random_element(); b #取一个随机元素
+ z4^2 + 1
+ sage: c = F2.random_element(); c #取一个随机元素
+ z4^3 + z4^2 + z4
+ sage: b + c
+ z4^3 + z4 + 1
+ sage:  b*c
+ z4 + 1
+ sage: 
+ \end{lstlisting}
+ \end{example}
+ 
+ \begin{example}
+ \label{exm:gcd_poly_gf}
+ 计算有限域$\mathrm{GF}(2^8)$上多项式$a(x) = x^5 + x^4 + x + 1$和$b(x) = x^4 + x^3 + x + 1$的最大公因子。
+ 
+ \begin{align*}
+	 \gcd(a(x), b(x)) &= \gcd(b(x), x^2 + 1)\\
+	                               &= \gcd(x^2 + 1, 0)\\
+                               &= x^2 + 1
+ \end{align*}
+ 请对比例~\ref{exm:gcd_poly_r}的结果，思考为什么结果不同。
+ \end{example}
+ %%2023年6月24日
+  \section*{章注}
+  %\section*{Chapter Note}
+  \addcontentsline{toc}{section}{章注}
+  本章对多项式环的讲解的精彩之处并非在新的知识点上有突破、发展，而是对以往知识点的回归：除法算法、整除、欧几里得算法、扩展欧几里得算法等。
+  在一种新的代数结构中再次出现这些老知识点，说明了这些知识点的在代数学中具有非常基础、深远的内涵。
+  
+  本章没有深入讲解有限域的相关知识，而是描述一种有限域$\mathrm{GF}(2^n)$的构造方法，为在密码学相关课程中描述国际对称密钥加密标准 AES 算法~\cite{DR02}奠定基础。
+  AES 算法以$\mathrm{GF}(2^8)$为理论基础，使得该算法的描述显得非常简洁、优雅。加上 AES 算法非常高效，并得到了广泛应用，
+  不得不赞叹 AES 算法是一种抽象理论与实践紧密结合的优秀典范。
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%课后习题
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \begin{problemset}
+  \item 证明命题~\ref{pro:poly_ring}。
+  
+  \item 将算法~\ref{alg:poly_div}编程实现为一个可真正进行多项式除法的程序。
+  
+  \item 证明定理~\ref{thm:poly_gcd}。
+  
+  \item 改进算法\lstinline|poly_gcd|，使之输出为首一多项式。
+  
+  \item 证明定理~\ref{thm:poly_egcd}。
+  
+  \item 编程实现多项式环中的\texttt{egcd}算法。
+  
+  \item 对任意多项式$f(x)$，必然有$(x-a)$整除$f(x) - f(a)$，其中$a$是一个常量。
+  
+  \item 证明$\mathrm{GF}(2^n)$的所有非零元素都有乘法逆元。
+  
+  \item 证明所定义的$\mathrm{GF}(2^n)$满足分配律。
+  
+  \item 分析对比例~\ref{exm:gcd_poly_r}与例~\ref{exm:gcd_poly_gf}，为什么相同的多项式在不同的域上，最大公因子不同？提示：把$a(x)$和
+  $b(x)$进行多项式分解，然后发现某些因子多项式在$\Q$上是素多项式，而在$\mathrm{GF}(2^8)$上却不是素多项式。
+  %x^4 + 1在Q上不能分解。但是在GF(2^8)上却可以分解。
+     
+  \item 编程实现$\mathrm{GF}(2^n)$的乘法。
+  
+  \item 编程实现求$\mathrm{GF}(2^n)$中非零元素的乘法逆元。
+  \end{problemset}

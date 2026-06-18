@@ -1,12 +1,11 @@
 % !TEX root = ../CINTA-cn.tex
-%%%%%%%%%%%%%%%%%%%%% chapter.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
+%%%%%%%%%%%%%%%%%%%%% chapter02.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
 % Chapter 3 Congruences and Powers
-% 20200503、20200513
-% Use this file as a template for your own input.
-%
-%%%%%%%%%%%%%%%%%%%%%%%% Springer-Verlag %%%%%%%%%%%%%%%%%%%%%%%%%%
-%\motto{Use the template \emph{chapter.tex} to style the various elements of your chapter content.}
+% This document was released as open source on 2026-06-13.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{同余与模运算}
 \label{chap:cong} % Always give a unique label
 % use \chaptermark{}
@@ -68,7 +67,7 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 因为
 \[9 | (26 - 8)\qquad \text{且}\qquad 7 | (6 - 55),\]
 或者，等价地：
-\[ 8 = 26 - 2*9 \qquad \text{且}\qquad 55 = 6 + 7*7.\]
+\[ 8 = 26 - 2 \cdot 9 \qquad \text{且}\qquad 55 = 6 + 7 \cdot 7.\]
 \end{example}
 
 %% 20260520
@@ -112,7 +111,7 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 
 \begin{example}
 因为 $10000 \equiv 1 \pmod{3}$ ，且$998 \equiv 2 \pmod{3}$，所以：
-\[ 10000*998 \equiv 2 \pmod{3}\]
+\[ 10000 \cdot 998 \equiv 2 \pmod{3}\]
 \end{example}
 
 \begin{example}
@@ -178,7 +177,7 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 表述方便，往往会省略\emph{模$m$}这个限定语。
 
 \begin{example}
-设$m = 11$，$c = 3$，那么$c$模$m$的乘法逆元$c^{-1}$是$4$，因为$3*4 \bmod m =  1$。虽然，$15$也满足$3 * 15 \bmod m = 1$，
+设$m = 11$，$c = 3$，那么$c$模$m$的乘法逆元$c^{-1}$是$4$，因为$3 \cdot 4 \bmod m =  1$。虽然，$15$也满足$3 \cdot 15 \bmod m = 1$，
 但是$15 \equiv 4 \pmod{m}$，所以，还是认为乘法逆元是$4$。
 \end{example}
 
@@ -199,7 +198,7 @@ a \equiv b \pmod{m} \iff (a \bmod m) = (b \bmod m)
 具体而言，是算出B\'{e}zout系数$s$和$t$使得
 \[ 3s + 11t = 1\]
 此时，$s = 4$，$t = -1 $，然后对以上等式两边同时模整数$11$，则可得：
-\[ 3 * 4 \equiv 1 \pmod{11}\]
+\[ 3 \cdot 4 \equiv 1 \pmod{11}\]
 即，$3$模$11$的乘法逆元是$4$。因此，对所需求解的同余方程两边
 同乘$3$的乘法逆元$4$，得到$x \equiv 8 \pmod{11}$。
 \end{example}
@@ -375,18 +374,18 @@ sage: pow(2, 1024, 3^100)
 \label{exm:pow}
 求$2^{16} \bmod 11$。计算过程：
 \[2^2 \bmod 11 = 4\] 
-\[2^4 \bmod 11 = 4*4 \bmod 11 = 5\]
-\[2^8 \bmod 11 = 5*5 \bmod 11 = 3 \]
-\[2^{16} \bmod 11 = 3*3 \bmod 11 = 9 \]
+\[2^4 \bmod 11 = 4 \cdot 4 \bmod 11 = 5\]
+\[2^8 \bmod 11 = 5 \cdot 5 \bmod 11 = 3 \]
+\[2^{16} \bmod 11 = 3 \cdot 3 \bmod 11 = 9 \]
 \end{example}
 
 以上例子中的指数恰好是$2$的乘方，如果不是怎么办？比如，要求的是$2^{22} \bmod 11$。如下例所示。
 \begin{example}
 \label{exm:pow2}
 求$2^{22} \bmod 11$。不难发现：
-\[2^{22} = 2^2 * 2^4 * 2^{16} \]
+\[2^{22} = 2^2 \cdot 2^4 \cdot 2^{16} \]
 所以 
-\[2^{22} \bmod 11 = 4*5*9  \bmod 11 = 4 \]
+\[2^{22} \bmod 11 = 4\cdot 5 \cdot 9  \bmod 11 = 4 \]
 \end{example}
 
 以上例子说明，可以通过不断计算某个数的平方，然后利用中间结果来求出最终的值，从而提高计算效率。但是，该计算过程如何表示为算法呢？考虑以下递归过程，
@@ -412,7 +411,7 @@ x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \text{如果$y$是奇数。} \\
 
 接下来展示如何把递归算法转换为迭代算法。
 首先，把整数$y$视为多项式（或者一个二进制数串）：
-\[ y = y_{n-1}2^{n-1} + y_{n-1}2^{n-1} \cdots + y_1 2 + y_0 ,\] 
+\[ y = y_{n-1}2^{n-1} + y_{n-1}2^{n-1} + \ldots + y_1 2 + y_0 ,\] 
 其中$y_i \in \{0, 1\}$。
 
 其次，将$x^y$变形为：
@@ -430,7 +429,7 @@ x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \text{如果$y$是奇数。} \\
 		y_2 &= 0, \quad x^{2^2} \equiv 3 \bmod m\\
         y_3 &= 1, \quad x^{2^3} \equiv 9 \bmod m
 	\end{align*}
-然后，将$y_i = 1$的项乘起来，得到$x^y = (5 * 9) \bmod 11 = 1$.
+然后，将$y_i = 1$的项乘起来，得到$x^y = (5 \cdot 9) \bmod 11 = 1$.
 \end{example}
 
 该过程可描述为以下算法。
@@ -489,7 +488,7 @@ x \cdot (x ^{ \lfloor y/2 \rfloor })^2 & \text{如果$y$是奇数。} \\
  
  \item 给定互素的正整数$c$和$m$，请证明在$\bmod \; m$的意义上存在唯一确定的整数值$c^{-1}$，它使得$c c^{-1} \equiv \pmod{m}$。
  
- \item 假设$x \equiv a \pmod{n}$，且$n = p * q$，$p, q$是两个不相同的素数。请证明，因此必然有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$。反之，如果有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$，是否必然有$x \equiv a \pmod{n}$？请证明或证伪。
+ \item 假设$x \equiv a \pmod{n}$，且$n = p \cdot q$，$p, q$是两个不相同的素数。请证明，因此必然有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$。反之，如果有$x \equiv a \pmod{p}$和$x \equiv a \pmod{q}$，是否必然有$x \equiv a \pmod{n}$？请证明或证伪。
  %%% 简单题，为CRT准备。
  
  \item 思考另一个版本的消去律。设$a, b, c \in \Z$，$m$是一个正整数。如果$\gcd(c, m) = g$，$g$是大于一的整数，且$ac \equiv bc \pmod{m}$。

@@ -1,0 +1,392 @@
+% !TEX root = ../CINTA-cn.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 7. Cyclic Group 
+% This document was released as open source on 2026-06-18.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{循环群}
+\label{chap:cyc_grp} % Always give a unique label
+
+\begin{introduction}
+  \item 循环群及循环子群
+  \item 原根定理
+  \item 循环群属性
+  \item 寻找原根
+\end{introduction}
+
+\section{循环群}
+\label{sec:cyc_gr}
+这一节考察这样的一种群，其所有的元素都能被特定的元素\emph{计算}出来（或者\emph{生成}出来）。考虑以下计算。
+给定素数$p$，从乘法群$\Z_p^*$中任意选取元素$g$，构造集合$\mathbb{S}$：
+		\[\mathbb{S} = \{ g, g^2,  \ldots, g^{i}, \ldots \} ,\]
+		$i$是任意整数。即不断对$g$做乘法，直到集合$\mathbb{S}$不再增长。
+		
+然后，问以下问题：
+		\begin{itemize}
+			\item $\mathbb{S}$是否一个有限集合？
+			
+			\item $\mathbb{S}$在模$p$乘法下是否成群？理由？
+						
+				\item $\mathbb{S}$是否会等于$\Z_p^*$？			
+		\end{itemize}
+在必要时，为什么不动手写个程序来帮忙呢？
+%Cyclic Groups.
+\begin{example}
+  \label{exm:cyc_z11}
+		设$p = 11$，选取$g = 4$，计算：
+			\[\mathbb{S} = \{ g, g^2, \ldots, g^{10}, \ldots \} \]
+	    得到：
+		\[\mathbb{S} = \{ 4, 5, 9, 3, 1 \} \]
+		当然，$\mathbb{S}$ 是有限集，因为$g$是有限群的元素。$\mathbb{S}$ 是一个群，然而它并不等于$\Z_{11}^*$。
+		继续问：
+		\begin{itemize}
+			\item 如果选择$g = 2$，得到什么？
+			
+			\item 如果选择$g = 3$呢？ 或者其他数值呢？			
+		\end{itemize}
+\end{example}
+
+%Cyclic Groups.
+循环群的定义可以表述为以下命题，之所以是命题，因为需要验证群公理。
+\begin{proposition}{}{cyc_gr0}
+	%\label{prop:cyc_gr0}
+		设$\mathbb{G}$是群，$\forall g \in \mathbb{G} $。则集合
+		\[\langle g \rangle = \{ g^k: k \in \mathbb{Z} \}\]
+		    是$\mathbb{G}$的子群。称$\langle g \rangle$为由$g$生成的循环群（cyclic group） \index{cyclic group}, 
+	    称$g$为群的生成元（generator） \index{generator}。
+	    而且，$\langle g \rangle$是群$\mathbb{G}$中包含元素$g$的最小子群。
+\end{proposition}
+\begin{proof}
+	       要证明$\langle g \rangle$是群只需要检验所有群公理。由于群的封闭性，任何包括元素$g$的子群都必然包括
+	       所有$g^i$，$i \in \Z$，所以$\langle g \rangle$是群$\mathbb{G}$中包含元素$g$的最小子群。\qed
+\end{proof}
+
+%%%20231026
+命题~\ref{pro:cyc_gr0}告诉我们，对任意的群$\mathbb{G}$，通过一个群元素$g\in \mathbb{G}$可以构造群$\mathbb{G}$的一个循环子群$\langle g \rangle$。
+再次强调，我们是通过研究群$\mathbb{G}$的子群来发现群$\mathbb{G}$的结构。因此，循环子群$\langle g \rangle$是研究群$\mathbb{G}$结构的突破口，也是
+常用方法。所以，不要仅仅把循环群的定义、属性看成独立的知识点，而应该把它们与群结构紧密联系起来，这一点在第~\ref{chap:coset}章讲解拉格朗日定理时显得尤为重要。
+当然，在可以灵活运用循环群之前，先要建立起对循环群的直观认识。
+
+首先要指出并命题~\ref{pro:cyc_gr0}中的一个细节。通过例~\ref{exm:cyc_z11}，对循环群的第一印象往往是，给定一个元素$g$，整个群可以通过$g$计算生成。
+其实，这里有一点微妙之处需要理解，请看下例。
+\begin{example}
+	$\Z$是循环群，生成元是$1$。$2\Z = \{\ldots, -4, -2, 0, 2, 4, \ldots\}$也是循环群，$2$为生成元。
+微妙之处在于，如何理解群$\Z$中的负数由$1$生成呢？同样，$2\Z$中的负数如何由$2$生成呢？
+关键点在于，根据命题~\ref{pro:cyc_gr0}，如果$g$落在群中，必然有$g^{-1}$也落在群中。
+\end{example}
+
+以下是一些简单实例，希望读者通过简单计算来熟悉循环群。
+\begin{example}
+$\Z_n$是循环群，生成元是$1$。体会一下，这个群元素的生成方式似乎与$\Z$不同。
+\end{example}
+
+\begin{example}
+完成例~\ref{exm:cyc_z11}的计算，可知$\Z_{11}^*$是循环群，$2$和$6$都是该群的生成元。
+也许生成元还有不少，能找出其他生成元吗？
+\end{example}
+
+\begin{example}
+	对于有限循环群而言，群的生成元就是阶等于群阶的群元素。以下 SageMath 代码显示群$\Z_{17}^*$所有元素的阶。
+%%%Latex 显示代码与编译出来不一致，没办法，只能这样了。
+\begin{lstlisting}
+sage: p = 17
+sage: for i in range(1, p):
+....:    print("The order of", i, "is", Mod(i,p).multiplicative_order())
+\end{lstlisting}
+建议读者改进以上代码，对任意素数$p$，统计群$\Z_p^*$生成元的个数，并找出相关规律。
+\end{example}
+
+\begin{example}
+$\Z_{11}^*$是循环群，似乎是因为$11$是素数。如果给定一个合数$n$，$\Z_n^*$也会是循环群吗？最好写个程序找找规律。
+\end{example}
+
+当然，除了依赖整数的加法和乘法形成的循环群，还有其他形式的循环群，只是，它们并不是本书关注的重点。请参看以下例子。
+\begin{example}
+	$\langle i \rangle$在乘法下是循环群，$i$是复数，满足$i \cdot i = -1$。$\langle i \rangle =\{1, -1, i, -i\}$ 由$i$生成。
+\end{example}
+
+\begin{proposition}{}{cyc_abel}
+%\label{prop:cyc_abel}
+所有的循环群都是阿贝尔群。
+\end{proposition}
+
+\begin{proof}
+设$\mathbb{G} = \langle g \rangle$是循环群，且$a, b \in \mathbb{G}$。必然存在$r, s \in \Z$使得，$a = g^r$和$b = g^s$。
+因此，
+\[ a b = g^r g^s = g^{r + s} = g^{s + r} = g^s g^r = b a\text{。}\]
+所以$\mathbb{G}$是阿贝尔群。 \qed
+\end{proof}
+
+\begin{proposition}{}{sub_cyc}
+%\label{prop:sub_cyc}
+循环群$\mathbb{G}=\langle g \rangle$的每一个子群都是循环群。
+\end{proposition}
+%以下证明的坑在于，你不能总是保证g^i的i是正整数。但是，if g^i \in H then g^{-1}也必须 in H，所以
+%不失一般性，可以假定i是正整数。 20191001
+\begin{proof}
+设$\mathbb{H}$是$\mathbb{G}$的子群。如果$\mathbb{H} = \{ e \}$，则这是循环群。
+假设$\mathbb{H}$包含除$e$以外的元素，则$\mathbb{H}$中的元素必然是$\mathbb{H} = \{e\} \cup \{ g^i, \forall i \in S \}$，
+其中$S$是$\mathbb{Z}$的某个子集。设$m$为$S$中的最小正整数，根据良序原则，此$m$必然存在。
+注意，对任意$i \in \Z$，如果$g^i \in \mathbb{H}$，必然有$g^{-i} \in \mathbb{H}$，所以集合$S$中必然有正整数。
+以下，只需证$h = g^m$为$\mathbb{H}$的生成元。
+
+为此，证明任取$h' \in \mathbb{H}$，$h'$由$h$生成。不失一般性，假设$h' = g^k$，$k$是某个正整数。
+由除法算法，存在整数$q$和$r$使得$k = mq + r$，其中$0 \leq r < m$。因此：
+\[h'= g^k = g^{mq + r} = (g^m)^q g^r = h^q g^r\text{。}\]
+因为$g^k, h^{-q} \in \mathbb{H}$，所以，$g^r = g^k h^{-q}$是$\mathbb{H}$中元素。
+根据$\mathbb{H}$的定义，只能是$r = 0$，即$k = mq$。
+因此，
+\[h'= g^k = g^{mq} = h^q\text{。}\] \qed
+\end{proof}
+
+%20200601
+\section{原根}
+这一节暂时离开代数，转向数论，讨论一种与生成元相关的数论概念：\emph{原根}（primitive root）。\index{primitive root}
+
+\begin{definition}{原根}{prim_rt}
+设$a$和$n$是互素的正整数。 $a$模$n$的阶定义为最小的整数$e \geq 1$使得$a^e \equiv 1 \pmod{n}$。
+如果$a$模$n$的阶等于模$n$下最大可能的阶，则称$a$是模$n$的原根。
+\end{definition}
+“模$n$下最大可能的阶”是什么意思？不要忘记费尔马小定理和欧拉定理，对任意给定的互素的正整数$a$和$n$，必然有：
+\[a^{\varphi(n)} \equiv  1 \pmod{n}\text{，}\]
+即$a$的阶只能小于等于$\varphi(n)$，而$a$的阶最大也只能是$\varphi(n)$，所以$\varphi(n)$就是最大可能的阶。
+\begin{example}
+\label{exm:cyc_prim}
+根据例~\ref{exm:cyc_z11}我们知道，$4$模$11$的阶是$5$，而$2$和$6$模$n$的阶都是$10$。因为模$11$最大可能的阶是$\phi(11)=10$
+因此，$2$和$6$是模$11$的原根。使用群的语言，则表述为$\Z_{11}^*$是由生成元$2$（或者$6$）生成的循环群。
+\end{example}
+
+对于模整数的原根，有以下重要且通用的结论。
+\begin{theorem}{原根定理}{primi_root}
+%\label{thm:primi_root}
+%{(Primitive Root Theorem.)} 
+对每一个素数$p$都有模$p$的原根，且恰有$\varphi(p-1)$个模$p$原根。
+\end{theorem}
+
+\begin{example}
+群$\mathbb{Z}_{11}^*$有$\varphi(10) = 4$个生成元。群$\mathbb{Z}_{13}^*$有$\varphi(12) = 4$个生成元。如何找出它们所有的生成元呢？
+\end{example}
+
+\begin{theorem}{广义原根定理}{gen_prim_rt}
+%\label{thm:gen_prim_rt}
+%{(General Primitive Root Theorem.)} 
+如果$n \in \Z$形如$2$、$4$、$p^e$和$2p^e$，对所有素数$p > 2$和所有正整数$e$，则$\Z_n^*$是循环群。
+\end{theorem}
+用数论的语言表述广义原根定理，则意味着对满足定理条件的整数$n$，必有模$n$的原根。换而言之，不满足定理给定条件的整数$n$则不存在原根。
+以上定理及证明都出现在标准的数论教材中，建议有兴趣的读者阅读 Bur11~\cite{Bur11}的相关章节。
+
+\section{循环群的相关属性}
+\label{sec:cyc_gr_prop}
+%Properties of Cyclic Groups.
+这一节接着讨论循环群的若干属性，特别是有限循环群的性质。所谓有限循环群，即
+循环群$\mathbb{G} = \langle g \rangle$的阶是一个正整数$n$。先观察
+循环群群元素之间的运算。任取群$\mathbb{G} = \langle g \rangle$中的两个元素$g_1 = g^{k_1}$和$g_2 = g^{k_2}$，
+必然有：
+\[ g_1 g_2 = g^{k_1} g^{k_2} = g^{k_1 + k_2}= g^{(k_1 + k_2) \bmod n}\]
+再考虑到，任取群$\mathbb{G}$中一个元素$g_i = g^{k_i}$，$k_i$会落在$0$到$n-1$之间，即
+群元素的指数会遍历完从$0$到$n-1$之间的所有整数。这意味着，任取
+$k_i$在模$n$下有加法逆元，且逆元落在$0$到$n-1$之间。这些观察直接导致一种直观认识：把群元素的操作
+理解为群指数上的加法，而且是落在群$\Z_n$的加法运算。
+这种认识没有立即带来新的定理，但是也许会带来理解上的方便。用这种认识去理解记忆以下命题将带来一定的方便，
+虽然我们还需要严谨的证明。
+\begin{proposition}{}{exp_div}
+	%\label{prop:exp_div}
+	任取正整数$n$，设$\mathbb{G} = \langle g \rangle$是阶为$n$的循环群，则$g^k = e$当且仅当$n$整除$k$。		
+\end{proposition}
+
+	\begin{proof}
+	\begin{enumerate}
+	\item $\Leftarrow$。如果$n$整除$k$，则存在$s \in \Z$使得$k = ns$，所以有$g^k = g^{ns}=e$。
+	
+	\item $\Rightarrow$。如果$g^k = e$，根据除法算法，存在$q, r \in \Z$使得$k = nq +r$，其中$0 \leq r < n$。因此，
+		\[e = g^k = g^{nq+r} = g^{nq} g^r = g^r\text{。}\]
+		又因为$n$是使得$g^n = e$的最小正整数，所以$r = 0$。
+	\end{enumerate}
+\qed
+    \end{proof}
+%Properties of Cyclic Groups.
+\begin{proposition}{}{cyc_gr}
+	%\label{prop:cyc_gr}
+		设群$\mathbb{G} = \langle g \rangle$ 是阶为 $n$的循环群。如果$h = g^k$，则$h$的阶为$n/d$，其中$d=\gcd(k,n)$。
+\end{proposition}
+	
+\begin{proof}
+	设$m\in \N$为$h$的阶，即使得$h^m = g^{km} = e$的最小正整数。
+			\begin{enumerate}
+			\item 根据命题~\ref{pro:exp_div}可知，$n \mid km$，即有$(n/d) \mid (k/d)m$。这个结论在第~\ref{chap:cong}章的思考~\ref{thk:ab_mod_m}已经有所提示。
+			
+			\item 因为$d = \gcd(k,n)$，所以$n/d$与$k/d$互素。因此，$(n/d) \mid (k/d)m$蕴涵$(n/d) \mid m$。可被$n/d$整除的最小正整数是$n/d$，所以$m = n/d$。		
+			\end{enumerate}  \qed
+\end{proof}
+
+因为以下内容将颇频繁地使用到命题~\ref{pro:cyc_gr}，值得为此给出一个警示牌作为强调。
+\begin{center}
+\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 10cm]
+	$n$阶循环群$\mathbb{G} = \langle g \rangle$中的元素$g^k$的阶为：
+		\[ \operatorname{ord}(g^k) = \dfrac{n}{\gcd(k,n)}\]
+\end{tcolorbox}
+\end{center}
+
+%20200604
+\begin{example}
+\label{exm:gen_gen}
+已知$2$是群$\Z_{11}^*$的生成元，群$\Z_{11}^*$的阶是$10$，$2^3 = 8 \in \Z_{11}^*$，且$\gcd(3, 10) =1$，所以
+$8$的阶是$10$，即$8$也是一个生成元。$5$不是生成元，因为$5 = 2^4 \bmod 11$，$\gcd(4, 10) = 2$。请读者自行验证以上结论。
+命题~\ref{pro:cyc_gr}告诉我们，在知道某个元是生成元时，如何找到另一个生成元。
+\end{example}
+		
+\begin{corollary}{}{cyc_gr1}
+		%\label{cor:cyc_gr1}
+	   设群$\mathbb{G} = \langle g \rangle$ 是阶为$n$的循环群，则群$\mathbb{G}$中恰有$\phi(n)$个生成元。
+\end{corollary}
+		
+\begin{proof}
+		群$\mathbb{G}$中有$n$个元素，都可表达为$g^i$，$i \in \Z_n$。根据命题~\ref{pro:cyc_gr}，对任意的$g^i$，其阶为$n/d$，其中$d = \gcd(i, n)$。
+		当 $d = 1$ 时$g^i$为生成元，此时$i$与$n$互素。$\Z_n$ 中有$\phi(n)$个元素与$n$互素，因此$\mathbb{G}$中有$\phi(n)$个生成元。
+		\qed
+\end{proof}
+
+ \begin{corollary}{}{cyc_gr2}
+		%\label{cor:cyc_gr2}
+		设群$\mathbb{G} = \langle g \rangle$是阶为$p$的循环群，$p$是素数，则$\mathbb{G}$中的元素除了$e$之外都是生成元。
+\end{corollary}
+		
+\begin{proof}
+		根据推论~\ref{cor:cyc_gr1}可知。
+		\qed
+\end{proof}
+%20200604
+\begin{example}
+		根据推论~\ref{cor:cyc_gr2}，如果$p$是素数，则群$\Z_p$中除单位元之外的每一个元素都是生成元，因为$\Z_p$是阶为$p$的循环群。
+		群$\Z_p^*$中一共有$\phi(p-1)$个生成元，因为群$\Z_p^*$的阶是$p-1$。
+		这些规律我们在例~\ref{exm:cyc_gen}已经有所提示，不知道读者当时发现了这些规律没有呢？
+\end{example}
+%20201015
+\begin{corollary}{}{ord_div_n}
+	%\label{cor:ord_div_n}
+	设群$\mathbb{G} = \langle g \rangle$ 是阶为 $n$的循环群，则任意$h\in \mathbb{G} $的阶必整除$n$。
+\end{corollary}
+\begin{proof}
+该结论的正确性可直接由命题~\ref{pro:cyc_gr}得出。\qed
+\end{proof}
+
+在此提前声明，推论~\ref{cor:ord_div_n}可更具一般性，即对任意阶为$n$的群（不一定是循环群），其中任意元素$h$的阶都必整除$n$。
+具体内容请参见第~\ref{chap:coset}章的拉格朗日定理，而推论~\ref{cor:ord_div_n}可视为循环群版本的拉格朗日定理。
+
+%%%20250329
+考虑到群元素的阶往往是通过以循环子群的形式介入到具体的分析与证明之中，为此给出以下警示牌，
+以帮助初学者更好地理解相关内容。
+\begin{center}
+	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 10cm]
+		可将任意群的元素$g$的阶$n$视为循环子群$\langle g \rangle$的阶，即：
+			\[ \operatorname{ord}(g) = |\langle g \rangle| = n\]
+	\end{tcolorbox}
+\end{center}
+
+\begin{example}
+		设$p  = 11$是素数，则群$\Z_p^*$中元素的阶可能是$1, 2, 5, 10$。其中，阶为$1$和$2$的元素分别有一个，阶为$5$和$10$的
+		元素分别有四个。生成元四个分别是：$2, 6, 7, 8$。
+\end{example}
+
+\section{寻找生成元}
+原根定理告诉我们，给定一个素数$p$，$\Z_p^*$是循环群，即必有至少一个生成元。
+通过命题~\ref{pro:cyc_gr}和例~\ref{exm:gen_gen}，我们知道，给定一个生成元可以很容易发现另一个生成元。
+然而我们更希望从无到有地直接求一个生成元。因为只考虑$\Z_p^*$的生成元，以下陈述将生成元与原根视为同一概念，不加区分地进行使用。
+
+在此之前，先考虑一个相对“容易”的问题：给定一个素数$p$和一个正整数$a$，
+能否高效地判定$a$是否模$p$的原根？
+
+首先要明确，所谓生成元，即该元素的阶等于群的阶。而非生成元的元素的阶必然比群的阶要小，而且还必然整除群的阶，参考推论~\ref{cor:ord_div_n}。
+
+这样，算法的思路就非常直接。给定$a$和$p$，只需要判断$a$的阶是否小于$p-1$。直观上，需要穷举$p - 1$的所有因子$f$。
+判断$a^f \bmod p$是否等于$1$，如果等则$a$不是原根，返回\texttt{False}。如果对$p-1$的所有因子$f$，都不返回\texttt{False}，则返回\texttt{True}，
+即$a$是原根。注意，该方法穷举所有小于$p-1$的因子$f$，而并不仅仅要求$f$是素因子。
+为了得到更好的效率，可进一步改进此直观思路，得到如下算法。
+%20200605
+\begin{center}
+	\lstinputlisting[label = alg:is_prim_rt, caption  = 原根判定算法]{codes/is_prim_rt.py}
+\end{center}
+
+算法的正确性显然，其算法思想与之前描述的直观思路完全一致。不同之处在于，
+它并不穷举$p-1$的所有因子进行计算和判断，而是穷举$p-1$所有素因子$p_i$，计算$a^{(p-1)/p_i} \bmod p$并进行判断，
+但是达到了相同的目的。
+算法的复杂性则主要取决于求$p-1$的素因子这一步。以后我们会知道，这是一个困难问题。
+
+关于算法的正确性与效率性，不再继续证明。建议读者动手计算来体会算法的正确性，可以分几步走：
+\begin{enumerate}
+\item 设$p-1 = p_1 p_2$，$p_1$和$p_2$是两个不同的素数；
+
+\item 设$p-1 = p_1^i p_2^j$，$p_1$和$p_2$是两个不同的素数，且$i$和$j$是大于$1$的整数；
+
+\item 设$p-1 = p_1^{e_1} p_2^{e_2}\cdots p_n^{e_n}$，$p_i$是不同的素数，且$e_i \ge 1$。
+\end{enumerate}
+
+有了原根判定算法，那么生成一个随机的原根则很容易。只需要随机在$\Z_p^*$中选取一个元素，判定它是否原根，
+如果是则返回，否则重新选取一个随机元素，直到找到一个原根为止。根据推论~\ref{cor:cyc_gr1}，原根的数目还颇多，
+所以，一次随机选取元素找到原根的概率颇大。
+
+需要强调一点，当$p$很大时，求$p-1$的素因子并不容易。所以，在使用$\Z_p^*$群的时候，通常并不是真地
+随机选取素数$p$，而是通过算法构造出$p$，同时掌握$p-1$的素因子。
+
+%%% 202305015
+\section*{章注}
+\addcontentsline{toc}{section}{章注}
+本章讨论了循环群的许多特性，显示它是一种很特殊的群。然而，作者更想提醒广大的初学者注意，
+应自觉将循环群的知识点与研究一般群结构关联起来。因为任意群都会存在循环子群，而通过循环子群
+去研究任意群结构是一种重要方法。这种方法会在以下章节中具体呈现，它往往会被初学者忽视。而且必须注意到，至今我们
+得到了许多关于群、循环群的属性，而这些属性不源自额外的约定与条件，而仅仅源自于群的四个公理！这是一个值得提醒的观点，
+它展示了抽象的魅力与乐趣。
+
+原根定理的证明可追溯到欧拉、勒让德等几位伟大的数学家。
+在1801年，高斯首先给出了广义原根定理的证明。
+在 Bur11~\cite{Bur11}可以找到广义原根定理（定理~\ref{thm:gen_prim_rt}）的一种清晰简洁的证明，建议阅读。
+
+\begin{problemset}
+		
+		\item 请心算列举出群$\Z_{10}$的所有生成元。
+		
+		\item 群$\Z_{17}^*$有多少个生成元？已知$3$是其中一个生成元，请问$9$和$10$是否生成元？%ans: 8, no, yes !
+		
+		\item $p$和$q$是两个不同的素数，请问$\Z_{pq}$都多少个生成元？$r$是任意正整数，请问$\Z_{p^r}$都多少个生成元？
+		
+		\item 证明：如果$p$是素数，则加法群$\Z_p$没有非平凡真子群。
+		
+		\item 证明：设$n$是正整数，$n$次单位根群$\mathbb{U}_n$是循环群。请问$\mathbb{U}_n$中有多少个生成元，
+		它们分别具有什么形式？
+		
+		\item 证明：设$n$为正整数，群$\Z_n$的生成元$r$满足以下条件：$1 \leq r < n$，且$\gcd(r, n)=1$。
+		
+		\item 证明：设$n$为正整数，$\mathbb{G}$是阶为$n$的循环群。如果存在正整数$d$是$n$的因子，则群$\mathbb{G}$
+		中存在$d$阶元素，且有$\phi(d)$个$d$阶元素。%%% 20250326
+		%%%首先，构造出d阶元素h，即g^{n/d}
+		%%%其次，h形成的d阶循环群，其中有phi(d)个生成元。
+		%%%说明，取g^m 为任意元素，g^m的阶如果是d，则d= n/gcd(m,n)。
+		%%% 记k = n/d ，则gcd(m,n) = gcd(kt, kd) = k gcd(t, d)，当且仅当gcd(t,d) = 1时
+		%%% gcd(m,n) = k iff gcd(t, d) = 1, 0<= t < d，则只有phi(d)个d阶元素。
+		
+		\item 证明：如果群 $\mathbb{G}$ 没有非平凡子群，则群$\mathbb{G}$是循环群。
+		
+		\item 证明推论~\ref{cor:ord_div_n}，即有限循环群$\mathbb{G}$中任意元素的阶都整除群$\mathbb{G}$的阶。
+		
+		\item 请使用推论~\ref{cor:ord_div_n}证明费尔马小定理。%%%20250327
+		
+		\item 证明：设$\mathbb{G}$为任意群，且$g\in \mathbb{G}$。如果存在$m, n \in \Z$使得$g^m = e$且$g^n = e$，则$g^d = e$，其中$d = \gcd(m, n)$。
+		%% DF03 : 55页。 
+		%% 20221018 Hint:Bezout!
+		
+		\item 你能否利用本章的知识来证明第~\ref{chap:flt-et}章最后一道习题呢？提示：设$n$是正整数，加法群$\Z_n$是一个循环群。%%20250326
+		
+		%20251206
+		\item 上一章的习题要求证明$\mathrm{GF}^*$（定义请参见第一章习题~\ref{prob:gf}）在乘法下是乘法群。本题要求大家通过编程验证$\mathrm{GF}^*$是一个循环群，即找到$\mathrm{GF}^*$中的一个元素$g$，使得$\mathrm{GF}^* = \langle g \rangle$。请问$\mathrm{GF}^*$有多少生成元？请找出$\mathrm{GF}^*$的所有生成元。
+		
+
+		 \item 编程完成以下工作：对任意给定的一个素数$p$，求出$\Z_p^*$的最小生成元。任取给定一个整数$n$，
+		 对所有大于等于$1$小于$n$的素数$p$，
+		 求$\Z_p^*$的最小生成元。令$n = 1000000$，给出以上最小生成元集合中的最大值，及其所对应的素数$p$。
+		 %%%760321, 73
+\end{problemset}

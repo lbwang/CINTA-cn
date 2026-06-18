@@ -1,0 +1,296 @@
+% !TEX root = ../CINTA-cn.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: Libin Wang
+% Chapter 8. Coset and LaGrange
+% This document was released as open source on 2026-06-18.
+% Copyright 2023, Libin Wang. Creative Commons License
+% This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{陪集与拉格朗日定理}
+\label{chap:coset} % Always give a unique label
+
+\begin{introduction}
+  \item 陪集
+  \item 拉格朗日定理
+  
+\end{introduction}
+ %20200603晚改写。
+ \section{陪集}
+ \label{sec:coset}
+ 在第~\ref{chap:flt-et}章，费尔马小定理的证明中使用这样一种操作，选取一个群元素$a\in \Z_p^*$，对群$\Z_p^*$中的每一个元素都乘上$a$，
+ 得到一个“新”的集合。 这种操作被称为元素$a$\emph{作用于}群$\Z_p^*$。同样的操作也出现在欧拉定理的证明中。
+ 在这一节，将定义一种群元素作用于子群的操作，并利用这种定义和相关属性来证明一个重要的定理。
+  
+ 	\begin{definition}{陪集}{coset}
+ 		设$\mathbb{G}$是群，$\mathbb{H}$是群$\mathbb{G}$的子群。定义$\mathbb{H}$ 的左陪集为
+ 		\[g\mathbb{H} = \{gh: h \in \mathbb{H}\}\text{，}\]
+ 		其中，元素$g\in \mathbb{G}$被称为代表元（representative）\index{代表元}\index{representative}。右陪集的定义类似：
+ 	    \[\mathbb{H}g = \{hg: h \in \mathbb{H}\}\text{。}\]
+ 	\end{definition}
+ 
+ \begin{example}
+ 		回忆费尔马小定理的证明，随机选取元素$a \in \mathbb{Z}_p^*$，然后证明： 
+ 		\[a \mathbb{Z}_p^* = \mathbb{Z}_p^*\text{。}\]
+ 		
+ 在欧拉定理的证明中，类似地，证明：
+ 		$\forall a \in \mathbb{Z}_n^*$, \[a \mathbb{Z}_n^* = \mathbb{Z}_n^*\text{。}\]
+ \end{example}
+ 
+ \begin{example}
+ 	设$p = 11$，$g = 4$，则$\mathbb{H} = \{ g^i: i \in \mathbb{Z} \}$是$\mathbb{Z}_p^*$的子群。实际上，$\mathbb{H} = \{ 1, 3, 4, 5, 9 \}$。
+ 	做以下计算：
+ 	\begin{itemize}
+ 		\item $\forall a \in \mathbb{H}$，$a\mathbb{H}$等于什么？
+ 		
+ 		\item $\forall a \notin \mathbb{H}$，但$a \in \mathbb{Z}_p^*$，$a\mathbb{H}$等于什么？
+ 	\end{itemize}
+ \end{example}
+ %20200615
+ 希望大家通过以上例子熟悉陪集的操作。$\mathbb{H}$ 是群，
+ 但是一般情况下，陪集$g \mathbb{H}$ 并不是群，除非$g\in\mathbb{H}$。
+ 此时$g$会被$\mathbb{H}$吸收掉，即$g\mathbb{H}=\mathbb{H}$。这种简单的性质在下一章很有用。
+ 
+ %20200615
+ 以下的证明统一使用左陪集，实际上左陪集与右陪集并没有本质区别，使用右陪集也会得到相同的属性、命题和定理。
+ 需要强调的是，一般情况下，任取
+ 群元$g \in \mathbb{G}$，左陪集$g \mathbb{H}$ 与右陪集$\mathbb{H} g$ 并不相等。以下考察陪集的若干属性。
+ 首先，陪集的代表元可以有多个，或者说，陪集中任意元素都可以作为代表元。 
+ \begin{proposition}{陪集属性}{coset}
+  		设$\mathbb{G}$是群，$\mathbb{H}$ 是$\mathbb{G}$的子群。任取$g_1, g_2 \in \mathbb{G}$，则
+  		$g_1 \mathbb{H} = g_2 \mathbb{H}$当且仅当$g_2 \in g_1 \mathbb{H}$。
+  \end{proposition}
+  
+  \begin{proof}
+  如果$g_1 \mathbb{H} = g_2 \mathbb{H}$，则存在$h_1, h_2 \in \mathbb{H}$使得$g_1 h_1 = g_2 h_2$，
+  即得$g_2 = g_1 h_1 h_2^{-1}$，也即$g_2 \in g_1 \mathbb{H}$。另一个方向的证明留为课后练习。\qed
+  \end{proof}
+  	
+ %Properties of Coset.
+ 	\begin{proposition}{陪集的阶}{ord_coset}
+ 		设$\mathbb{G}$是群，$\mathbb{H}$ 是$\mathbb{G}$的子群。对任意的$g \in \mathbb{G}$，
+ 		群$\mathbb{H}$的阶与集合$g\mathbb{H}$的阶相同。
+ 	\end{proposition}
+ 	
+ \begin{proof}
+ 	对任意的$g \in \mathbb{G}$，定义映射$\psi : \mathbb{H}\rightarrow g\mathbb{H}$为，$\forall h \in \mathbb{H}$，$\psi(h)=gh$。
+ 	然后证明该映射是单射和满射。请回忆在费尔马小定理的证明中，我们做过什么。要证明单射，只需要
+ 	证明任取$h, h' \in \mathbb{H}$，且$h \neq h'$，则$gh \neq gh'$。显然成立。同时，映射$\psi$显然是一种满射。
+ \end{proof}
+ 
+ 	\begin{proposition}{同一或不相交}{id_iso}
+ 	%\label{pro:id_iso}
+ 		设$\mathbb{G}$为群，$\mathbb{H}$是$\mathbb{G}$的子群。任取不同的两个群元素$ g_1 , g_2 \in \mathbb{G}$，则
+ 		$g_1 \mathbb{H} = g_2 \mathbb{H}$或$g_1 \mathbb{H} \cap g_2 \mathbb{H} = \emptyset$。
+ 	\end{proposition}
+ 
+ \begin{proof}
+    以下证明，如果$g_1 \mathbb{H} \cap g_2 \mathbb{H} \ne \emptyset$，则$g_1 \mathbb{H} = g_2 \mathbb{H}$。
+ 	假设存在$h_1, h_2 \in \mathbb{H}$使得$g_1 h_1 = g_2 h_2$，可证明$g_1 \mathbb{H} \subseteq g_2 \mathbb{H}$。
+ 	注意，任取$g_1 h \in g_1 \mathbb{H}$，有
+ 	\[ g_1 h = g_1 (h_1 h_1^{-1}) h = g_2 (h_2 h_1^{-1} h ) \in g_2 \mathbb{H} \text{，}\]
+ 	即$g_1 h  \in g_2 \mathbb{H}$。
+ 	类似，可证$g_2 \mathbb{H} \subseteq g_1 \mathbb{H}$。因此，$g_1 \mathbb{H} = g_2 \mathbb{H}$.。
+ \end{proof}
+ 
+ \begin{proposition}{群$\mathbb{G}$的划分}{part}
+ %\label{pro:part}
+ 		设$\mathbb{G}$是群，$\mathbb{H}$是群$\mathbb{G}$的子群。则子群$\mathbb{H}$的所有左陪集
+ 		将划分群$\mathbb{G}$。 
+ \end{proposition}
+ 
+ %%20201123增加图片，不是很满意，暂时如此吧。
+ 所谓“划分”，即把群元素分割为互不相交的若干个集合。如图~\ref{fig:gr_par}所示，群$\mathbb{G}$被五个不相同陪集划分。
+ 
+ \begin{figure}
+ \begin{center}
+ \includegraphics[scale=0.45]{figures/coset_par.PNG} 	
+ \caption{群的划分}
+ \label{fig:gr_par}       % Give a unique label
+ \end{center}
+ \end{figure}
+ 
+ \begin{proof}
+ 	首先，要确信$\mathbb{H}$的左陪集覆盖了群$\mathbb{G}$，
+ 	即任意$g \in \mathbb{G}$都落在某个陪集$g' \mathbb{H}$当中。也即存在$g' \in \mathbb{G}$，且存在$h \in \mathbb{H}$，使得$g = g'h$。
+ 	这显然正确。然后，使用命题~\ref{pro:id_iso}即得。\qed
+ \end{proof}
+ 
+
+%%Todo：增加若干实例，或者图表！
+既然提到集合（群）的“划分”，就必须重提第~\ref{chap:cong}章所提及的\emph{等价关系}和\emph{等价类}等定义。
+我们知道，
+如果有一种等价关系定义在集合$\mathbb{S}$ 上，则该等价关系会把集合 $\mathbb{S}$ 划分为不相交的等价类。毫不意外，
+陪集相等关系是一种等价关系，表述为以下命题。
+\begin{proposition}{}{coset_eq}
+设$\mathbb{G}$是群，$\mathbb{H}$是群$\mathbb{G}$的子群。则子群$\mathbb{H}$的所有左陪集的相等关系是这样一种等价关系$\sim$，
+即对任意$g_1, g_2 \in \mathbb{G}$，$g_1 \sim g_2$当且仅当$g_1 \mathbb{H} = g_2 \mathbb{H}$。
+\end{proposition}
+\begin{proof}
+容易，直接验证自反、对称、传递三个属性。\qed
+\end{proof}
+
+ %Lagrange's Theorem's index
+ \begin{definition}{指标}{index}
+ 	   设$\mathbb{G}$是群，$\mathbb{H}$是群$\mathbb{G}$的子群。$\mathbb{H}$在群$\mathbb{G}$上的\emph{指标}（index）
+ 	   定义为$\mathbb{H}$在$\mathbb{G}$上\emph{不相同}的左陪集的个数，并记为$\lbrack \mathbb{G}: \mathbb{H} \rbrack$。
+ \end{definition}
+     
+ \begin{example}
+      $\mathbb{H} = \{ 1, 3, 4, 5, 9 \}$是$\mathbb{Z}_{11}^*$的子群。$\mathbb{H}$在$\mathbb{G}$有两个左陪集，
+      分别是$ = \{ 1, 3, 4, 5, 9 \}$和$ \{ 2, 6, 7, 8, 10 \}$，
+      即$\lbrack \mathbb{G}: \mathbb{H} \rbrack = 2$。
+\end{example}
+
+\section{拉格朗日定理} 	
+% add in 20191002
+ 利用陪集的属性，\emph{拉格朗日定理}（\emph{Lagrange's theorem}）说明：子群$\mathbb{H}$的阶必然整除群$\mathbb{G}$的阶。
+ 这是一个重要结论，以下定理和相关推论显示，
+ 拉格朗日定理是分析有限群的有力工具。\index{拉格朗日定理}\index{Lagrange's theorem}
+ 	\begin{theorem}{拉格朗日定理}{LagThm}
+ 	%(Lagrange's Theorem.)
+ 	设$\mathbb{G}$是有限群，$\mathbb{H}$是$\mathbb{G}$的子群，
+ 	则$\vert \mathbb{G} \vert / \vert \mathbb{H} \vert = \lbrack \mathbb{G} : \mathbb{H}\rbrack$，即
+ 	$\vert \mathbb{G} \vert / \vert \mathbb{H} \vert$等于
+ 	$\mathbb{H}$在$\mathbb{G}$上不同左陪集的个数。 
+ 	\end{theorem}
+ 
+ \begin{proof}
+ 群$\mathbb{G}$被划分为$\lbrack \mathbb{G} : \mathbb{H}\rbrack$个不同的左陪集，
+ 每一个左陪集有$\vert \mathbb{H} \vert$个元素。因此$\vert \mathbb{G} \vert  = \lbrack \mathbb{G} : \mathbb{H}\rbrack \vert  \mathbb{H} \vert$。 \qed
+ \end{proof}
+ 
+  \begin{example}
+       已知$\mathbb{H} = \{ 1, 3, 4, 5, 9 \}$是$\mathbb{Z}_{11}^*$的子群。
+       $\vert \mathbb{G} \vert / \vert \mathbb{H} \vert = 10 / 5 = 2$，即 $ \lbrack \mathbb{G} : \mathbb{H}\rbrack = 2$。
+ \end{example}
+ 
+ %Corollaries from Lagrange's Theorem.
+ \begin{corollary}{}{ord_div}
+ 	%\label{cor:ord_div}
+ 	设$\mathbb{G}$是有限群，对任意$g \in \mathbb{G}$，$g$的阶必然整除群$\mathbb{G}$的阶，即$\operatorname{ord}(g)\mid \vert \mathbb{G} \vert$。
+ \end{corollary}
+ 	
+ 	\begin{corollary}{}{ord_prim}
+ 	%\label{cor:ord_prim}
+ 	设$\mathbb{G}$是素数阶有限群，即$\vert \mathbb{G} \vert = p$，$p$是素数，则$ \mathbb{G}$是循环群
+ 	且任意非单位元元素$g \in \mathbb{G}$是生成元。 
+ 	\end{corollary}
+ 	
+ 	\begin{proof}
+ 	任取$g \in \mathbb{G}$且$g \neq e$。根据推论~\ref{cor:ord_div}，$g$的阶必然整除$\vert \mathbb{G} \vert = p$，
+ 	$p$是素数。因为$\operatorname{ord}(g) > 1$，则$\operatorname{ord}(g) = p$。因此$g$是群$\mathbb{G}$的一个生成元。 \qed
+ 	\end{proof}
+ 	
+ 	 \begin{corollary}{}{}
+ 	 设$\mathbb{H}$和$\mathbb{K}$是有限群$\mathbb{G}$的子群，
+ 	  	 	并且$\mathbb{K} \subset \mathbb{H} \subset \mathbb{G}$，则
+ 	 		\[\lbrack \mathbb{G}: \mathbb{K} \rbrack = \lbrack \mathbb{G} : \mathbb{H} \rbrack \lbrack \mathbb{H} : \mathbb{K} \rbrack \text{。}\]
+ 	 		\qed
+ 	 \end{corollary}
+ 
+ \begin{proof}
+观察可得：
+ \[\lbrack \mathbb{G}: \mathbb{K} \rbrack =  \frac{\vert \mathbb{G} \vert }{\vert \mathbb{K} \vert}
+ = \frac{\vert \mathbb{G} \vert }{\vert \mathbb{H} \vert} \frac{\vert \mathbb{H} \vert }{\vert \mathbb{K} \vert} = \lbrack \mathbb{G} : \mathbb{H} \rbrack \lbrack \mathbb{H} : \mathbb{K} \rbrack  \]
+ \qed
+ \end{proof}
+ 
+ 使用群的语言和拉格朗日定理，可对第~\ref{chap:flt-et}章的两个重要定理，费尔马小定理和欧拉定理，给出简洁的证明。
+ 	\begin{corollary}{费尔马小定理}{flt_gr}
+ 	%\label{cor:flt_gr}
+ 	设$p$是素数，$a$是整数且$p \nmid a$。
+ 	则\[a^{p-1} \equiv 1 \pmod{p}\text{。}\]
+ 	\end{corollary}
+ 	\begin{proof}
+ 	留作课后练习。\qed
+ 	\end{proof}
+ 	
+ 	\begin{corollary}{欧拉定理}{euler_gr}
+ 	%\label{cor:euler_gr}
+ 	设$n$是正合数，$a$是正整数且$\gcd(a,n)=1$。则
+ 	     \[a^{\phi(n)} \equiv 1 \pmod{n}\text{。}\]
+ 	\end{corollary}
+ 	
+ 	\begin{proof}
+ 	作为课后习题。\qed
+ 	\end{proof}
+ 	
+ 使用群论的语言，还可以把费尔马小定理和欧拉定理变形为以下“群论”版本。
+ \begin{theorem}{群论版费尔马小定理}
+  设$\mathbb{G}$是阶为$n$的有限群，则对任意群元$a \in \mathbb{G}$，有$a^n = e$。
+ \end{theorem}
+必须强调，虽然该定理被称为“群论版费尔马小定理”，但它也适用于欧拉定理，因为欧拉定理中的$\phi(n)$是群$\Z_n^*$的阶。
+
+ \begin{proof}
+ 直接由推论~\ref{cor:ord_div}可得。\qed
+ \end{proof}
+ 注意，因为其证明直接利用拉格朗日定理，而就不像之前那样依赖整数乘法的交换特性。即该定理在非交换群中也成立。
+ 如果还使用之前的技巧，通过证明任取群元$a\in \mathbb{G}$，有$a\mathbb{G} = \mathbb{G}$，然后再对集合中的元素进行累乘，从而得到结论，
+ 那就必须依赖交换律，定理也就只能在阿贝尔群下成立了。
+ 
+ %%% 20230522
+ \section*{章注}
+ \addcontentsline{toc}{section}{章注}
+ 拉格朗日定理是抽象代数学中第一个重要的且广为人知的定理，而且是简单又非常实用的一个定理。
+ 奇怪的是，通过《离散数学》学过该定理后，能记住并且灵活使用它的人很少。
+ 通过本章课后习题，想强调几个观点。首先，抽象代数改变了我们描述事物的语言，比如，使用群论的语言去描述费尔马小定理与欧拉定理，定理与证明都显得更加简洁。
+ 其次，抽象代数的定理改变了我们思考的方式，在此大家要体会拉格朗日定理如何改变了我们思考群结构的方式。最后，数学不仅仅是思维的训练，
+ 而是真真实实的实践工具，比如课后习题11、12，那两种定义循环群的方法被广泛使用在密码学协议设计之中，比如，用在数字签名算法 DSS~\cite{DSS13}和 Schnorr 签名~\cite{Sch89}等算法中。目前这两种签名算法依然应用广泛，其中 Schnorr 签名更是得到重点关注，有许多变种，分别应用在不同的密码协议和应用系统。
+ 
+ \begin{problemset}
+ \item \label{exe:coset}设$\mathbb{G}$是群，$\mathbb{H}$ 是$\mathbb{G}$的子群。任取$g_1, g_2 \in \mathbb{G}$，则
+   		$g_1 \mathbb{H} = g_2 \mathbb{H}$当且仅当$g_1^{-1}g_2 \in \mathbb{H}$。
+   		
+   %%% 20235017		
+  %%%原题出处不详，忘记了。答案，成立！如果不是阿贝尔群就不成立，可以用对称群找反例，但是由于本书不解对称群，那就算了。
+  %%% 对阿贝尔群，如果a和b属于同一个陪集，那么对任意陪集S，有 aS = bS. 因为S = gH，aS = agH，bS = bgH。
+  %%% a和b落在相同陪集，即a = g' h1, b = g' h2, 所以，ag = g' h1 g ，bg= g' h2 g，显然落在相同的陪集。
+ \item 设$\mathbb{G}$是阿贝尔群，$\mathbb{H}$ 是$\mathbb{G}$的子群。已知存在两个不同的元素$g_1, g_2 \in \mathbb{G}$，
+ 且$g_1 \mathbb{H} = g_2 \mathbb{H}$。请问对任意正整数$k$，$g_1^{k} \mathbb{H} = g_2^{k} \mathbb{H}$是否成立？请证明或证伪。
+   		
+ \item 如果$\mathbb{G}$是群，$\mathbb{H}$是群$\mathbb{G}$的子群，
+  且$\lbrack \mathbb{G} : \mathbb{H}\rbrack =2$，请证明对任意的$g\in \mathbb{G}$，$g \mathbb{H} = \mathbb{H}g$。
+  
+  %%%% 源自网络：http://math.stanford.edu/~akshay/math109/hw5.pdf
+  \item 如果$\mathbb{G}$是有限群，$\mathbb{H}$和$\mathbb{K}$是群$\mathbb{G}$的子群，且子群$\mathbb{H}$的阶与子群$\mathbb{K}$的阶互素。
+  请证明，$\mathbb{H}$与$\mathbb{K}$只有一个共同元素--单位元。
+
+ \item 设$\mathbb{G}$是阶为$pq$的群，其中$p$和$q$是素数。请证明$\mathbb{G}$的任意非平凡真子群是循环群。
+ 
+
+%%% 为下一章的习题做准备。
+ \item 设$\mathbb{G}$是阶为$pq$的阿贝尔群，其中$p$和$q$是两个不同的素数。已知群元$g_1$的阶为$p$，群元$g_2$的阶为$q$，请问
+ 群元$g_1 g_2$的阶为多少？请说明理由。
+ 
+ %%% 此题是为了对标上面那道题，答案: r=ord(g1 g2) | lcm(m,n)
+ %% 证明过程，第一确实有 (g1 g2)^lcm(m,n) = e; 第二 r整除 lcm (循环群的属性.)
+ \item 设$\mathbb{G}$是阿贝尔群。已知群元$g_1$的阶为$m$，群元$g_2$的阶为$n$，请问
+ 群元$g_1 g_2$的阶会满足什么关系？如果加上$\gcd(m,n)=1$这个条件又会如何？请证明你给出的结论。
+   
+ \item 如果群$\mathbb{H}$是有限群$\mathbb{G}$的真子群，即存在$g\in \mathbb{G}$但是$g \notin \mathbb{H}$。
+ 请证明$\vert \mathbb{H} \vert  \leq \vert \mathbb{G} \vert \ /2$。%源自IMC2第8章
+  
+ \item 设$n\in \N$为合数，请证明群$\Z_n^*$中至少一半的元素是$n$为合数的证据，即满足以下条件的所有元素：
+$\forall a \in \Z_n^*$，且$a^{n-1}  \not\equiv 1 \pmod{n}$。
+  提示：$\Z_n^*$中所有不是$n$为合数证据的元素是否构成群？%源自IMC2第8章-307页，这个提示其实是要大家反着看，“不是证据的元素”构成群。
+  %%% Not a witness means: a^{n-1} = 1 mod n.
+ 
+ \item 使用拉格朗日定理重新证明费尔马小定理和欧拉定理。
+ 		
+ %以下两题，从第7章搬过来。
+ \item 编程完成以下工作。选取素数$q$，使得$p = 2 \cdot q + 1$也是素数。随机选取$h \in \mathbb{Z}_p^*$，使得$g = h^2 \bmod p$且$g $不等于$1$。
+ 		显然，$\langle g \rangle$ 是循环群。
+ 		\begin{enumerate}
+ 		\item 写一个 Python（或者 Sage）程序生成群$\langle g \rangle$。
+ 		
+ 		\item 群$\langle g \rangle$的阶是多少，为什么？
+ 		
+ 		\item 群$\langle g \rangle$中有多少个生成元？能说明理由吗？
+ 		
+ 		\end{enumerate}
+ 		
+ \item 设$p$、$q$为两个不同的奇素数，且$q$是$p-1$的因子。随机取$\Z_p^*$中的一个元素$h$，并计算$g = (h^{(p-1)/q } \bmod p)$。如果$g$不等于$1$，请问$g$的阶是多少？请给出证明。[提示：这是著名的DSA签名算法参数生成的一部分。]
+ 		
+ \end{problemset}
