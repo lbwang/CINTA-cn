@@ -12,6 +12,7 @@
 \begin{introduction}
   \item 欧几里得算法
   \item 二进制欧几里得算法
+  \item B\'{e}zout 定理
   \item 扩展欧几里得算法
 \end{introduction}
 
@@ -143,8 +144,8 @@ B\'{e}zout 定理的证明可在标准数论教材中找到。以下给出证明
 \end{proof}
 
 B\'{e}zout 定理说明两个非零整数$a$和$b$的公因子一定能表达为$a$和$b$的线性组合，强调的是存在性，$\egcd$算法则高效地计算出$a$和$b$的最大公因子及其相应的 B\'{e}zout 系数。而且以上定理的证明还显示这样一个重要的事实：
-\begin{property}{(最大公因子的属性)}
-\label{prop:gcd}
+\begin{property}{(最大公因子的属性--1)}
+\label{prop:gcd1}
 \begin{center}
 	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 11cm]
 $\gcd(a,b)$等于$a$和$b$所有大于零的线性组合值的最小值。
@@ -201,6 +202,17 @@ b r_1 + c s_1 &= 1
 \[ab(r_0r_1) + c(b r_1 s_0 + a r_0 s_1 + c s_0 s_1) = 1\]
 根据B\'{e}zout 定理，可知$\gcd(ab, c)=1$。\qed
 \end{proof}
+
+有一个容易证明的结论，陈述如下。下一章将会使用。
+\begin{property}{(最大公因子的属性--2)}
+\label{prop:gcd2}
+\begin{center}
+	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 11cm]
+$a$ 和 $b$ 的任意整数线性组合都是 $\gcd(a,b)$ 的整数倍。而且，
+任意$\gcd(a,b)$ 的整数倍都是$a$ 和 $b$ 的整数线性组合。
+	\end{tcolorbox}
+	\end{center}
+\end{property}
 
 \begin{example}
 \label{exm:egcd-in-sage}
