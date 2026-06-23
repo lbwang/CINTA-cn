@@ -66,7 +66,7 @@ P = q_1 q_2 \cdots q_m
 
 %Todo 素数基本定理
 欧几里得定理告诉我们，素数有无穷多，需要进一步问，素数到底有多少，其分布如何？
-通过简单的 Sage 命令，我们可以稍微建立起一些关于素数分布的基本认识。
+通过简单的 SageMath 命令，我们可以稍微建立起一些关于素数分布的基本认识。
 \begin{lstlisting}
 sage: prime_pi(1000)
 168
@@ -77,12 +77,12 @@ sage: prime_pi(65537)
 sage: plot(prime_pi, 1,10000, rgbcolor=(0,0,1))
 \end{lstlisting}
 
-以下是用 Sage 命令画出的一万以内整数中的素数分布图，大家可以尝试使用其他参数，取$1000$或者$100,000$等
+以下是用 SageMath 命令画出的一万以内整数中的素数分布图，大家可以尝试使用其他参数，取$1000$或者$100,000$等
 得到的效果图基本相同。
 %Add 20200723
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/prime.jpg} 	
+\includegraphics[scale=.5]{figures/chapt5-1-prime-counting-function.pdf} 	
 \caption{一万以内整数的素数分布图}
 \label{fig:prime}       % Give a unique label
 \end{center}
@@ -134,7 +134,7 @@ sage: plot(prime_pi, 1,10000, rgbcolor=(0,0,1))
 
 \section{素性测试}
 \label{sec:primeTest}
-本节讨论素性测试问题，即如何判断一个大的奇整数$n$是否素数。先看以下 Sage 实例。
+本节讨论素性测试问题，即如何判断一个大的奇整数$n$是否素数。先看以下 SageMath 实例。
 \begin{example}
 \label{exm:prime}
 \begin{lstlisting}

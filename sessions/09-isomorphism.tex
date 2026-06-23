@@ -411,7 +411,7 @@ $(b \mathbb{H}) (d\mathbb{H}) = bd \mathbb{H}$，得证。
 \begin{figure}[htbp]
 	\begin{center}
 		\resizebox{0.4\linewidth}{!}{%
-		   \input{figures/coset_in_group.tikz}
+		   \input{figures/chapt9-1-quotient-group-mod-intuition.tikz}
 	    }
 		\caption{商群中“模”的直观理解.}
 		\label{fig:mod_motivation}       % Give a unique label
@@ -483,7 +483,7 @@ $\eta$和$\phi$的复合映射。
 \begin{figure}
 \begin{center}
 
-\includegraphics[width=0.6\textwidth]{figures/FIT-fig-improved.pdf}
+\includegraphics[width=0.6\textwidth]{figures/chapt9-2-first-isomorphism-theorem.pdf}
 \caption{第一同构定理的图形化表达}
 \label{fig:FIT}      
 \end{center}
@@ -494,7 +494,7 @@ $\eta$和$\phi$的复合映射。
 %Motivation of First Isomorphism Theorem. 20260511
 \begin{figure}
 	\begin{center}
-		\input{figures/g_to_h_mapping.tikz}
+		\input{figures/chapt9-3-first-isomorphism-mapping.tikz}
 		\caption{关于第一同构定理的直观认识.}
 		\label{fig:FIT_motivation}       % Give a unique label
 	\end{center}
@@ -671,13 +671,7 @@ $g_1  g_2 = e$，即$g_1 = g_2^{-1}$。又因为$\mathbb{H}_1 \cap \mathbb{H}_2 
 % 20230523，源自DF04第98页。 https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAB12BbOnACwBGA4AAkAvpx78hwANJiQY0uky58hFGQAMVWoxZtJvQcIDiCpSux4CRLaQBMu+s1aIO3YzPGLlIDNbqRA6OzvpuHlImchZ+AWq2mqQAzGGuhp7SwuKcAMZ0aEZZMb5WCRokpAAsaQburGK6MFAA5vBEoABmAE4QXEhkIDgQSPYgfDB0UGyQYA1+PX2j1MNIIeOT0+6z8129-Yhjq4jJ1BNTMwS7IIsH68dVZ5uXc6U3+0inQyOIjxsX2yub1uSD+xwArE8AeAgY0xEA
 \begin{figure}
 \begin{center}
-\begin{tikzcd}
-                               & \mathbb{G} \arrow[d, no head]                                &                                \\
-                               & \mathbb{H}\mathbb{K} \arrow[ld, no head] \arrow[rd, no head] &                                \\
-\mathbb{H} \arrow[rd, no head] &                                                              & \mathbb{K} \arrow[ld, no head] \\
-                               & \mathbb{H}\cap\mathbb{K} \arrow[d, no head]                  &                                \\
-                               & e                                                            &                               
-\end{tikzcd}
+\input{figures/chapt9-4-second-isomorphism-subgroup-lattice.tikz}
 \caption{第二同构定理涉及的群结构}
 \label{fig:SIT}   
 \end{center}
@@ -767,11 +761,16 @@ $\mathbb{K}$是$\mathbb{H}$的子群。
 定义映射$\psi\colon \mathbb{G}/\mathbb{K} \to \mathbb{G}/\mathbb{H}$
 为$g\mathbb{K} \mapsto g \mathbb{H}$。容易验证，$\psi$是一种同态，
 且$\Ker\; \psi  = \mathbb{H}/\mathbb{K} $，
-因为%20230529
+因为 % 20230529
 \begin{align*}
-\Ker\; \psi  &=  \{ g\mathbb{K}  \in \mathbb{G}/\mathbb{K} : \psi(g\mathbb{K}) = \mathbb{H}\} \\
-                                      &= \{ g\mathbb{K}  \in \mathbb{G}/\mathbb{K} : g\mathbb{H} = \mathbb{H}\} \\
-                                      &=  \{ g\mathbb{K}  \in \mathbb{G}/\mathbb{K} : g \in \mathbb{H}\} = \mathbb{H}/\mathbb{K}
+\Ker\;\psi
+  &= \left\{g\mathbb{K} \in \mathbb{G}/\mathbb{K}
+      \;\middle|\; \psi(g\mathbb{K}) = \mathbb{H}\right\} \\
+  &= \left\{g\mathbb{K} \in \mathbb{G}/\mathbb{K}
+      \;\middle|\; g\mathbb{H} = \mathbb{H}\right\} \\
+  &= \left\{g\mathbb{K} \in \mathbb{G}/\mathbb{K}
+      \;\middle|\; g \in \mathbb{H}\right\} \\
+  &= \mathbb{H}/\mathbb{K}
 \end{align*}
 所以$\mathbb{H}/\mathbb{K}$
 是$\mathbb{G}/\mathbb{K}$的正规子群。
@@ -831,15 +830,11 @@ $\mathbb{H}$和$\mathbb{K}$是群$\mathbb{G}$的正规子群，且$\mathbb{K}\le
 	
 	\end{proof}
 
-\section*{Chapter Note}
-\addcontentsline{toc}{section}{Chapter Note}
-%
-To be done...
+
 \fi
 
 %%2023年5月22日
 \section*{章注}
-%\section*{Chapter Note}
 \addcontentsline{toc}{section}{章注}
 本章有一条联系紧密的知识链：从同态出发，经过 kernel、正规子群、商群等，最后到达同构定理。这多少可以解释，为什么很多同学
 在之前的课程中学到了同构、同态、正规子群等等概念，感觉很空洞，从概念到概念，每个概念似乎都懂，但从来不知道如何运用。希望本章的学习，
