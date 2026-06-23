@@ -1,0 +1,7 @@
+\begin{tikzcd}
+                               & \mathbb{G} \arrow[d, no head]                                &                                \\
+                               & \mathbb{H}\mathbb{K} \arrow[ld, no head] \arrow[rd, no head] &                                \\
+\mathbb{H} \arrow[rd, no head] &                                                              & \mathbb{K} \arrow[ld, no head] \\
+                               & \mathbb{H}\cap\mathbb{K} \arrow[d, no head]                  &                                \\
+                               & e                                                            &
+\end{tikzcd}

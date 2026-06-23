@@ -238,6 +238,9 @@ TSWLatexianTemp*
 
 # auto folder when using emacs and auctex
 ./auto/*
+
+# Local figure-generation instructions
+figures/Agents4Figures.md
 *.el
 
 # expex forward references with \gathertags
