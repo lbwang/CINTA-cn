@@ -33,7 +33,7 @@ sage: show(plot(E1, hue=.9))             #作图
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec-R1.jpg} 	
+\includegraphics[scale=.5]{figures/chapt16-1-real-elliptic-curve-minus5-4.pdf}
 \caption{实数域上的椭圆曲线$y^2 = x^3  -5x + 4$}
 \label{fig:ec-1}       % Give a unique label
 \end{center}
@@ -48,7 +48,7 @@ sage: show(plot(E2, hue=.9))
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec-R2.jpg} 	
+\includegraphics[scale=.5]{figures/chapt16-2-real-elliptic-curve-2-3.pdf}
 \caption{实数域上的椭圆曲线$y^2 = x^3 + 2x + 3$}
 \label{fig:ec-2}       % Give a unique label
 \end{center}
@@ -70,13 +70,13 @@ sage: show(plot(E3, hue=.9))
 \begin{lstlisting}
 sage: p = 137 #p是一个素数
 sage: F = FiniteField(p) #定义F为一种有限域，也可以用命令F = GF(p)
-sage: E137 = EllipticCurve(F, [F.random_element(), F.random_element()])
+sage: E137 = EllipticCurve(F, [3, 8])
 sage: show(plot(E137, hue=.9))
 \end{lstlisting}
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec137.jpg} 	
+\includegraphics[scale=.5]{figures/chapt16-3-elliptic-curve-over-f137.pdf}
 \caption{有限域$\F_{137}$上的椭圆曲线}
 \label{fig:ec-137}       % Give a unique label
 \end{center}
@@ -124,7 +124,7 @@ sage: E137.order()   #群的阶
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.4]{figures/ec-Add1.JPG} 	
+\includegraphics[scale=.4]{figures/chapt16-4-elliptic-curve-point-addition.pdf}
 \caption{椭圆曲线加法-1}
 \label{fig:ec-add1}       % Give a unique label
 \end{center}
@@ -158,7 +158,7 @@ sage: E137.order()   #群的阶
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec-Add2.JPG} 	
+\includegraphics[scale=.5]{figures/chapt16-5-elliptic-curve-point-doubling.pdf}
 \caption{椭圆曲线加法-2}
 \label{fig:ec-add2}       % Give a unique label
 \end{center}
@@ -228,7 +228,7 @@ sage: ZeroPoint = E137(0)
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.4]{figures/ec-InfPot.JPG} 	
+\includegraphics[scale=.4]{figures/chapt16-6-elliptic-curve-inverse-and-infinity.pdf}
 \caption{椭圆曲线群的逆元与无穷远点}
 \label{fig:ec-InfPot}       % Give a unique label
 \end{center}
@@ -253,7 +253,7 @@ sage: implicit_plot(x^3 -3*x + 2 - y^2 == 0, (x,-3,3), (y,-3,3)) # 画曲线y^2 
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec-singular1.jpg} 	
+\includegraphics[scale=.5]{figures/chapt16-7-singular-cubic-cusp.pdf}
 \caption{带奇异点的曲线-1}
 \label{fig:ec-singular1}       % Give a unique label
 \end{center}
@@ -261,7 +261,7 @@ sage: implicit_plot(x^3 -3*x + 2 - y^2 == 0, (x,-3,3), (y,-3,3)) # 画曲线y^2 
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=.5]{figures/ec-singular2.jpg} 	
+\includegraphics[scale=.5]{figures/chapt16-8-singular-cubic-node.pdf}
 \caption{带奇异点的曲线-2}
 \label{fig:ec-singular2}       % Give a unique label
 \end{center}
