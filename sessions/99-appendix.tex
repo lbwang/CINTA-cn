@@ -73,16 +73,6 @@ T(2^{k+1}) &\leq 3T(2^k) +C2^k\\
 	所以，$T(n)=\mathcal{O}(n^{\log_2\; 3})$。
 \end{proof}
 
-\iffalse
-\chapter{The Binary Euclidean Algorithm}
-\label{chap:begcd}
-To write the analysis of the algorithm... 
-
-\begin{center}
-	\lstinputlisting[language=Python]{codes/chap1-8.py}
-\end{center}
-\fi
-
 \chapter{斐波那契数列}
 \label{chap:fib}
 
@@ -97,7 +87,7 @@ F_n &= F_{n-1} + F_{n-2}.
 \end{center}
 
 \begin{center}
-	\lstinputlisting[caption = "Measure the radio."]{codes/appendix-2.py}
+	\lstinputlisting[caption = "Measure the ratio."]{codes/appendix-2.py}
 \end{center}
 
 \begin{align*}
@@ -121,7 +111,7 @@ F_n &= F_{n-1} + F_{n-2}.
 假设我们有一个盒子里面放了$m$个球，每一球都用标签唯一标注一个号码，范围从$1$到$m$。然后抽取$k$个球，如抽彩票一般，抽完了
 球还放回去。问以下问题：抽取到同一个球的概率有多大？抽取到同一个球这个事件也称发生了一次碰撞。
 
-注意到，抽取第二个球不与第一个球相同的概率的是$1 - 1/m$，而第三个球不与前面抽到的球相同的概率是$1 - 2/m$。
+注意到，抽取第二个球不与第一个球相同的概率是$1 - 1/m$，而第三个球不与前面抽到的球相同的概率是$1 - 2/m$。
 以这种方式思考，得到：
 \begin{equation}
 \label{eq:A03}
@@ -144,8 +134,7 @@ F_n &= F_{n-1} + F_{n-2}.
 
 希望以$50\%$的概率发生一次碰撞，则$k = \sqrt{2\ln\;2m} \thickapprox 1.18\sqrt{m}$。原始的生日悖论问题中$m = 365$，
 则得到$k = \sqrt{(2 \ln\; 2) \cdot 365} \thickapprox 23$。
-下图展示了$m = 365$，$k$取不同值时发生碰撞的概率，可知当$k = 50$时概率基本为$1$。也就是说一个$50$人的班级大概率有
-两位同学会同一天过生日。
+下图展示了$m = 365$，$k$取不同值时发生碰撞的概率，可知当$k = 50$时概率基本为$1$。也就是说一个$50$人的班级大概率有两位同学会同一天过生日。
 
 \begin{figure}
 	\begin{center}

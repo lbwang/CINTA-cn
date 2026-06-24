@@ -56,7 +56,7 @@ sage: show(plot(E2, hue=.9))
 
 还可以选取随机的$a$和$b$，去看看曲线长什么样。比如我们完全无法预测以下曲线的模样：
 \begin{lstlisting}
-sage: E3 = EllipticCurve(RR,[RR.random_element(), RR.random_element()]) #RR代表有理数域
+sage: E3 = EllipticCurve(RR,[RR.random_element(), RR.random_element()]) #RR代表实数域
 sage: show(plot(E3, hue=.9))
 \end{lstlisting}
 
@@ -103,8 +103,7 @@ sage: E137.order()   #群的阶
 的特殊点 $\mathcal{O}$ ，并且$E$在加法上形成一个有限交换群。
 \end{theorem}
 
-所谓无穷远点$\mathcal{O}$就是加法的单位元。这里的内涵比较丰富，稍后再进一步讨论。
-当前迫切的任务是要把点的加法定义出来。
+所谓无穷远点$\mathcal{O}$就是加法的单位元。这里的内涵比较丰富，稍后再进一步讨论。当前迫切的任务是要把点的加法定义出来。
 
 \begin{remark}
 以上定义还要求椭圆曲线都落在特征不为$2$和$3$的域上。因为，特征为$2$或者$3$的域会使得下一节讲解的某些计算不成立。
@@ -297,7 +296,7 @@ sage: E137.cardinality()    # 等同于E137.order()
 \index{点乘}\index{point multiplication}\index{标量乘}\index{scalar multiplication}
 
 看上去，这是群元素的指数运算，实际上，点乘算法更类似整数的乘法。
-因为，把$k$看为二进制数$k = \sum_{i=0}^n k_i 2^i$，$n$是某个整数，$k_i \in \{0,  1\}$代表$k$二进制表达的一个比特。
+因为，把$k$看为 $n$ 比特的二进制数$k = \sum_{i=0}^{n-1} k_i 2^i$，$n$是某个正整数，$k_i \in \{0, 1\}$ 代表$k$二进制表达的一个比特。
 则：
 \begin{align*}
 	      kP &=  (k_{n-1} 2^{n-1}  + k_{n-2} 2^{n-2}  + \cdots + k_1 2 + k_0)P\\
@@ -323,11 +322,8 @@ sage: E137.cardinality()    # 等同于E137.order()
 
 %%2023年6月26日
  \section*{章注}
- %\section*{Chapter Note}
  \addcontentsline{toc}{section}{章注}
- 椭圆曲线是数论及其相关领域（比如密码学等）的重要研究课题，其中包含了丰富的数学知识。
- 在理论研究中，椭圆曲线在费尔马大定理的证明中起到重要作用，这是一次震动全世界的理论突破。
- 在实践中，椭圆曲线被广泛地应用在不同的公钥密码体制中，比如：ECDSA 签名标准~\cite{DSS13}、
+ 椭圆曲线是数论及其相关领域（比如密码学等）的重要研究课题，其中包含了丰富的数学知识。在理论研究中，椭圆曲线在费尔马大定理的证明中起到重要作用，这是一次震动全世界的理论突破。在实践中，椭圆曲线被广泛地应用在不同的公钥密码体制中，比如：ECDSA 签名标准~\cite{DSS13}、
  中国国密标准\footnote{\href{https://github.com/guanzhi/GM-Standards}{中国国密标准}}等。
  
  目前，椭圆曲线密码学依然是热门的研究课题，
