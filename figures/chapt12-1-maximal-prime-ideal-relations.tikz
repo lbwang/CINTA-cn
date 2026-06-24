@@ -1,0 +1,42 @@
+\begin{tikzpicture}[
+  x=1cm,
+  y=1cm,
+  >=latex,
+  line cap=round,
+  line join=round,
+  concept/.style={
+    rounded corners=4pt,
+    minimum width=4.2cm,
+    minimum height=1.05cm,
+    inner xsep=10pt,
+    draw=blue!45!black,
+    line width=0.9pt,
+    fill=blue!7,
+    font=\large
+  },
+  consequence/.style={
+    concept,
+    draw=teal!55!black,
+    fill=teal!8
+  },
+  equivalence/.style={
+    <->,
+    draw=blue!55!black,
+    line width=1.15pt
+  },
+  implication/.style={
+    ->,
+    draw=teal!60!black,
+    line width=1.15pt
+  }
+]
+  \node[concept] (maximal) at (0,2.2) {$M$ 是极大理想};
+  \node[concept] (field) at (6.4,2.2) {$R/M$ 是域};
+  \node[consequence] (prime) at (0,0) {$M$ 是素理想};
+  \node[consequence] (domain) at (6.4,0) {$R/M$ 是整环};
+
+  \draw[equivalence] (maximal.east) -- (field.west);
+  \draw[equivalence] (prime.east) -- (domain.west);
+  \draw[implication] (maximal.south) -- (prime.north);
+  \draw[implication] (field.south) -- (domain.north);
+\end{tikzpicture}
