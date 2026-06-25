@@ -405,21 +405,27 @@ $(b \mathbb{H}) (d\mathbb{H}) = bd \mathbb{H}$，得证。
  以上操作可以推广到对任意给定的整数$n$和子群$n\mathbb{Z}$，可得商群$\mathbb{Z}/ n \mathbb{Z}$，请读者自行完成构造。
 \end{example}
 
-此时，需要回顾第~\ref{chap:cong}章例~\ref{exam:residue-class}在讲模整数的剩余类时使用的记号，当时提前使用了商群这个概念。之前强调的是“\emph{在同一把尺子（模数）的度量下，将尺寸相同的元素放在同一个集合}，现在在商群的理解中，是强调\emph{使用一个集合(正规子群)来度量某个元素应该放置在什么集合（即陪集，也就是商群的元素）}。借助图~\ref{fig:mod_motivation}可以加深对这种直观的认识，图中$\mathbb{H}$是模数，它度量元素$g$，决定把$g$放到哪一个陪集中。图中的$g$和$g'$落在相同的陪集，也可以理解为$g \equiv g' \pmod{\mathbb{H}}$，也就是$g^{-1} g' \in \mathbb{H}$，参考第~\ref{chap:coset}章的命题~\ref{pro:coset}和课后练习第~\ref{exe:coset}题。这两种理解本质相同，然而后者更具广泛的意义，前者只关心整数，而后者可以扩展到任意的群结构。
+此时，需要回顾第~\ref{chap:cong}章例~\ref{exam:residue-class}在讲模整数的剩余类时使用的记号，当时提前使用了商群这个概念。之前强调的是“\emph{在同一把尺子（模数）的测量下，将尺寸相同的元素放在同一个集合}”，现在在商群的理解中，是强调“\emph{使用一个集合(正规子群)来测量某个元素，看它应该被放置在什么集合（即陪集，也就是商群的元素）}”。借助图~\ref{fig:mod_motivation}可以加深对这种直观的认识。图中$\mathbb{H}$是模数，它测量元素$g$，决定把$g$放到哪一个陪集中。图中的$g$和$g'$落在相同的陪集，可表示为$g \equiv g' \pmod{\mathbb{H}}$。因为$g$和$g'$落在相同的陪集即为$g' \in g \mathbb{H}$，也即$g^{-1} g' \in \mathbb{H}$（参考第~\ref{chap:coset}章的命题~\ref{pro:coset}和课后练习第~\ref{exe:coset}题），所以我们可得以下性质。
+
+\begin{property}{($g$与$g'$模$\mathbb{H}$同余)}
+\label{prop:congruence_grp}
+\[ g \equiv g' \pmod{\mathbb{H}} \iff g^{-1} g' \in \mathbb{H}\]
+\end{property}
+
+对比之前的知识点（性质~\ref{prop:congruence}）可知，这两种对“\emph{模}”的理解本质相同，然而后者更具广泛的意义，前者只关心整数，而后者可以扩展到任意的群结构。
 
 %Motivation of First Isomorphism Theorem. 20260521
 \begin{figure}[htbp]
 	\begin{center}
-		\resizebox{0.4\linewidth}{!}{%
-		   \input{figures/chapt9-1-quotient-group-mod-intuition.tikz}
-	    }
-		\caption{商群中“模”的直观理解.}
-		\label{fig:mod_motivation}       % Give a unique label
+	\resizebox{0.4\linewidth}{!}{%
+		\input{figures/chapt9-1-quotient-group-mod-intuition.tikz}
+	}
+	\caption{商群中“模”的直观理解.}
+		\label{fig:mod_motivation}      
 	\end{center}
 \end{figure}
-%20260521
 
-	
+%20260521
 \begin{example}{（$\mathbb{Z}_n^*$的商群）}
 \label{exm:quo_gr_Zn}
 设$n = 15$，则$\mathbb{Z}_n^* = \{ 1, 2, 4, 7, 8, 11, 13, 14\}$。设$g = 2$，记$\mathbb{S} = \langle g \rangle = \{1, 2, 4, 8\}$，

@@ -121,15 +121,15 @@ F_n &= F_{n-1} + F_{n-2}.
 
 \begin{align*}
 \Pr(\text{不发生碰撞}) &= \prod_{i=0}^{k-1} (1 - i/m)\\
-                                 &\thickapprox \prod_{i=0}^{k-1} e^{-i/m} \\
-                                 &= e^{- \sum_{i=0}^{k-1} (i/m)}\\
-                                 &= e^{-k(k-1)/2m} \\
-                                 &\thickapprox e^{-k^2/2m}.                             
+    &\thickapprox \prod_{i=0}^{k-1} e^{-i/m} \\
+    &= e^{- \sum_{i=0}^{k-1} (i/m)}\\
+    &= e^{-k(k-1)/2m} \\
+    &\thickapprox e^{-k^2/2m}.                             
 \end{align*}
 
 \begin{align}
 \Pr(\text{发生碰撞}) &= 1 - \Pr(\text{不发生碰撞})\\
-                         &= 1 - e^{-k^2/2m}
+                    &= 1 - e^{-k^2/2m}
 \end{align}
 
 希望以$50\%$的概率发生一次碰撞，则$k = \sqrt{2\ln\;2m} \thickapprox 1.18\sqrt{m}$。原始的生日悖论问题中$m = 365$，
@@ -139,7 +139,7 @@ F_n &= F_{n-1} + F_{n-2}.
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{figures/chapt99-1-birthday-collision-probability.pdf}
-		\caption{生日悖论问题的概率.}
+		\caption{生日悖论问题的概率}
 	\end{center}
 	\label{fig:birth}       % Give a unique label
 \end{figure}
@@ -165,7 +165,7 @@ F_n &= F_{n-1} + F_{n-2}.
 
 \item 欧拉定理：$a^{\phi(n)} \equiv 1 \pmod{n}$，$a$与$n$互素。
 
-\item 群论费尔马小定理：对任意$n$阶有限群$\mathbb{G}$，记$1$是群的单位元。任取元素$a\in \mathbb{G}$，有$a^n = 1$。
+\item 群论费尔马小定理：对任意$n$阶有限群$\mathbb{G}$，记$1$~\footnote{为了配合本节内容，特意把单位元$e$表达为$1$。}是群的单位元。任取元素$a\in \mathbb{G}$，有$a^n = 1$。
 
 \item 勒让德符号：$\left(\frac{a}{p}\right) = 1$，若$a$是模$p$的二次剩余，$p$为素数，$a$与$p$互素。
 

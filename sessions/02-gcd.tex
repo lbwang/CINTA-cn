@@ -139,12 +139,12 @@ B\'{e}zout 定理的证明可在标准数论教材中找到。以下给出证明
 \begin{proof}
 构造集合
 	 \[S = \{ am + bn : m,n  \in \mathbb{Z} \; \text{且}\; am + bn > 0 \}\]
-显然，集合$S$非空，根据良序原则，取其中最小值$d = ar + bs$。然后证明两个属性：$d$是$a$和$b$的公因子；
+显然，集合$S$非空，根据良序原则，取其中最小值$d = ar + bs$。然后证明两个小结论：$d$是$a$和$b$的公因子；
 如果存在$a$和$b$的公因子$d'$，则$d' \mid d$。这样就证明了$d= \gcd(a,b)$。\qed
 \end{proof}
 
 B\'{e}zout 定理说明两个非零整数$a$和$b$的公因子一定能表达为$a$和$b$的线性组合，强调的是存在性，$\egcd$算法则高效地计算出$a$和$b$的最大公因子及其相应的 B\'{e}zout 系数。而且以上定理的证明还显示这样一个重要的事实：
-\begin{property}{(最大公因子的属性--1)}
+\begin{property}{(最大公因子的性质--1)}
 \label{prop:gcd1}
 \begin{center}
 	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 11cm]
@@ -203,8 +203,8 @@ b r_1 + c s_1 &= 1
 根据B\'{e}zout 定理，可知$\gcd(ab, c)=1$。\qed
 \end{proof}
 
-有一个容易证明的结论，陈述如下。下一章将会使用。
-\begin{property}{(最大公因子的属性--2)}
+有一个不难证明的结论，陈述如下。下一章将会使用。
+\begin{property}{(最大公因子的性质--2)}
 \label{prop:gcd2}
 \begin{center}
 	\begin{tcolorbox}[colback=green!5!white, colframe=red!75!black,width = 11cm]
