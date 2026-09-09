@@ -29,6 +29,7 @@
 \usepackage{amsmath, amsfonts, amssymb}
 
 \usepackage[most]{tcolorbox}
+\usetikzlibrary{calc,decorations.pathreplacing}
 
 %% Setup for Code
 \usepackage{listings}
@@ -42,7 +43,8 @@
 \newtheorem{proposition}[theorem]{Proposition}
 
 %\title{A Concrete Introduction to Number Theory and Algebra--Chapter 1- 2} 
-\title{Mathematics for Computer Science -- 1} 
+%\title{Mathematics for Computer Science -- 1} 
+\title{ Mathematical Foundations in Information Security -- 1} 
 \author{王立斌} 
 \institute{School of Computer Science, South China Normal University}
 \date{\today} 
@@ -59,6 +61,18 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction.}
+
+\frame{\frametitle{本课程的历史.}
+
+\begin{itemize}
+\item 2016级之前，结合《计算机安全学》进行数学教学；
+
+\item 2017级--2021级，《信息时代的计算机数学》；
+
+\item 2022级至今，《信息安全的数学基础》（网工、必修）和《计算机科学中的数学》（计科，选修）；
+\end{itemize}
+}
+
 \frame{\frametitle{What is Mathematics for Computer Science -- 1?}
 According to LLM17-MCS:
 \begin{itemize}
@@ -93,7 +107,41 @@ According to 《Concrete Mathematics》（GKP93--《具体数学》）：
 \end{alertblock}
 }
 
+\frame{\frametitle{Motivations of our course.}
+从2023年起，本课程被命名为《信息安全的数学基础》，以下专题为主线:
+\begin{itemize}
+\item Number Theory -- 初等数论
 
+\item Abstract Algebra -- 抽象代数
+
+\item Algorithms -- 算法
+\end{itemize}
+\pause
+
+\begin{alertblock}{Notice!}
+强调，我们关注编程与算法，即所谓的"computational(计算性)"，且以上专题是柔和在一起的内容。本质上这是一门开阔视野、训练思维的课程。
+\end{alertblock}
+
+}
+
+\frame{\frametitle{Motivations of our course.}
+与本课程相关的主要密码学算法包括：
+\begin{itemize}
+\item 分组密码算法：AES等
+
+\item 公钥密码算法：Diffie-Hellman、RSA、ECC等
+
+\item 后量子密码算法：NTRU等
+
+\end{itemize}
+\pause
+
+\begin{alertblock}{Notice!}
+相信课程所涉及内容不仅仅局限于以上提及的算法。
+\end{alertblock}
+}
+
+\iffalse
 \frame{\frametitle{Motivations of our course.}
 从2024年起，《计算机科学中的数学》第一次出现在SCNU-CS，以下专题为本课程的主线:
 \begin{itemize}
@@ -110,6 +158,7 @@ According to 《Concrete Mathematics》（GKP93--《具体数学》）：
 \end{alertblock}
 
 }
+\fi
 
 \frame{\frametitle{参考书.}
 
@@ -141,7 +190,6 @@ Finding patterns. （寻找模式.）
 \end{exampleblock}
 
 }
-
 % 20260302增补
 \frame{\frametitle{AI时代的数学课特征与预警.}
 \begin{exampleblock}{AI时代的数学课有什么特征.}
@@ -161,6 +209,11 @@ Finding patterns. （寻找模式.）
 	 
 \end{itemize}
 \end{exampleblock}
+\pause
+
+\begin{alertblock}{提醒.}
+	AI时代的大学课堂更应该回归教育的本质。
+\end{alertblock}
 }
 
 \section{Numbers in Computer Systems.}
@@ -434,7 +487,7 @@ The multiplication is implemented \emph{without} using multiplication !
 	
 	\begin{figure}
 		\begin{center}
-		\includegraphics[scale=1]{../figures/mod.pdf} 
+		\input{../figures/chap1-1-mod.tikz}
 		\caption{Geometric interpretation of division.}
 		\end{center}
 		
